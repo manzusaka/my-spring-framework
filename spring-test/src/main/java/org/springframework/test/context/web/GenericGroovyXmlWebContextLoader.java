@@ -16,7 +16,7 @@
 
 package org.springframework.test.context.web;
 
-import org.springframework.beans.factory.groovy.GroovyBeanDefinitionReader;
+//import org.springframework.beans.factory.groovy.GroovyBeanDefinitionReader;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 /**
@@ -46,7 +46,8 @@ public class GenericGroovyXmlWebContextLoader extends GenericXmlWebContextLoader
 	@Override
 	protected void loadBeanDefinitions(GenericWebApplicationContext context,
 			WebMergedContextConfiguration webMergedConfig) {
-		new GroovyBeanDefinitionReader(context).loadBeanDefinitions(webMergedConfig.getLocations());
+		//代码报错注释
+//		new GroovyBeanDefinitionReader(context).loadBeanDefinitions(webMergedConfig.getLocations());
 	}
 
 	/**

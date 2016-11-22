@@ -389,7 +389,8 @@ public class GroovyBeanDefinitionReader extends AbstractBeanDefinitionReader imp
 		}
 		else if (this.namespaces.containsKey(name) && args.length > 0 && args[0] instanceof Closure) {
 			GroovyDynamicElementReader reader = createDynamicElementReader(name);
-			reader.invokeMethod("doCall", args);
+			//代码报错注释
+//			reader.invokeMethod("doCall", args);
 		}
 		else if (args.length > 0 && args[0] instanceof Closure) {
 			// abstract bean definition
@@ -690,21 +691,23 @@ public class GroovyBeanDefinitionReader extends AbstractBeanDefinitionReader imp
 	}
 
 	private GroovyDynamicElementReader createDynamicElementReader(String namespace) {
-		XmlReaderContext readerContext = this.groovyDslXmlBeanDefinitionReader.createReaderContext(new DescriptiveResource(
-			"Groovy"));
-		BeanDefinitionParserDelegate delegate = new BeanDefinitionParserDelegate(readerContext);
-		boolean decorating = (this.currentBeanDefinition != null);
-		if (!decorating) {
-			this.currentBeanDefinition = new GroovyBeanDefinitionWrapper(namespace);
-		}
-		return new GroovyDynamicElementReader(namespace, this.namespaces, delegate, this.currentBeanDefinition, decorating) {
-			@Override
-			protected void afterInvocation() {
-				if (!this.decorating) {
-					currentBeanDefinition = null;
-				}
-			}
-		};
+		//代码报错注释
+//		XmlReaderContext readerContext = this.groovyDslXmlBeanDefinitionReader.createReaderContext(new DescriptiveResource(
+//			"Groovy"));
+//		BeanDefinitionParserDelegate delegate = new BeanDefinitionParserDelegate(readerContext);
+//		boolean decorating = (this.currentBeanDefinition != null);
+//		if (!decorating) {
+//			this.currentBeanDefinition = new GroovyBeanDefinitionWrapper(namespace);
+//		}
+//		return new GroovyDynamicElementReader(namespace, this.namespaces, delegate, this.currentBeanDefinition, decorating) {
+//			@Override
+//			protected void afterInvocation() {
+//				if (!this.decorating) {
+//					currentBeanDefinition = null;
+//				}
+//			}
+//		};
+		return null;
 	}
 
 

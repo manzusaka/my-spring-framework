@@ -16,7 +16,7 @@
 
 package org.springframework.test.context.support;
 
-import org.springframework.beans.factory.groovy.GroovyBeanDefinitionReader;
+//import org.springframework.beans.factory.groovy.GroovyBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.MergedContextConfiguration;
 
@@ -46,7 +46,7 @@ public class GenericGroovyXmlContextLoader extends GenericXmlContextLoader {
 	 */
 	@Override
 	protected void loadBeanDefinitions(GenericApplicationContext context, MergedContextConfiguration mergedConfig) {
-		new GroovyBeanDefinitionReader(context).loadBeanDefinitions(mergedConfig.getLocations());
+//		new GroovyBeanDefinitionReader(context).loadBeanDefinitions(mergedConfig.getLocations());
 	}
 
 	/**
