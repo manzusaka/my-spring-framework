@@ -36,9 +36,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.MutablePropertyValues;
@@ -71,13 +69,8 @@ import static org.junit.Assert.*;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Rob Harrop
- * @author Kazuki Shimizu
  */
 public class DataBinderTests {
-
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
-
 
 	@Test
 	public void testBindingNoErrors() throws Exception {
@@ -1989,30 +1982,6 @@ public class DataBinderTests {
 		assertEquals("age", binder.getBindingResult().getFieldError("age").getField());
 	}
 
-	@Test  // SPR-14888
-	public void testSetAutoGrowCollectionLimit() {
-		BeanWithIntegerList tb = new BeanWithIntegerList();
-		DataBinder binder = new DataBinder(tb);
-		binder.setAutoGrowCollectionLimit(257);
-		MutablePropertyValues pvs = new MutablePropertyValues();
-		pvs.add("integerList[256]", "1");
-
-		binder.bind(pvs);
-		assertEquals(257, tb.getIntegerList().size());
-		assertEquals(Integer.valueOf(1), tb.getIntegerList().get(256));
-		assertEquals(Integer.valueOf(1), binder.getBindingResult().getFieldValue("integerList[256]"));
-	}
-
-	@Test  // SPR-14888
-	public void testSetAutoGrowCollectionLimitAfterInitialization() {
-		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("DataBinder is already initialized - call setAutoGrowCollectionLimit before other configuration methods");
-
-		DataBinder binder = new DataBinder(new BeanWithIntegerList());
-		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
-		binder.setAutoGrowCollectionLimit(257);
-	}
-
 
 	@SuppressWarnings("unused")
 	private static class BeanWithIntegerList {
@@ -2143,7 +2112,7 @@ public class DataBinderTests {
 		private List<E> list;
 
 		public GrowingList() {
-			this.list = new ArrayList<>();
+			this.list = new ArrayList<E>();
 		}
 
 		public List<E> getWrappedList() {
@@ -2231,8 +2200,8 @@ public class DataBinderTests {
 		private final Map<String, Object> f;
 
 		public Form() {
-			f = new HashMap<>();
-			f.put("list", new GrowingList<>());
+			f = new HashMap<String, Object>();
+			f.put("list", new GrowingList<Object>());
 		}
 
 		public Map<String, Object> getF() {
