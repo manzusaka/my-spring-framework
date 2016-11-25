@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
  * {@link Resource} implementation for {@code java.io.File} handles.
  * Supports resolution as a {@code File} and also as a {@code URL}.
  * Implements the extended {@link WritableResource} interface.
+ * 实现文件的直至  还扩展实现了WritableResource接口
  *
  * @author Juergen Hoeller
  * @since 28.12.2003
@@ -54,6 +55,8 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	 * to append a trailing slash to the root path: "C:/dir1/", which
 	 * indicates this directory as root for all relative paths.
 	 * @param file a File handle
+	 * 构造
+	 * 
 	 */
 	public FileSystemResource(File file) {
 		Assert.notNull(file, "File must not be null");
@@ -70,6 +73,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	 * "C:/dir1/dir2". In the case of "C:/dir1", relative paths will apply
 	 * at the same directory level: relative path "dir2" -> "C:/dir2".
 	 * @param path a file path
+	 * 构造
 	 */
 	public FileSystemResource(String path) {
 		Assert.notNull(path, "Path must not be null");
@@ -80,6 +84,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	/**
 	 * Return the file path for this resource.
+	 * 获取文件路径
 	 */
 	public final String getPath() {
 		return this.path;
@@ -88,6 +93,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	/**
 	 * This implementation returns whether the underlying file exists.
 	 * @see java.io.File#exists()
+	 * 检测文件是否存在
 	 */
 	@Override
 	public boolean exists() {
@@ -99,6 +105,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	 * (and corresponds to an actual file with content, not to a directory).
 	 * @see java.io.File#canRead()
 	 * @see java.io.File#isDirectory()
+	 * 检测文件是否可读
 	 */
 	@Override
 	public boolean isReadable() {
@@ -108,6 +115,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	/**
 	 * This implementation opens a FileInputStream for the underlying file.
 	 * @see java.io.FileInputStream
+	 * 获取文件的输入流
 	 */
 	@Override
 	public InputStream getInputStream() throws IOException {
@@ -119,6 +127,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	 * (and corresponds to an actual file with content, not to a directory).
 	 * @see java.io.File#canWrite()
 	 * @see java.io.File#isDirectory()
+	 * 检测文件是否可写入
 	 */
 	@Override
 	public boolean isWritable() {
@@ -128,6 +137,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	/**
 	 * This implementation opens a FileOutputStream for the underlying file.
 	 * @see java.io.FileOutputStream
+	 * 获取文件的输出流
 	 */
 	@Override
 	public OutputStream getOutputStream() throws IOException {

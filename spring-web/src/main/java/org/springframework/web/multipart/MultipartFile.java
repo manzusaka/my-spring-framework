@@ -35,6 +35,7 @@ import org.springframework.core.io.InputStreamSource;
  * @since 29.09.2003
  * @see org.springframework.web.multipart.MultipartHttpServletRequest
  * @see org.springframework.web.multipart.MultipartResolver
+ * 多部分的文件
  */
 public interface MultipartFile extends InputStreamSource {
 

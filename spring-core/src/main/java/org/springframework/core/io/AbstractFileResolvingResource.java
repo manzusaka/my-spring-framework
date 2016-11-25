@@ -29,7 +29,8 @@ import org.springframework.util.ResourceUtils;
 /**
  * Abstract base class for resources which resolve URLs into File references,
  * such as {@link UrlResource} or {@link ClassPathResource}.
- *
+ * 通过URL解析文件访问的一个基础抽象类
+ * 
  * <p>Detects the "file" protocol as well as the JBoss "vfs" protocol in URLs,
  * resolving file system references accordingly.
  *
@@ -42,6 +43,7 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	 * This implementation returns a File reference for the underlying class path
 	 * resource, provided that it refers to a file in the file system.
 	 * @see org.springframework.util.ResourceUtils#getFile(java.net.URL, String)
+	 * 这个实现返回一个文件访问的底层的类路径资源,如果它是指文件系统中的一个文件。
 	 */
 	@Override
 	public File getFile() throws IOException {
@@ -55,6 +57,7 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	/**
 	 * This implementation determines the underlying File
 	 * (or jar file, in case of a resource in a jar/zip).
+	 * 获取最后修改的文件
 	 */
 	@Override
 	protected File getFileForLastModifiedCheck() throws IOException {
@@ -75,6 +78,7 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	 * This implementation returns a File reference for the given URI-identified
 	 * resource, provided that it refers to a file in the file system.
 	 * @see org.springframework.util.ResourceUtils#getFile(java.net.URI, String)
+	 * 通过Uri获取文件
 	 */
 	protected File getFile(URI uri) throws IOException {
 		if (uri.getScheme().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
@@ -83,7 +87,9 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 		return ResourceUtils.getFile(uri, getDescription());
 	}
 
-
+	/**
+	 * 判断文件是否存在
+	 */
 	@Override
 	public boolean exists() {
 		try {

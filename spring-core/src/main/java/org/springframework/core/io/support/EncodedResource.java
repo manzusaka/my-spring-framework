@@ -30,7 +30,8 @@ import org.springframework.util.ObjectUtils;
 /**
  * Holder that combines a {@link Resource} descriptor with a specific encoding
  * or {@code Charset} to be used for reading from the resource.
- *
+ * 持有一个Resource进行编码encoding
+ * 
  * <p>Used as an argument for operations that support reading content with
  * a specific encoding, typically via a {@code java.io.Reader}.
  *
@@ -54,6 +55,7 @@ public class EncodedResource implements InputStreamSource {
 	 * Create a new {@code EncodedResource} for the given {@code Resource},
 	 * not specifying an explicit encoding or {@code Charset}.
 	 * @param resource the {@code Resource} to hold (never {@code null})
+	 * 构造
 	 */
 	public EncodedResource(Resource resource) {
 		this(resource, null, null);
@@ -64,6 +66,7 @@ public class EncodedResource implements InputStreamSource {
 	 * using the specified {@code encoding}.
 	 * @param resource the {@code Resource} to hold (never {@code null})
 	 * @param encoding the encoding to use for reading from the resource
+	 * 构造
 	 */
 	public EncodedResource(Resource resource, String encoding) {
 		this(resource, encoding, null);
@@ -74,11 +77,12 @@ public class EncodedResource implements InputStreamSource {
 	 * using the specified {@code Charset}.
 	 * @param resource the {@code Resource} to hold (never {@code null})
 	 * @param charset the {@code Charset} to use for reading from the resource
+	 * 构造
 	 */
 	public EncodedResource(Resource resource, Charset charset) {
 		this(resource, null, charset);
 	}
-
+	
 	private EncodedResource(Resource resource, String encoding, Charset charset) {
 		super();
 		Assert.notNull(resource, "Resource must not be null");
@@ -90,6 +94,7 @@ public class EncodedResource implements InputStreamSource {
 
 	/**
 	 * Return the {@code Resource} held by this {@code EncodedResource}.
+	 * 获取一个Resource源
 	 */
 	public final Resource getResource() {
 		return this.resource;
@@ -98,6 +103,7 @@ public class EncodedResource implements InputStreamSource {
 	/**
 	 * Return the encoding to use for reading from the {@linkplain #getResource() resource},
 	 * or {@code null} if none specified.
+	 * 获取编码格式
 	 */
 	public final String getEncoding() {
 		return this.encoding;
@@ -106,6 +112,7 @@ public class EncodedResource implements InputStreamSource {
 	/**
 	 * Return the {@code Charset} to use for reading from the {@linkplain #getResource() resource},
 	 * or {@code null} if none specified.
+	 * 获取字符集
 	 */
 	public final Charset getCharset() {
 		return this.charset;
@@ -117,6 +124,7 @@ public class EncodedResource implements InputStreamSource {
 	 * has been specified.
 	 * @see #getReader()
 	 * @see #getInputStream()
+	 * 判断是否能进行编码
 	 */
 	public boolean requiresReader() {
 		return (this.encoding != null || this.charset != null);
@@ -129,6 +137,7 @@ public class EncodedResource implements InputStreamSource {
 	 * @throws IOException if opening the Reader failed
 	 * @see #requiresReader()
 	 * @see #getInputStream()
+	 * 获取指定字符集编码以后的Reader
 	 */
 	public Reader getReader() throws IOException {
 		if (this.charset != null) {
@@ -148,13 +157,19 @@ public class EncodedResource implements InputStreamSource {
 	 * @throws IOException if opening the InputStream failed
 	 * @see #requiresReader()
 	 * @see #getReader()
+	 * 获取Resource持有的流文件
 	 */
 	@Override
 	public InputStream getInputStream() throws IOException {
 		return this.resource.getInputStream();
 	}
 
-
+	/**
+	 * 重写比较的方法
+	 * 1.当对象一致
+	 * 2.对象持有的Resource和charset和encoding一致
+	 * 返回true
+	 */
 	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
@@ -168,7 +183,7 @@ public class EncodedResource implements InputStreamSource {
 				ObjectUtils.nullSafeEquals(this.charset, otherResource.charset) &&
 				ObjectUtils.nullSafeEquals(this.encoding, otherResource.encoding));
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return this.resource.hashCode();
