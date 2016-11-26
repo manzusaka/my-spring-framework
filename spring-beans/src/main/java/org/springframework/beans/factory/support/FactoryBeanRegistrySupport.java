@@ -34,6 +34,7 @@ import org.springframework.beans.factory.FactoryBeanNotInitializedException;
  * Support base class for singleton registries which need to handle
  * {@link org.springframework.beans.factory.FactoryBean} instances,
  * integrated with {@link DefaultSingletonBeanRegistry}'s singleton management.
+ * 支持基础的class单例注册FactoryBean
  *
  * <p>Serves as base class for {@link AbstractBeanFactory}.
  *
@@ -51,6 +52,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	 * @param factoryBean the FactoryBean instance to check
 	 * @return the FactoryBean's object type,
 	 * or {@code null} if the type cannot be determined yet
+	 * 提供相应的FactoryBean 获取FactoryBean的object type
 	 */
 	protected Class<?> getTypeForFactoryBean(final FactoryBean<?> factoryBean) {
 		try {
@@ -80,6 +82,8 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	 * @param beanName the name of the bean
 	 * @return the object obtained from the FactoryBean,
 	 * or {@code null} if not available
+	 * 根据名字，从factoryBeanObjectCache缓存中获取一个对象
+	 * 
 	 */
 	protected Object getCachedObjectForFactoryBean(String beanName) {
 		Object object = this.factoryBeanObjectCache.get(beanName);

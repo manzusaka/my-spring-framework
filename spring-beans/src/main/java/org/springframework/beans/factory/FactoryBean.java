@@ -21,27 +21,37 @@ package org.springframework.beans.factory;
  * which are themselves factories. If a bean implements this interface,
  * it is used as a factory for an object to expose, not directly as a bean
  * instance that will be exposed itself.
+ *Bean工厂的一个接口，使用接口实现一个工厂的对象，如果实现了这个接口，只能通过一个工厂使用，不能直接作为一个bean暴露给自己使用
  *
  * <p><b>NB: A bean that implements this interface cannot be used as a
  * normal bean.</b> A FactoryBean is defined in a bean style, but the
  * object exposed for bean references ({@link #getObject()} is always
  * the object that it creates.
+ * 如果一个bean实现了这个接口，不能作为一个正常的bean
+ * 一个FactoryBean定义了一种格式，但是总是暴露给bean引用用他的getObject()方法来创建对象
  *
  * <p>FactoryBeans can support singletons and prototypes, and can
  * either create objects lazily on demand or eagerly on startup.
  * The {@link SmartFactoryBean} interface allows for exposing
  * more fine-grained behavioral metadata.
+ * FactoryBeans 可以支持单例和原型，可以通过懒汉的模式去创建一个对象或者说快速创建对象的需求
+ * SmartFactoryBean允许暴露给颗粒度更低的元数据
+ * 
  *
  * <p>This interface is heavily used within the framework itself, for
  * example for the AOP {@link org.springframework.aop.framework.ProxyFactoryBean}
  * or the {@link org.springframework.jndi.JndiObjectFactoryBean}.
  * It can be used for application components as well; however,
  * this is not common outside of infrastructure code.
+ * 这个接口是spring容器本身使用的一个接口，例如再AOP中使用的ProxyFactoryBean
+ * 一般用于系统组件很少用于外部代码
  *
  * <p><b>NOTE:</b> FactoryBean objects participate in the containing
  * BeanFactory's synchronization of bean creation. There is usually no
  * need for internal synchronization other than for purposes of lazy
  * initialization within the FactoryBean itself (or the like).
+ * 
+ * 
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -68,6 +78,7 @@ public interface FactoryBean<T> {
 	 * @return an instance of the bean (can be {@code null})
 	 * @throws Exception in case of creation errors
 	 * @see FactoryBeanNotInitializedException
+	 * 返回一个工厂管理的对象实例
 	 */
 	T getObject() throws Exception;
 
@@ -89,6 +100,7 @@ public interface FactoryBean<T> {
 	 * @return the type of object that this FactoryBean creates,
 	 * or {@code null} if not known at the time of the call
 	 * @see ListableBeanFactory#getBeansOfType
+	 * 返回对象实例的Type
 	 */
 	Class<?> getObjectType();
 
@@ -114,6 +126,7 @@ public interface FactoryBean<T> {
 	 * @return whether the exposed object is a singleton
 	 * @see #getObject()
 	 * @see SmartFactoryBean#isPrototype()
+	 * 是否是单例
 	 */
 	boolean isSingleton();
 

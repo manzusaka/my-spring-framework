@@ -44,6 +44,7 @@ import org.springframework.util.StringUtils;
  * {@link org.springframework.beans.factory.config.SingletonBeanRegistry}.
  * Allows for registering singleton instances that should be shared
  * for all callers of the registry, to be obtained via bean name.
+ * 单例bean的通用注册实现
  *
  * <p>Also supports registration of
  * {@link org.springframework.beans.factory.DisposableBean} instances,
@@ -120,7 +121,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/** Map between depending bean names: bean name --> Set of bean names for the bean's dependencies */
 	private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<String, Set<String>>(64);
 
-
+	/**
+	 * 注册单例
+	 */
 	@Override
 	public void registerSingleton(String beanName, Object singletonObject) throws IllegalStateException {
 		Assert.notNull(beanName, "'beanName' must not be null");
@@ -139,6 +142,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * <p>To be called for eager registration of singletons.
 	 * @param beanName the name of the bean
 	 * @param singletonObject the singleton object
+	 * 给定的singleton对象添加到这个工厂的单例对象缓存
 	 */
 	protected void addSingleton(String beanName, Object singletonObject) {
 		synchronized (this.singletonObjects) {
@@ -156,6 +160,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * resolve circular references.
 	 * @param beanName the name of the bean
 	 * @param singletonFactory the factory for the singleton object
+	 * 添加给定的单工厂建立指定的单例
 	 */
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
@@ -167,7 +172,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			}
 		}
 	}
-
+	/**
+	 * 根据名字获取单例
+	 */
 	@Override
 	public Object getSingleton(String beanName) {
 		return getSingleton(beanName, true);
@@ -180,6 +187,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param beanName the name of the bean to look for
 	 * @param allowEarlyReference whether early references should be created or not
 	 * @return the registered singleton object, or {@code null} if none found
+	 * 根据名字获取单例
 	 */
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 		Object singletonObject = this.singletonObjects.get(beanName);
@@ -206,6 +214,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param singletonFactory the ObjectFactory to lazily create the singleton
 	 * with, if necessary
 	 * @return the registered singleton object
+	 * 根据名字和工厂返回一个单例，如果没有旧创建个新的
 	 */
 	public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(beanName, "'beanName' must not be null");
@@ -287,19 +296,25 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 			this.registeredSingletons.remove(beanName);
 		}
 	}
-
+	/**
+	 * 检查是否该注册中心包含一个单例实例的名字
+	 */
 	@Override
 	public boolean containsSingleton(String beanName) {
 		return this.singletonObjects.containsKey(beanName);
 	}
-
+	/**
+	 * 获取所有的单例beanNames
+	 */
 	@Override
 	public String[] getSingletonNames() {
 		synchronized (this.singletonObjects) {
 			return StringUtils.toStringArray(this.registeredSingletons);
 		}
 	}
-
+	/**
+	 * 获取单例的数量
+	 */
 	@Override
 	public int getSingletonCount() {
 		synchronized (this.singletonObjects) {
@@ -307,7 +322,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		}
 	}
 
-
+	/**
+	 * 设置当前正在创建的bean
+	 * @param beanName
+	 * @param inCreation
+	 */
 	public void setCurrentlyInCreation(String beanName, boolean inCreation) {
 		Assert.notNull(beanName, "Bean name must not be null");
 		if (!inCreation) {
@@ -369,6 +388,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * naturally implement Spring's DisposableBean interface).
 	 * @param beanName the name of the bean
 	 * @param bean the bean instance
+	 * 注册一次性的，用完即销毁的bean
 	 */
 	public void registerDisposableBean(String beanName, DisposableBean bean) {
 		synchronized (this.disposableBeans) {
@@ -384,6 +404,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param containedBeanName the name of the contained (inner) bean
 	 * @param containingBeanName the name of the containing (outer) bean
 	 * @see #registerDependentBean
+	 * 注册一个包含的bean，用处后面再看
 	 */
 	public void registerContainedBean(String containedBeanName, String containingBeanName) {
 		// A quick check for an existing entry upfront, avoiding synchronization...
@@ -409,6 +430,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * to be destroyed before the given bean is destroyed.
 	 * @param beanName the name of the bean
 	 * @param dependentBeanName the name of the dependent bean
+	 * 注册一个依赖的Bean
 	 */
 	public void registerDependentBean(String beanName, String dependentBeanName) {
 		// A quick check for an existing entry upfront, avoiding synchronization...
@@ -506,7 +528,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		}
 		return dependenciesForBean.toArray(new String[dependenciesForBean.size()]);
 	}
-
+	/**
+	 * 销毁所有单例的bean
+	 * 
+	 */
 	public void destroySingletons() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Destroying singletons in " + this);
@@ -541,6 +566,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * if a corresponding disposable bean instance is found.
 	 * @param beanName the name of the bean
 	 * @see #destroyBean
+	 * 销毁一个单例的bean
 	 */
 	public void destroySingleton(String beanName) {
 		// Remove a registered singleton of the given name, if any.
@@ -559,6 +585,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * bean before the bean itself. Should not throw any exceptions.
 	 * @param beanName the name of the bean
 	 * @param bean the bean instance to destroy
+	 * 销毁一个需要被销毁的bean
 	 */
 	protected void destroyBean(String beanName, DisposableBean bean) {
 		// Trigger destruction of dependent beans first...
@@ -612,6 +639,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * any sort of extended singleton creation phase. In particular, subclasses
 	 * should <i>not</i> have their own mutexes involved in singleton creation,
 	 * to avoid the potential for deadlocks in lazy-init situations.
+	 * 返回单例互斥，还不知道干嘛用的4.2开始有的
 	 */
 	public final Object getSingletonMutex() {
 		return this.singletonObjects;

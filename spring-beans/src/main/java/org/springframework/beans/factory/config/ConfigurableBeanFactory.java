@@ -72,6 +72,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * @throws IllegalStateException if this factory is already associated with
 	 * a parent BeanFactory
 	 * @see #getParentBeanFactory()
+	 * 设置父类工厂
 	 */
 	void setParentBeanFactory(BeanFactory parentBeanFactory) throws IllegalStateException;
 
@@ -84,11 +85,13 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * to be resolved once the factory processes the bean definition.
 	 * @param beanClassLoader the class loader to use,
 	 * or {@code null} to suggest the default class loader
+	 * 设置bean的类加载器
 	 */
 	void setBeanClassLoader(ClassLoader beanClassLoader);
 
 	/**
 	 * Return this factory's class loader for loading bean classes.
+	 * 获取bean的类加载器
 	 */
 	ClassLoader getBeanClassLoader();
 
@@ -100,6 +103,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * classes are loaded as lazily as possible. The temporary loader is
 	 * then removed once the BeanFactory completes its bootstrap phase.
 	 * @since 2.5
+	 * 设置临时的类加载器，没有违反约束  一般只用于load-time的织入 这个地方不太明确后面看一看
 	 */
 	void setTempClassLoader(ClassLoader tempClassLoader);
 
@@ -116,12 +120,14 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * <p>Turn this flag off to enable hot-refreshing of bean definition objects
 	 * and in particular bean classes. If this flag is off, any creation of a bean
 	 * instance will re-query the bean class loader for newly resolved classes.
+	 * 是否设置元数据  后面看一看干嘛用的
 	 */
 	void setCacheBeanMetadata(boolean cacheBeanMetadata);
 
 	/**
 	 * Return whether to cache bean metadata such as given bean definitions
 	 * (in merged fashion) and resolved bean classes.
+	 * 判断是否设置元数据
 	 */
 	boolean isCacheBeanMetadata();
 
@@ -131,6 +137,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * An ApplicationContext will typically set a standard expression strategy
 	 * here, supporting "#{...}" expressions in a Unified EL compatible style.
 	 * @since 3.0
+	 * 设置bean表达式的决策
 	 */
 	void setBeanExpressionResolver(BeanExpressionResolver resolver);
 
@@ -144,6 +151,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * Specify a Spring 3.0 ConversionService to use for converting
 	 * property values, as an alternative to JavaBeans PropertyEditors.
 	 * @since 3.0
+	 * 设置ConversionService用于替换property  spring 3.0
 	 */
 	void setConversionService(ConversionService conversionService);
 
@@ -160,6 +168,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * the need for synchronization on custom editors; hence, it is generally
 	 * preferable to use this method instead of {@link #registerCustomEditor}.
 	 * @param registrar the PropertyEditorRegistrar to register
+	 * 添加一个等级注册前PropertyEditorRegistrar
 	 */
 	void addPropertyEditorRegistrar(PropertyEditorRegistrar registrar);
 
@@ -172,6 +181,7 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 	 * of this method, to avoid for the need for synchronization on custom editors.
 	 * @param requiredType type of the property
 	 * @param propertyEditorClass the {@link PropertyEditor} class to register
+	 * 注册自定义的属性编辑器
 	 */
 	void registerCustomEditor(Class<?> requiredType, Class<? extends PropertyEditor> propertyEditorClass);
 

@@ -21,6 +21,7 @@ package org.springframework.beans.factory.config;
  * Can be implemented by {@link org.springframework.beans.factory.BeanFactory}
  * implementations in order to expose their singleton management facility
  * in a uniform manner.
+ * 提供了单例bean的一个注册接口，实现bean注册的统一管理
  *
  * <p>The {@link ConfigurableBeanFactory} interface extends this interface.
  *
@@ -35,6 +36,7 @@ public interface SingletonBeanRegistry {
 	/**
 	 * Register the given existing object as singleton in the bean registry,
 	 * under the given bean name.
+	 * 再bean注册表中注册bean，其实就是map
 	 * <p>The given instance is supposed to be fully initialized; the registry
 	 * will not perform any initialization callbacks (in particular, it won't
 	 * call InitializingBean's {@code afterPropertiesSet} method).

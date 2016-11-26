@@ -25,6 +25,7 @@ import org.springframework.core.ResolvableType;
  * further interfaces such as {@link ListableBeanFactory} and
  * {@link org.springframework.beans.factory.config.ConfigurableBeanFactory}
  * are available for specific purposes.
+ * spring bean容器的根接口，这是一个基本的客户端视图bean容器，子接口都可用于特定的目的
  *
  * <p>This interface is implemented by objects that hold a number of bean definitions,
  * each uniquely identified by a String name. Depending on the bean definition,
@@ -35,6 +36,9 @@ import org.springframework.core.ResolvableType;
  * depends on the bean factory configuration: the API is the same. Since Spring
  * 2.0, further scopes are available depending on the concrete application
  * context (e.g. "request" and "session" scopes in a web environment).
+ * 实现此接口的对象持有的bean定义，每个bean都用name进行唯一标识，根据bean的定义，工厂返回（独立实例-原型设计模式，共享bean-单例设计模式）
+ * 这将根据spring的配置进行返回
+ * 
  *
  * <p>The point of this approach is that the BeanFactory is a central registry
  * of application components, and centralizes configuration of application
@@ -135,6 +139,7 @@ public interface BeanFactory {
 	 * @throws NoSuchBeanDefinitionException if there is no bean definition
 	 * with the specified name
 	 * @throws BeansException if the bean could not be obtained
+	 * 根据配置返回一个共享或者独立的bean
 	 */
 	Object getBean(String name) throws BeansException;
 
@@ -155,6 +160,7 @@ public interface BeanFactory {
 	 * @throws NoSuchBeanDefinitionException if there is no such bean definition
 	 * @throws BeanNotOfRequiredTypeException if the bean is not of the required type
 	 * @throws BeansException if the bean could not be created
+	 * 根据配置返回一个共享或者独立的bean
 	 */
 	<T> T getBean(String name, Class<T> requiredType) throws BeansException;
 
@@ -172,6 +178,7 @@ public interface BeanFactory {
 	 * @throws BeansException if the bean could not be created
 	 * @since 3.0
 	 * @see ListableBeanFactory
+	 * 根据配置返回一个共享或者独立的bean
 	 */
 	<T> T getBean(Class<T> requiredType) throws BeansException;
 
@@ -188,6 +195,7 @@ public interface BeanFactory {
 	 * the affected bean isn't a prototype
 	 * @throws BeansException if the bean could not be created
 	 * @since 2.5
+	 * 根据配置返回一个共享或者独立的bean
 	 */
 	Object getBean(String name, Object... args) throws BeansException;
 
@@ -209,6 +217,7 @@ public interface BeanFactory {
 	 * the affected bean isn't a prototype
 	 * @throws BeansException if the bean could not be created
 	 * @since 4.1
+	 * 根据配置返回一个共享或者独立的bean
 	 */
 	<T> T getBean(Class<T> requiredType, Object... args) throws BeansException;
 
@@ -227,6 +236,7 @@ public interface BeanFactory {
 	 * will be able to obtain an instance for the same name.
 	 * @param name the name of the bean to query
 	 * @return whether a bean with the given name is present
+	 * 检查bean工厂是否包含这个bean
 	 */
 	boolean containsBean(String name);
 
@@ -242,6 +252,7 @@ public interface BeanFactory {
 	 * @param name the name of the bean to query
 	 * @return whether this bean corresponds to a singleton instance
 	 * @throws NoSuchBeanDefinitionException if there is no bean with the given name
+	 * 校验是否是共享单例对象
 	 * @see #getBean
 	 * @see #isPrototype
 	 */
@@ -259,6 +270,7 @@ public interface BeanFactory {
 	 * @param name the name of the bean to query
 	 * @return whether this bean will always deliver independent instances
 	 * @throws NoSuchBeanDefinitionException if there is no bean with the given name
+	 * 校验是否原型对象
 	 * @since 2.0.3
 	 * @see #getBean
 	 * @see #isSingleton
@@ -276,6 +288,7 @@ public interface BeanFactory {
 	 * @return {@code true} if the bean type matches,
 	 * {@code false} if it doesn't match or cannot be determined yet
 	 * @throws NoSuchBeanDefinitionException if there is no bean with the given name
+	 * 校验bean的tpye
 	 * @since 4.2
 	 * @see #getBean
 	 * @see #getType
@@ -293,6 +306,7 @@ public interface BeanFactory {
 	 * @return {@code true} if the bean type matches,
 	 * {@code false} if it doesn't match or cannot be determined yet
 	 * @throws NoSuchBeanDefinitionException if there is no bean with the given name
+	 * 校验bean的tpye
 	 * @since 2.0.1
 	 * @see #getBean
 	 * @see #getType
@@ -309,6 +323,7 @@ public interface BeanFactory {
 	 * @param name the name of the bean to query
 	 * @return the type of the bean, or {@code null} if not determinable
 	 * @throws NoSuchBeanDefinitionException if there is no bean with the given name
+	 * 获取bean的类型
 	 * @since 1.1.2
 	 * @see #getBean
 	 * @see #isTypeMatch

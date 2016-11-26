@@ -35,6 +35,7 @@ import org.springframework.util.Assert;
 /**
  * Abstract base class for bean definition readers which implement
  * the {@link BeanDefinitionReader} interface.
+ * BeanDefinitionReader的抽象实现
  *
  * <p>Provides common properties like the bean factory to work on
  * and the class loader to use for loading bean classes.
@@ -62,6 +63,7 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 
 	/**
 	 * Create a new AbstractBeanDefinitionReader for the given bean factory.
+	 * 根据传入的factory创建一个BeanDefinitionReader
 	 * <p>If the passed-in bean factory does not only implement the BeanDefinitionRegistry
 	 * interface but also the ResourceLoader interface, it will be used as default
 	 * ResourceLoader as well. This will usually be the case for
@@ -74,6 +76,9 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 	 * EnvironmentCapable, while normal BeanFactory implementations are not.
 	 * @param registry the BeanFactory to load bean definitions into,
 	 * in the form of a BeanDefinitionRegistry
+	 * 如果传入bean工厂不仅实现BeanDefinitionRegistry接口还ResourceLoader接口，将使用原来的 ResourceLoader 
+	 * 否择将被当作默认的ResourceLoader
+	 * 构造
 	 * @see #setResourceLoader
 	 * @see #setEnvironment
 	 */

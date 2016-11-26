@@ -134,6 +134,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	 * <p>The value resolver may for example resolve placeholders
 	 * in target bean names and even in alias names.
 	 * @param valueResolver the StringValueResolver to apply
+	 * 决定所以注册的名字和别名，别名管理
 	 */
 	public void resolveAliases(StringValueResolver valueResolver) {
 		Assert.notNull(valueResolver, "StringValueResolver must not be null");
@@ -174,6 +175,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 	 * Check whether the given name points back to the given alias as an alias
 	 * in the other direction already, catching a circular reference upfront
 	 * and throwing a corresponding IllegalStateException.
+	 * 别名注册检查
 	 * @param name the candidate name
 	 * @param alias the candidate alias
 	 * @see #registerAlias
@@ -189,6 +191,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 
 	/**
 	 * Determine the raw name, resolving aliases to canonical names.
+	 * 找到原始名称  规范的名称
 	 * @param name the user-specified name
 	 * @return the transformed name
 	 */
