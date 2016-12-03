@@ -435,16 +435,27 @@ public class BeanDefinitionParserDelegate {
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
 	 */
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, BeanDefinition containingBean) {
+		/*
+		 * ele当前的节点
+		 * 如果是新解析的情况下，就是初始化起来的时候containingBean=null
+		 */
+		
+		//解析出ID
 		String id = ele.getAttribute(ID_ATTRIBUTE);
+		//解析出name
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
-
+		//定义别名
 		List<String> aliases = new ArrayList<String>();
+		//如果有名字
 		if (StringUtils.hasLength(nameAttr)) {
+			//使用标记进行分解   name中出现  , ;  空格都可以分解出多个名字  组成数组
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
+			//所有的名字都是别名
 			aliases.addAll(Arrays.asList(nameArr));
 		}
-
+		//设置beanName属性  他是ID  比较容易搞错
 		String beanName = id;
+		//如果ID为空  名字不为空  则用name属性的第一个名字作为beanName
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
 			if (logger.isDebugEnabled()) {
@@ -452,20 +463,32 @@ public class BeanDefinitionParserDelegate {
 						"' as bean name and " + aliases + " as aliases");
 			}
 		}
-
+		//校验  如果beanName  aliases有重名则抛出bean存在的错误 
 		if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
-
+		//解析Bean成一个AbstractBeanDefinition 实际上使子类GenericBeanDefinition
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
+			//这个地方时给没有名字的bean用的   会直接把类名全路径：com.infotech.TestBean#0当作beanName，把com.infotech.TestBean当作aliases别名
 			if (!StringUtils.hasText(beanName)) {
 				try {
 					if (containingBean != null) {
+						//这个情况要看一下哪里来的
 						beanName = BeanDefinitionReaderUtils.generateBeanName(
 								beanDefinition, this.readerContext.getRegistry(), true);
 					}
 					else {
+						/*
+						 * 再新建的时候containingBean==null
+						 * generatedBeanName=beanDefinition.getBeanClassName();
+						 * id=generatedBeanName;
+						 * while (registry.containsBeanDefinition(id)) {
+						 *    counter++;
+						 *	  id = generatedBeanName + GENERATED_BEAN_NAME_SEPARATOR + counter;
+						 *  }
+						 */
+
 						beanName = this.readerContext.generateBeanName(beanDefinition);
 						// Register an alias for the plain bean class name, if still possible,
 						// if the generator returned the class name plus a suffix.
@@ -521,33 +544,45 @@ public class BeanDefinitionParserDelegate {
 	 */
 	public AbstractBeanDefinition parseBeanDefinitionElement(
 			Element ele, String beanName, BeanDefinition containingBean) {
-
+		/*ele当前的节点
+		 *beanName其实就是bean文件解析出来的id,如果不是id则是解析出来的name属性的第一个值
+		 *如果是新解析的情况下，就是初始化起来的时候containingBean=null
+		 */
+		
+		//堆栈中推入一个beanName
 		this.parseState.push(new BeanEntry(beanName));
-
+		//找到  className   这个是属性class来的
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
-
+		
 		try {
 			String parent = null;
 			if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 				parent = ele.getAttribute(PARENT_ATTRIBUTE);
 			}
+			//创建了一个初始的GenericBeanDefinition  设置了parentName和className
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-
+			//开始硬编码设置属性  
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			//设置Description
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
-
+			//解析元元素
 			parseMetaElements(ele, bd);
+			//设置lookup_method
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			//设置replace_method
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
-
+			//解析设置构造函数
 			parseConstructorArgElements(ele, bd);
+			//解析设置属性值
 			parsePropertyElements(ele, bd);
+			//解析设置qualifier的值
 			parseQualifierElements(ele, bd);
-
+			//设置元元素的内容
 			bd.setResource(this.readerContext.getResource());
+			//设置当前节点的内容
 			bd.setSource(extractSource(ele));
 
 			return bd;
@@ -577,39 +612,47 @@ public class BeanDefinitionParserDelegate {
 	 */
 	public AbstractBeanDefinition parseBeanDefinitionAttributes(Element ele, String beanName,
 			BeanDefinition containingBean, AbstractBeanDefinition bd) {
-
+		//当前的节点
+		//beanName其实就是bean文件解析出来的id,如果不是id则是解析出来的name属性的第一个值
+		//如果是新解析的情况下，就是初始化起来的时候containingBean=null
+		//bd 是前面新建的GenericBeanDefinition  后续如果还有其他入口调用再进行补充
+		
+		//应该是spring1.0的singleton这个属性不再被支持了
 		if (ele.hasAttribute(SINGLETON_ATTRIBUTE)) {
 			error("Old 1.x 'singleton' attribute in use - upgrade to 'scope' declaration", ele);
 		}
+		//解析设置scope属性
 		else if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {
 			bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
 		}
 		else if (containingBean != null) {
+			// 找到包含的bean的这个属性给塞进去
 			// Take default from containing bean in case of an inner bean definition.
 			bd.setScope(containingBean.getScope());
 		}
-
+		//解析设置abstract属性
 		if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
 			bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
 		}
-
+		//解析设置lazy-init属性   
 		String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);
 		if (DEFAULT_VALUE.equals(lazyInit)) {
 			lazyInit = this.defaults.getLazyInit();
 		}
+		//很犀利的写法"true".equals("null")
 		bd.setLazyInit(TRUE_VALUE.equals(lazyInit));
-
+		//解析设置autowire属性
 		String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);
 		bd.setAutowireMode(getAutowireMode(autowire));
-
+		//解析设置autowire属性
 		String dependencyCheck = ele.getAttribute(DEPENDENCY_CHECK_ATTRIBUTE);
 		bd.setDependencyCheck(getDependencyCheck(dependencyCheck));
-
+		//解析设置depends-on属性
 		if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE)) {
 			String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
 			bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
 		}
-
+		//解析设置autowire-candidate属性
 		String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);
 		if ("".equals(autowireCandidate) || DEFAULT_VALUE.equals(autowireCandidate)) {
 			String candidatePattern = this.defaults.getAutowireCandidates();
@@ -621,11 +664,11 @@ public class BeanDefinitionParserDelegate {
 		else {
 			bd.setAutowireCandidate(TRUE_VALUE.equals(autowireCandidate));
 		}
-
+		//解析设置primary属性
 		if (ele.hasAttribute(PRIMARY_ATTRIBUTE)) {
 			bd.setPrimary(TRUE_VALUE.equals(ele.getAttribute(PRIMARY_ATTRIBUTE)));
 		}
-
+		//解析设置init-method属性
 		if (ele.hasAttribute(INIT_METHOD_ATTRIBUTE)) {
 			String initMethodName = ele.getAttribute(INIT_METHOD_ATTRIBUTE);
 			if (!"".equals(initMethodName)) {
@@ -638,7 +681,7 @@ public class BeanDefinitionParserDelegate {
 				bd.setEnforceInitMethod(false);
 			}
 		}
-
+		//解析设置destroy-method属性
 		if (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) {
 			String destroyMethodName = ele.getAttribute(DESTROY_METHOD_ATTRIBUTE);
 			bd.setDestroyMethodName(destroyMethodName);
@@ -649,10 +692,11 @@ public class BeanDefinitionParserDelegate {
 				bd.setEnforceDestroyMethod(false);
 			}
 		}
-
+		//解析设置factory-method属性
 		if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) {
 			bd.setFactoryMethodName(ele.getAttribute(FACTORY_METHOD_ATTRIBUTE));
 		}
+		//解析设置factory-bean属性
 		if (ele.hasAttribute(FACTORY_BEAN_ATTRIBUTE)) {
 			bd.setFactoryBeanName(ele.getAttribute(FACTORY_BEAN_ATTRIBUTE));
 		}
@@ -675,6 +719,9 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	public void parseMetaElements(Element ele, BeanMetadataAttributeAccessor attributeAccessor) {
+		//当前的节点
+		//attributeAccessor 是前面新建的GenericBeanDefinition  后续如果还有其他入口调用再进行补充
+		
 		NodeList nl = ele.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node node = nl.item(i);
@@ -1421,6 +1468,7 @@ public class BeanDefinitionParserDelegate {
 		BeanDefinitionHolder finalDefinition = definitionHolder;
 
 		// Decorate based on custom attributes first.
+		// 遍历说有的属性 看是否有适用于修饰的属性
 		NamedNodeMap attributes = ele.getAttributes();
 		for (int i = 0; i < attributes.getLength(); i++) {
 			Node node = attributes.item(i);
@@ -1428,6 +1476,7 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		// Decorate based on custom nested elements.
+		// 遍历所有的子节点 看是否有用于修饰的子节点
 		NodeList children = ele.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);

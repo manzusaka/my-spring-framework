@@ -19,6 +19,7 @@ package org.springframework.core;
 /**
  * Interface defining a generic contract for attaching and accessing metadata
  * to/from arbitrary objects.
+ * 定义通用的元数据访问接口
  *
  * @author Rob Harrop
  * @since 2.0

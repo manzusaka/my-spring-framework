@@ -53,7 +53,7 @@ import org.springframework.core.io.Resource;
 @Deprecated
 @SuppressWarnings({"serial", "all"})
 public class XmlBeanFactory extends DefaultListableBeanFactory {
-
+	//其实这句new的代码很关键，一个this把很多信息都传递了进去
 	private final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this);
 
 
