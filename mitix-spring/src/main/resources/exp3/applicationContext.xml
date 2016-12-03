@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:dzuser="http://www.honglvhang.com/schema/user"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.honglvhang.com/schema/user  http://www.honglvhang.com/schema/user/user.xsd">
+	
+	<dzuser:user id="infotech" acname="honglvhang" email="honglvhang@135.com"></dzuser:user>
+	
+</beans>
