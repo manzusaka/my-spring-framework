@@ -1447,9 +1447,11 @@ public class BeanDefinitionParserDelegate {
 	public BeanDefinition parseCustomElement(Element ele) {
 		return parseCustomElement(ele, null);
 	}
-
+	
 	public BeanDefinition parseCustomElement(Element ele, BeanDefinition containingBd) {
+		//containingBd 父类Bean  顶层元素设置未null
 		String namespaceUri = getNamespaceURI(ele);
+		//根据命名空间找到相应的NamespaceHandler
 		NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 		if (handler == null) {
 			error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", ele);

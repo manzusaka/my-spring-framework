@@ -447,18 +447,30 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating instance of bean '" + beanName + "'");
 		}
+		//mbdToUse  这个属性在3.0中没有  估计是为了解决bug,就是下面拷贝一份来进行后续的处理
 		RootBeanDefinition mbdToUse = mbd;
 
 		// Make sure bean class is actually resolved at this point, and
 		// clone the bean definition in case of a dynamically resolved Class
 		// which cannot be stored in the shared merged bean definition.
+		/*
+		 * 这个地方根据RootBeanDefinition 根据本来的className属性或者Object beanClass 弄出一个class来然后放到RootBeanDefinition的beanClass中去
+		 * (Object beanClass 这个玩意   现在还不知道什么意思   还是个线程同步的Object 难道有对象会同时创建？？)
+		 * 其实就是拿到了BeanClass或者calssName然后找到了calss
+		 */
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
+			//使用新的mbdToUse进行处理业务，估计主要是处理失败不用回滚RootBeanDefinition
+			//这个应该就是拷贝了一份，具体的代码需要核对所有的属性，所以没有查看
 			mbdToUse = new RootBeanDefinition(mbd);
 			mbdToUse.setBeanClass(resolvedClass);
 		}
-
+		
 		// Prepare method overrides.
+		/*
+		 * 对重载方法进行一次检查，如果overrides方法在classs上未找到同名方法则抛出异常
+		 * 如果只有找到一个方法，就标记是否重载为false,这样做有一个好处，就是可以在检查的时候就标记一部分非重载的方法，避免二次处理，毕竟后面处理方法的替换也非常消耗效率
+		 */
 		try {
 			mbdToUse.prepareMethodOverrides();
 		}
@@ -469,6 +481,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			/*
+			 *  就是执行了一次前置处理器，这个时候可以通过用户代码改变bean生成的轨迹
+			 *  如果经过前置处理器以后，bean已经存在，说明bean已经生成，就是被AOP了，在bean的生命周期中就可以跳过很多步，直接执行bean的初始化后置处理器，然后返回bean
+			 */
+			
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -504,17 +521,25 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws BeanCreationException {
 
 		// Instantiate the bean.
+		// 这个代码现在要兼容哪句代码还不知道
 		BeanWrapper instanceWrapper = null;
 		if (mbd.isSingleton()) {
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
+		/*
+		 * 1.如果存在工厂方法进行初始化
+		 * 2.一个类有多个构造函数，每个构造函数有不同的参数，需要根据参数锁定构造方法进行初始化
+		 * 3.如果不存在工厂和构造  就用默认的方法进行实例化
+		 */
 		if (instanceWrapper == null) {
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
+		//BeanWrapper中去拿到真正的bean Object
 		final Object bean = (instanceWrapper != null ? instanceWrapper.getWrappedInstance() : null);
 		Class<?> beanType = (instanceWrapper != null ? instanceWrapper.getWrappedClass() : null);
 
 		// Allow post-processors to modify the merged bean definition.
+		//MergedBeanDefinitionPostProcessors应用  Autowired注解就是通过这个进行预解析
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
@@ -1017,7 +1042,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 					"Bean class isn't public, and non-public access not allowed: " + beanClass.getName());
 		}
-
+		//使用工厂方法进行创建
 		if (mbd.getFactoryMethodName() != null)  {
 			return instantiateUsingFactoryMethod(beanName, mbd, args);
 		}

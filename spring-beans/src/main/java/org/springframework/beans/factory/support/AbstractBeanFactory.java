@@ -235,12 +235,24 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(
 			final String name, final Class<T> requiredType, final Object[] args, boolean typeCheckOnly)
 			throws BeansException {
-
+		/*
+		 * 1.如果传入的name已&符号开头  就去掉 &开始
+         * 2.这里传入的name是合规的  （beanName或者alias） 所以系统会去校验一下   怎么校验呢   他会用aliasMap 去get一下   如果拿到了    这货就是别名
+		 * 3.别名是可以循环传递的  就是使用alias标签可以一直循环的定义传递下去
+		 */
 		final String beanName = transformedBeanName(name);
 		Object bean;
-
 		// Eagerly check singleton cache for manually registered singletons.
+		/*
+		 * 检查缓存中或者实例工厂中是否有对应的实例
+		 * 为什么首先会使用这段代码 
+		 * 因为在创建单例bean的时候会存在依赖关系的情况   而创建依赖的时候为了避免循环依赖
+		 * spring创建bean的原则是不等bean创建完成就将创建bean的ObjectFactory提早曝光
+		 * 也就是将ObjectFactory加入到缓存中   一旦下一个bean创建时需要依赖上一个bean则直接使用beanFactory
+		 */
+		//直接尝试从缓存中获取或者singletonFactories中的ObjectFactory中获取
 		Object sharedInstance = getSingleton(beanName);
+		//单例实例中获取的应该是创建了的bean第一次的时候应该是没有的    注意，这个不是注册时候的beanDefinitionMap
 		if (sharedInstance != null && args == null) {
 			if (logger.isDebugEnabled()) {
 				if (isSingletonCurrentlyInCreation(beanName)) {
@@ -253,19 +265,29 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
-
 		else {
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
+			// 判断这个原型bean是否正在创建，如果原型bean正在创建则抛出异常
 			if (isPrototypeCurrentlyInCreation(beanName)) {
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
 
 			// Check if bean definition exists in this factory.
+			//
 			BeanFactory parentBeanFactory = getParentBeanFactory();
+			//如果beanDefinitionMap中不存在类，那么就尝试去parentBeanFactory中检测
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
+				/*
+				 * 这个代码先调用transformedBeanName(name);
+				 *  1.如果传入的name已&符号开头  就去掉 &开始
+				 *  2.这里传入的name是合规的  （beanName或者alias） 所以系统会去校验一下   怎么校验呢   他会用aliasMap 去get一下   如果拿到了    这货就是别名
+				 *  3.别名是可以循环传递的  就是使用alias标签可以一直循环的定义传递下去
+				 *  然后原型bean又把前面的 &给补回去了
+				 */
 				String nameToLookup = originalBeanName(name);
+				//传递到parentBeanFactory中寻找
 				if (args != null) {
 					// Delegation to parent with explicit args.
 					return (T) parentBeanFactory.getBean(nameToLookup, args);
@@ -275,16 +297,20 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					return parentBeanFactory.getBean(nameToLookup, requiredType);
 				}
 			}
-
+			//只有在factoryBean调用做类型校验的时候不走这个代码，否则创建bean的时候就去设置正在创建的缓存
 			if (!typeCheckOnly) {
 				markBeanAsCreated(beanName);
 			}
-
+			//有一个rootBeanDefinition 的缓存先去找  如果没有找到   就从注册的beanDefinitionMap 里面去找到注册的原始beanDefinition然后进行转换
+			//rootBeanDefinition是由GenericBeanDefinition转化得到的
 			try {
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.
+				// 应该记录了依赖的bean的名字啊别名啊什么的  前面以及解析过  
+				// depends-on会处理循环依赖  如果循环依赖应该报错  since 4.0
+				// 应该是这个循环依赖由bug 所以在spring 4.0上处理了关于depends-on 方式的依赖
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
@@ -292,17 +318,22 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
 									"Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
 						}
+						//设置bean的依赖关系
 						registerDependentBean(dep, beanName);
+						//初始化依赖的那个bean,重新调用getBean
 						getBean(dep);
 					}
 				}
 
 				// Create bean instance.
+				// 实例化bean
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, new ObjectFactory<Object>() {
+						//简单的说这个方法实现了FactoryBean的方法，这个动作是用于实例化bean的
 						@Override
 						public Object getObject() throws BeansException {
 							try {
+								//真正的实例化bean+bean初始化
 								return createBean(beanName, mbd, args);
 							}
 							catch (BeansException ex) {
@@ -1338,6 +1369,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected Class<?> resolveBeanClass(final RootBeanDefinition mbd, String beanName, final Class<?>... typesToMatch)
 			throws CannotLoadBeanClassException {
 		try {
+			//确定有class这个属性Object属性  如果有了  直接取出来转成Class
 			if (mbd.hasBeanClass()) {
 				return mbd.getBeanClass();
 			}
@@ -1373,6 +1405,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (!ObjectUtils.isEmpty(typesToMatch)) {
 			// When just doing type checks (i.e. not creating an actual instance yet),
 			// use the specified temporary class loader (e.g. in a weaving scenario).
+			//decorating 装饰 美化
 			ClassLoader tempClassLoader = getTempClassLoader();
 			if (tempClassLoader != null) {
 				classLoaderToUse = tempClassLoader;
@@ -1385,6 +1418,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 		}
 		String className = mbd.getBeanClassName();
+		//类名不为空，外面是类不为空
 		if (className != null) {
 			Object evaluated = evaluateBeanDefinitionString(className, mbd);
 			if (!className.equals(evaluated)) {

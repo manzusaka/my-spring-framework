@@ -116,6 +116,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Map<String, Set<String>> containedBeanMap = new ConcurrentHashMap<String, Set<String>>(16);
 
 	/** Map between dependent bean names: bean name --> Set of dependent bean names */
+	// 依赖关系map
 	private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<String, Set<String>>(64);
 
 	/** Map between depending bean names: bean name --> Set of bean names for the bean's dependencies */
@@ -218,8 +219,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(beanName, "'beanName' must not be null");
+		//创建过程需要对singletonObjects已经创建的Map进行全局同步
 		synchronized (this.singletonObjects) {
 			Object singletonObject = this.singletonObjects.get(beanName);
+			//如果singletonObject存在就直接返回了
 			if (singletonObject == null) {
 				if (this.singletonsCurrentlyInDestruction) {
 					throw new BeanCreationNotAllowedException(beanName,
@@ -229,14 +232,23 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+				//还没有实例化，进行检查，顺便放入singletonsCurrentlyInCreation 这个Set，注意在spring 3中这里是一个Map
+				//应该是为了解决循环依赖的bug问题
+				//其实这个状态是在标记bean是否正在实例化
 				beforeSingletonCreation(beanName);
+				//spring4新增，不知道这个属性干嘛用
 				boolean newSingleton = false;
+				//懒汉模式初始化了一下suppressedExceptions属性
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
 				if (recordSuppressedExceptions) {
 					this.suppressedExceptions = new LinkedHashSet<Exception>();
 				}
+				
 				try {
+					// 回调函数，具体的getObject();在外面实现了
+					// 真正的一个实现bean创建的逻辑
 					singletonObject = singletonFactory.getObject();
+					//获取了属性以后设置了这个值   这个值好像在标记是否是新实例化的
 					newSingleton = true;
 				}
 				catch (IllegalStateException ex) {
@@ -259,8 +271,10 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
+					//无论如何都执行实例化后的方法，移除正在实例化这个标签
 					afterSingletonCreation(beanName);
 				}
+				//如果是第一次加载这个bean 那么放入到singletonObjects，registeredSingletons中
 				if (newSingleton) {
 					addSingleton(beanName, singletonObject);
 				}
@@ -434,21 +448,25 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	public void registerDependentBean(String beanName, String dependentBeanName) {
 		// A quick check for an existing entry upfront, avoiding synchronization...
+		// 递归找到bean的标准名字
 		String canonicalName = canonicalName(beanName);
 		Set<String> dependentBeans = this.dependentBeanMap.get(canonicalName);
 		if (dependentBeans != null && dependentBeans.contains(dependentBeanName)) {
 			return;
 		}
-
+		
 		// No entry yet -> fully synchronized manipulation of the dependentBeans Set
+		// bean依赖关系map
 		synchronized (this.dependentBeanMap) {
 			dependentBeans = this.dependentBeanMap.get(canonicalName);
+			//懒汉模式第一次拿出来没有然后设置个初始的
 			if (dependentBeans == null) {
 				dependentBeans = new LinkedHashSet<String>(8);
 				this.dependentBeanMap.put(canonicalName, dependentBeans);
 			}
 			dependentBeans.add(dependentBeanName);
 		}
+		// bean依赖关系倒叙map
 		synchronized (this.dependenciesForBeanMap) {
 			Set<String> dependenciesForBean = this.dependenciesForBeanMap.get(dependentBeanName);
 			if (dependenciesForBean == null) {
@@ -462,14 +480,18 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Determine whether the specified dependent bean has been registered as
 	 * dependent on the given bean or on any of its transitive dependencies.
-	 * @param beanName the name of the bean to check
-	 * @param dependentBeanName the name of the dependent bean
+	 * @param beanName the name of the bean to check   本名-需要校验的bean
+	 * @param dependentBeanName the name of the dependent bean  被依赖的bean
 	 * @since 4.0
+	 * 
 	 */
 	protected boolean isDependent(String beanName, String dependentBeanName) {
 		return isDependent(beanName, dependentBeanName, null);
 	}
-
+	/*
+	 *beanName  主bean
+	 * dependentBeanName 被依赖的bean
+	 */
 	private boolean isDependent(String beanName, String dependentBeanName, Set<String> alreadySeen) {
 		if (alreadySeen != null && alreadySeen.contains(beanName)) {
 			return false;
@@ -479,9 +501,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		if (dependentBeans == null) {
 			return false;
 		}
+		//循环依赖  a-->b  b-->a
 		if (dependentBeans.contains(dependentBeanName)) {
 			return true;
 		}
+		//alreadySeen 已经检测
 		for (String transitiveDependency : dependentBeans) {
 			if (alreadySeen == null) {
 				alreadySeen = new HashSet<String>();

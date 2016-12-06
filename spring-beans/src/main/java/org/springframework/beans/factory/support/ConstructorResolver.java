@@ -101,18 +101,19 @@ class ConstructorResolver {
 	 */
 	public BeanWrapper autowireConstructor(final String beanName, final RootBeanDefinition mbd,
 			Constructor<?>[] chosenCtors, final Object[] explicitArgs) {
-
+		
 		BeanWrapperImpl bw = new BeanWrapperImpl();
 		this.beanFactory.initBeanWrapper(bw);
 
 		Constructor<?> constructorToUse = null;
 		ArgumentsHolder argsHolderToUse = null;
 		Object[] argsToUse = null;
-
+		// 构造参数确定 如果是传入的构造参数 那么已传入的构造参数为准
 		if (explicitArgs != null) {
 			argsToUse = explicitArgs;
 		}
 		else {
+			//如果有构造方法传入  那么去解析构造函数
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
@@ -124,6 +125,7 @@ class ConstructorResolver {
 					}
 				}
 			}
+			//对构造函数进行转换  把可能的值转换为最终的值
 			if (argsToResolve != null) {
 				argsToUse = resolvePreparedArguments(beanName, mbd, bw, constructorToUse, argsToResolve);
 			}

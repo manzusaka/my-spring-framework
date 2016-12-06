@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+	
+	<!-- 使用属性注入的单例循环依赖 -->
+	<!-- 
+	<bean id="testA" class="com.mitix.spring.exp5.TestA">
+		<property name="testB" ref="testB"></property>
+	</bean>
+	<bean id="testB" class="com.mitix.spring.exp5.TestB">
+		<property name="testC" ref="testC"></property>
+	</bean>
+	<bean id="testC" class="com.mitix.spring.exp5.TestC">
+		<property name="testA" ref="testA"></property>
+	</bean>
+	 -->
+	 
+	<!-- 使用构造函数的循环依赖，直接抛出异常无法处理 -->
+	<!-- -->
+	<bean id="testA" class="com.mitix.spring.exp5.TestA">
+		<constructor-arg index="0" ref="testB"></constructor-arg>
+	</bean>
+	<bean id="testB" class="com.mitix.spring.exp5.TestB">
+		<constructor-arg index="0" ref="testC"></constructor-arg>
+	</bean>
+	<bean id="testC" class="com.mitix.spring.exp5.TestC">
+		<constructor-arg index="0" ref="testA"></constructor-arg>
+	</bean>
+	 
+	<!-- depends-on 方式的依赖 直接抛出异常无法处理-->
+	<!--  
+	<bean id="testA" class="com.mitix.spring.exp5.TestA" depends-on="testB">
+	</bean>
+	<bean id="testB" class="com.mitix.spring.exp5.TestB" depends-on="testC">
+	</bean>
+	<bean id="testC" class="com.mitix.spring.exp5.TestC" depends-on="testA">
+	</bean>
+	-->
+</beans>
