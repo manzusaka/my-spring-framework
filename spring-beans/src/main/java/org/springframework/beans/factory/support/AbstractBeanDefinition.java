@@ -133,30 +133,30 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public static final String INFER_METHOD = "(inferred)";
 
-
+	//bean的class 但是为什么是一个volatile属性  
 	private volatile Object beanClass;
-
+	
 	private String scope = SCOPE_DEFAULT;
 
 	private boolean abstractFlag = false;
 
 	private boolean lazyInit = false;
-
+	//自动装配
 	private int autowireMode = AUTOWIRE_NO;
-
+	
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
 	private String[] dependsOn;
-
+	//自动装配候选
 	private boolean autowireCandidate = true;
-
+	//自动装配主要候选
 	private boolean primary = false;
-
+	//自动装配名字
 	private final Map<String, AutowireCandidateQualifier> qualifiers =
 			new LinkedHashMap<String, AutowireCandidateQualifier>(0);
-
+	//访问私有的构造和方法
 	private boolean nonPublicAccessAllowed = true;
-
+	
 	private boolean lenientConstructorResolution = true;
 
 	private ConstructorArgumentValues constructorArgumentValues;
@@ -176,7 +176,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private boolean enforceInitMethod = true;
 
 	private boolean enforceDestroyMethod = true;
-
+	//是否是人造的，如果用的是config就是AOP中的代理配置的，会把人造的设置为true
 	private boolean synthetic = false;
 
 	private int role = BeanDefinition.ROLE_APPLICATION;

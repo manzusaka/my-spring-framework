@@ -21,16 +21,21 @@ import org.springframework.beans.BeansException;
 /**
  * Factory hook that allows for custom modification of new bean instances,
  * e.g. checking for marker interfaces or wrapping them with proxies.
- *
+ * 工厂钩子，允许自定义修改bean实例化，是一个检查标记接口
+ * 
  * <p>ApplicationContexts can autodetect BeanPostProcessor beans in their
  * bean definitions and apply them to any beans subsequently created.
  * Plain bean factories allow for programmatic registration of post-processors,
  * applying to all beans created through this factory.
- *
+ *  ApplicationContexts 可以自动侦测BeanPostProcessor并将BeanPostProcessor应用于后面创建的bean上
+ *  简单的工厂允许注册处理器，适用于所有这个工厂里的bean
+ *  
+ * 
  * <p>Typically, post-processors that populate beans via marker interfaces
  * or the like will implement {@link #postProcessBeforeInitialization},
  * while post-processors that wrap beans with proxies will normally
  * implement {@link #postProcessAfterInitialization}.
+ * 通常是通过bean填充完属性以后没通过initializeBean中的postProcessBeforeInitialization或者postProcessAfterInitialization实现的
  *
  * @author Juergen Hoeller
  * @since 10.10.2003

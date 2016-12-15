@@ -1399,9 +1399,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	private Class<?> doResolveBeanClass(RootBeanDefinition mbd, Class<?>... typesToMatch)
 			throws ClassNotFoundException {
-
+		//这个方法相对于spring已经有很大的变化了   多了tempClassLoader  目前还没有看出是干嘛用的
 		ClassLoader beanClassLoader = getBeanClassLoader();
 		ClassLoader classLoaderToUse = beanClassLoader;
+		//当传入的类型不为空的情况下处理
 		if (!ObjectUtils.isEmpty(typesToMatch)) {
 			// When just doing type checks (i.e. not creating an actual instance yet),
 			// use the specified temporary class loader (e.g. in a weaving scenario).
@@ -1417,9 +1418,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 		}
+		//获取类名
 		String className = mbd.getBeanClassName();
-		//类名不为空，外面是类不为空
+		//类名不为空
 		if (className != null) {
+			//通过表达式处理bean的名字 
 			Object evaluated = evaluateBeanDefinitionString(className, mbd);
 			if (!className.equals(evaluated)) {
 				// A dynamically resolved expression, supported as of 4.2...
@@ -1612,8 +1615,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 */
 	protected Object getObjectForBeanInstance(
 			Object beanInstance, String name, String beanName, RootBeanDefinition mbd) {
-
+		/*
+		 * beanInstance=bean实例
+		 * name=传入名字
+		 * beanName=规范的bean名字
+		 * mbd=bean配置
+		 */
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
+		// 如果名字是以&为前缀就是说想获取一个工厂bean 但是beanInstance又不是一个工厂bean那就直接返回异常
 		if (BeanFactoryUtils.isFactoryDereference(name) && !(beanInstance instanceof FactoryBean)) {
 			throw new BeanIsNotAFactoryException(transformedBeanName(name), beanInstance.getClass());
 		}
@@ -1621,10 +1630,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Now we have the bean instance, which may be a normal bean or a FactoryBean.
 		// If it's a FactoryBean, we use it to create a bean instance, unless the
 		// caller actually wants a reference to the factory.
+		/*
+		 * 如果beanInstance不是一个工厂bean那就直接返回了--大多数类都是这样的 
+		 * 或者代码本身就像获取一个工厂类，那就不用去转换了把这个工厂类给外围代码就好了
+		 */
 		if (!(beanInstance instanceof FactoryBean) || BeanFactoryUtils.isFactoryDereference(name)) {
 			return beanInstance;
 		}
-
+		
+		//接下来就是代码想获取一个正常的bean，但是我们代码跑完以后发现这货还是个工厂bean，那就要调用工厂bean的getObject（）方法了
+		//当然中间经过了很多判断
 		Object object = null;
 		if (mbd == null) {
 			object = getCachedObjectForFactoryBean(beanName);

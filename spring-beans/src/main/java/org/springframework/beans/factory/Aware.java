@@ -23,12 +23,13 @@ package org.springframework.beans.factory;
  * determined by individual subinterfaces, but should typically
  * consist of just one void-returning method that accepts a single
  * argument.
+ * 标记接口，标识bean是合格的spring容器进行特定的回调的bean
  *
  * <p>Note that merely implementing {@link Aware} provides no default
  * functionality. Rather, processing must be done explicitly, for example
  * in a {@link org.springframework.beans.factory.config.BeanPostProcessor BeanPostProcessor}.
  * Refer to {@link org.springframework.context.support.ApplicationContextAwareProcessor}
- * and {@link org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory}
+ * and {@link org.springframework.beans.factory.support.AbstractAutoAwarewireCapableBeanFactory}
  * for examples of processing {@code *Aware} interface callbacks.
  *
  * @author Chris Beams

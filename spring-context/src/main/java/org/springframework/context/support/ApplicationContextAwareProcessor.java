@@ -60,7 +60,9 @@ import org.springframework.util.StringValueResolver;
 class ApplicationContextAwareProcessor implements BeanPostProcessor {
 
 	private final ConfigurableApplicationContext applicationContext;
-
+	/*
+	 *嵌入式的StringValue解析器 
+	 */
 	private final StringValueResolver embeddedValueResolver;
 
 
@@ -102,6 +104,7 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 
 	private void invokeAwareInterfaces(Object bean) {
 		if (bean instanceof Aware) {
+			//StandardEnvironment 标准环境
 			if (bean instanceof EnvironmentAware) {
 				((EnvironmentAware) bean).setEnvironment(this.applicationContext.getEnvironment());
 			}

@@ -60,24 +60,28 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	/**
 	 * Return the unique id of this application context.
 	 * @return the unique id of the context, or {@code null} if none
+	 * 返回唯一的context的ID号
 	 */
 	String getId();
 
 	/**
 	 * Return a name for the deployed application that this context belongs to.
 	 * @return a name for the deployed application, or the empty String by default
+	 * 返回部署的context的名字
 	 */
 	String getApplicationName();
 
 	/**
 	 * Return a friendly name for this context.
 	 * @return a display name for this context (never {@code null})
+	 * 返回一个好听的名字  显示的名字
 	 */
 	String getDisplayName();
 
 	/**
 	 * Return the timestamp when this context was first loaded.
 	 * @return the timestamp (ms) when this context was first loaded
+	 * 获取上下文加载时间戳
 	 */
 	long getStartupDate();
 
@@ -90,9 +94,11 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 
 	/**
 	 * Expose AutowireCapableBeanFactory functionality for this context.
+	 * 暴露AutowireCapableBeanFactory功能
 	 * <p>This is not typically used by application code, except for the purpose of
 	 * initializing bean instances that live outside of the application context,
 	 * applying the Spring bean lifecycle (fully or partly) to them.
+	 * 这不是一个正常的应用程序bean，除非你要创建一个在context以外的，又要使用容器生命周期的bean
 	 * <p>Alternatively, the internal BeanFactory exposed by the
 	 * {@link ConfigurableApplicationContext} interface offers access to the
 	 * {@link AutowireCapableBeanFactory} interface too. The present method mainly
@@ -100,6 +106,7 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	 * <p><b>NOTE: As of 4.2, this method will consistently throw IllegalStateException
 	 * after the application context has been closed.</b> In current Spring Framework
 	 * versions, only refreshable application contexts behave that way; as of 4.2,
+	 * 注意：4.2版本开始已经把这个方法关闭了，始终抛出异常，所以使用的化使用4.2以下的版本
 	 * all application context implementations will be required to comply.
 	 * @return the AutowireCapableBeanFactory for this context
 	 * @throws IllegalStateException if the context does not support the
@@ -108,6 +115,7 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	 * never been called), or if the context has been closed already
 	 * @see ConfigurableApplicationContext#refresh()
 	 * @see ConfigurableApplicationContext#getBeanFactory()
+	 * 
 	 */
 	AutowireCapableBeanFactory getAutowireCapableBeanFactory() throws IllegalStateException;
 

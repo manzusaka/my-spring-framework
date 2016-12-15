@@ -71,6 +71,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	private DefaultListableBeanFactory beanFactory;
 
 	/** Synchronization monitor for the internal BeanFactory */
+	//同步的BeanFactory监控锁
 	private final Object beanFactoryMonitor = new Object();
 
 
@@ -115,18 +116,23 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * This implementation performs an actual refresh of this context's underlying
 	 * bean factory, shutting down the previous bean factory (if any) and
 	 * initializing a fresh bean factory for the next phase of the context's lifecycle.
+	 * 实现bean工厂的刷新，父类模板方法的实现
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
+		//如果已经有BeanFactory那就直接清理掉
 		if (hasBeanFactory()) {
 			destroyBeans();
 			closeBeanFactory();
 		}
 		try {
+			//ApplicationContext容器中真正初始化起来的bean容器
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+			//这个ID号设置非常经典，getId()方法
 			beanFactory.setSerializationId(getId());
 			customizeBeanFactory(beanFactory);
 			loadBeanDefinitions(beanFactory);
+			//设置容器的beanFactory
 			synchronized (this.beanFactoryMonitor) {
 				this.beanFactory = beanFactory;
 			}
@@ -213,6 +219,9 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see DefaultListableBeanFactory#setAllowCircularReferences
 	 * @see DefaultListableBeanFactory#setAllowRawInjectionDespiteWrapping
 	 * @see DefaultListableBeanFactory#setAllowEagerClassLoading
+	 * 做一个客户化定制，定制内容
+	 * 1.是否允许bean覆盖
+	 * 2.设置循环依赖设置
 	 */
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
 		if (this.allowBeanDefinitionOverriding != null) {
@@ -231,6 +240,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @throws IOException if loading of bean definition files failed
 	 * @see org.springframework.beans.factory.support.PropertiesBeanDefinitionReader
 	 * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
+	 * bean工厂的加载解析，模板方法应该是给带有资源的子类实现了
 	 */
 	protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory)
 			throws BeansException, IOException;

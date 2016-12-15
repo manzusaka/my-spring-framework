@@ -23,7 +23,7 @@ import org.springframework.core.MethodParameter;
 /**
  * Interface that defines type conversion methods. Typically (but not necessarily)
  * implemented in conjunction with the {@link PropertyEditorRegistry} interface.
- *
+ * 定义类型转化方法，通常在PropertyEditorRegistry接口实现，但是不是绝对的
  * <p><b>Note:</b> Since TypeConverter implementations are typically based on
  * {@link java.beans.PropertyEditor PropertyEditors} which aren't thread-safe,
  * TypeConverters themselves are <em>not</em> to be considered as thread-safe either.

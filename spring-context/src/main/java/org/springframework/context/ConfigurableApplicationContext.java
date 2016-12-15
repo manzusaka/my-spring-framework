@@ -27,13 +27,15 @@ import org.springframework.core.io.ProtocolResolver;
 
 /**
  * SPI interface to be implemented by most if not all application contexts.
+ * 
  * Provides facilities to configure an application context in addition
  * to the application context client methods in the
  * {@link org.springframework.context.ApplicationContext} interface.
- *
+ * 提供工具设置一个上下文除了应用程序客户端上下文的接口
  * <p>Configuration and lifecycle methods are encapsulated here to avoid
  * making them obvious to ApplicationContext client code. The present
  * methods should only be used by startup and shutdown code.
+ * 设置和生命周期方法被封装，父方法只能启动和关闭容器
  *
  * @author Juergen Hoeller
  * @author Chris Beams
@@ -54,6 +56,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * Name of the ConversionService bean in the factory.
 	 * If none is supplied, default conversion rules apply.
 	 * @see org.springframework.core.convert.ConversionService
+	 * 提供默认转换规则
 	 */
 	String CONVERSION_SERVICE_BEAN_NAME = "conversionService";
 
@@ -62,6 +65,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * the context will use a temporary ClassLoader for type matching, in order
 	 * to allow the LoadTimeWeaver to process all actual bean classes.
 	 * @see org.springframework.instrument.classloading.LoadTimeWeaver
+	 * 事件处理器
 	 */
 	String LOAD_TIME_WEAVER_BEAN_NAME = "loadTimeWeaver";
 
@@ -115,12 +119,15 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * bean factory of this application context on refresh, before any of the
 	 * bean definitions get evaluated. To be invoked during context configuration.
 	 * @param postProcessor the factory processor to register
+	 * 添加一个新的BeanFactoryPostProcessor应用于bean工厂来更新上下文
+	 * 
 	 */
 	void addBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor);
 
 	/**
 	 * Add a new ApplicationListener that will be notified on context events
 	 * such as context refresh and context shutdown.
+	 * 增加一个新的ApplicationListener通知机制来监听上下文刷新货关闭
 	 * <p>Note that any ApplicationListener registered here will be applied
 	 * on refresh if the context is not active yet, or on the fly with the
 	 * current event multicaster in case of a context that is already active.
@@ -135,6 +142,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * allowing for additional resource protocols to be handled.
 	 * <p>Any such resolver will be invoked ahead of this context's standard
 	 * resolution rules. It may therefore also override any default rules.
+	 * 注册一个协议来解析上下文，允许外部资源协议处理
 	 * @since 4.3
 	 */
 	void addProtocolResolver(ProtocolResolver resolver);
@@ -148,6 +156,8 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @throws BeansException if the bean factory could not be initialized
 	 * @throws IllegalStateException if already initialized and multiple refresh
 	 * attempts are not supported
+	 * 加载或者刷新持久化配置
+	 * 
 	 */
 	void refresh() throws BeansException, IllegalStateException;
 
@@ -158,6 +168,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * (at max) will be registered for each context instance.
 	 * @see java.lang.Runtime#addShutdownHook
 	 * @see #close()
+	 * 关闭钩子
 	 */
 	void registerShutdownHook();
 
@@ -168,6 +179,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * parent contexts have their own, independent lifecycle.
 	 * <p>This method can be called multiple times without side effects: Subsequent
 	 * {@code close} calls on an already closed context will be ignored.
+	 * 关闭方法
 	 */
 	@Override
 	void close();
@@ -179,6 +191,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	 * @see #refresh()
 	 * @see #close()
 	 * @see #getBeanFactory()
+	 * 探测是下文是否是激活的
 	 */
 	boolean isActive();
 
