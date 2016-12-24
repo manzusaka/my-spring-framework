@@ -10,7 +10,9 @@
 /**
  * @version 1.0.0
  * @author oldflame-Jm
- * Aware
+ * Aware在beanfactory中的使用
+ * 就是beanfactory实现的3个aware
+ * @see exp10 applicationcontext-aware
  */
 package com.mitix.spring.exp6;
 //Aware的使用

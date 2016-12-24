@@ -211,8 +211,10 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	}
 
 	private PropertyPlaceholderHelper createPlaceholderHelper(boolean ignoreUnresolvablePlaceholders) {
+		//placeholderPrefix=${       placeholderSuffix=}   valueSeparator=:
 		return new PropertyPlaceholderHelper(this.placeholderPrefix, this.placeholderSuffix,
 				this.valueSeparator, ignoreUnresolvablePlaceholders);
+		//ignoreUnresolvablePlaceholders  忽略不能解析的片段
 	}
 
 	private String doResolvePlaceholders(String text, PropertyPlaceholderHelper helper) {

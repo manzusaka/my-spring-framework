@@ -1,0 +1,9 @@
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+    <weaver>
+       <include within="com.mitix.spring..*" />
+    </weaver>
+    <aspects>
+       <aspect name="com.mitix.spring.exp16.ProfilingAspect" />
+    </aspects>
+</aspectj>

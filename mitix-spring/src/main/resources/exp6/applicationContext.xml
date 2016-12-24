@@ -9,4 +9,6 @@
 	</bean>
 	<bean id="bfaware" class="com.mitix.spring.exp6.BeanFactoryAwareImpl">
 	</bean>
+	<bean id="bnaware" class="com.mitix.spring.exp6.BeanNameAwareImpl"></bean>
+	<bean id="bclaware" class="com.mitix.spring.exp6.BeanClassLoaderAwareImpl"></bean>
 </beans>

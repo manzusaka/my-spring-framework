@@ -55,6 +55,7 @@ package org.springframework.core.env;
  * {@code AbstractApplicationContext} subclass {@code getEnvironment()} methods. See
  * {@link ConfigurableEnvironment} Javadoc for usage examples demonstrating manipulation
  * of property sources prior to application context {@code refresh()}.
+ * 环境对象配置接口
  *
  * @author Chris Beams
  * @since 3.1
@@ -82,6 +83,7 @@ public interface Environment extends PropertyResolver {
 	 * @see #getDefaultProfiles
 	 * @see ConfigurableEnvironment#setActiveProfiles
 	 * @see AbstractEnvironment#ACTIVE_PROFILES_PROPERTY_NAME
+	 * 获取一个当前环境激活的profiles集合
 	 */
 	String[] getActiveProfiles();
 
@@ -91,6 +93,8 @@ public interface Environment extends PropertyResolver {
 	 * @see #getActiveProfiles
 	 * @see ConfigurableEnvironment#setDefaultProfiles
 	 * @see AbstractEnvironment#DEFAULT_PROFILES_PROPERTY_NAME
+	 * 获取默认的profile组
+	 * 如果当环境中激活的组为空getActiveProfiles返回null的话会弃用默认的profile组
 	 */
 	String[] getDefaultProfiles();
 
@@ -105,6 +109,10 @@ public interface Environment extends PropertyResolver {
 	 * or if any profile is {@code null}, empty or whitespace-only
 	 * @see #getActiveProfiles
 	 * @see #getDefaultProfiles
+	 * 判断给定的一个或多个组中，是否存在满足当前环境对象配置的组（任意一个组满足即可）。
+	 * 如：
+	 * 调用acceptsProfiles("p1","!p2")，如果当前环境对象激活了p1，
+	 * 或者没有激活p2（注意是或，满足一个条件即可），则返回true，否则返回false。
 	 */
 	boolean acceptsProfiles(String... profiles);
 

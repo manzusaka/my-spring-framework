@@ -10,6 +10,7 @@
 /**
  * @version 1.0.0
  * @author oldflame-Jm
- * TODO
+ * Aware在context中的使用
+ * @see exp6 beanfactory-aware
  */
 package com.mitix.spring.exp10;

@@ -83,9 +83,10 @@ public class PropertyPlaceholderHelper {
 
 		Assert.notNull(placeholderPrefix, "'placeholderPrefix' must not be null");
 		Assert.notNull(placeholderSuffix, "'placeholderSuffix' must not be null");
-		this.placeholderPrefix = placeholderPrefix;
-		this.placeholderSuffix = placeholderSuffix;
+		this.placeholderPrefix = placeholderPrefix;//${
+		this.placeholderSuffix = placeholderSuffix;//}
 		String simplePrefixForSuffix = wellKnownSimplePrefixes.get(this.placeholderSuffix);
+		//初始化simplePrefixForSuffix={
 		if (simplePrefixForSuffix != null && this.placeholderPrefix.endsWith(simplePrefixForSuffix)) {
 			this.simplePrefix = simplePrefixForSuffix;
 		}

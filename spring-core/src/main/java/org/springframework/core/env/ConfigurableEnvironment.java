@@ -84,6 +84,7 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * @see org.springframework.context.annotation.Profile
 	 * @see AbstractEnvironment#ACTIVE_PROFILES_PROPERTY_NAME
 	 * @throws IllegalArgumentException if any profile is null, empty or whitespace-only
+	 * 重新设置激活的组集合
 	 */
 	void setActiveProfiles(String... profiles);
 
@@ -91,6 +92,7 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * Add a profile to the current set of active profiles.
 	 * @see #setActiveProfiles
 	 * @throws IllegalArgumentException if the profile is null, empty or whitespace-only
+	 * 向当前激活的组集合中添加一个组。
 	 */
 	void addActiveProfile(String profile);
 
@@ -99,6 +101,7 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * are explicitly made active through {@link #setActiveProfiles}.
 	 * @see AbstractEnvironment#DEFAULT_PROFILES_PROPERTY_NAME
 	 * @throws IllegalArgumentException if any profile is null, empty or whitespace-only
+	 * 设置默认激活的组集合。激活的组集合为空时会使用默认的组集合。
 	 */
 	void setDefaultProfiles(String... profiles);
 
@@ -116,6 +119,9 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * sources such as the set of system properties or the set of system environment
 	 * variables.
 	 * @see AbstractEnvironment#customizePropertySources
+	 * 获取当前环境对象中的属性源集合，也就是应用环境变量。
+	 * 属性源集合其实就是一个容纳PropertySource的容器。
+	 * 这个方法提供了直接配置属性源的入口。
 	 */
 	MutablePropertySources getPropertySources();
 
@@ -131,6 +137,8 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * {@link IllegalAccessException}; in cases where the SecurityManager forbids access
 	 * to a property, {@code null} will be returned and an INFO-level log message will be
 	 * issued noting the exception.
+	 * 获取操作系统环境变量
+	 * 这个方法提供了直接配置系统环境变量的入口。
 	 */
 	Map<String, Object> getSystemEnvironment();
 
@@ -146,6 +154,8 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * {@link IllegalAccessException}; in cases where the SecurityManager forbids access
 	 * to a property, {@code null} will be returned and an INFO-level log message will be
 	 * issued noting the exception.
+	 * 获取虚拟机环境变量
+	 * 这个方法提供了直接配置虚拟机环境变量的入口。
 	 */
 	Map<String, Object> getSystemProperties();
 
@@ -166,6 +176,7 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * @param parent the environment to merge with
 	 * @since 3.1.2
 	 * @see org.springframework.context.support.AbstractApplicationContext#setParent
+	 * 合并指定环境对象中的配置到当前环境对象中。
 	 */
 	void merge(ConfigurableEnvironment parent);
 

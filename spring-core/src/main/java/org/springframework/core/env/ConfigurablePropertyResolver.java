@@ -23,6 +23,8 @@ import org.springframework.core.convert.support.ConfigurableConversionService;
  * types. Provides facilities for accessing and customizing the
  * {@link org.springframework.core.convert.ConversionService ConversionService}
  * used when converting property values from one type to another.
+ * 配置接口实现了大多数的PropertyResolver
+ * 提供了访问和设置功能，将属性由一种形式转换成另外一种形式
  *
  * @author Chris Beams
  * @since 3.1
@@ -40,6 +42,7 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	 * </pre>
 	 * @see PropertyResolver#getProperty(String, Class)
 	 * @see org.springframework.core.convert.converter.ConverterRegistry#addConverter
+	 * 然会一个ConfigurableConversionService
 	 */
 	ConfigurableConversionService getConversionService();
 
@@ -53,16 +56,19 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	 * @see PropertyResolver#getProperty(String, Class)
 	 * @see #getConversionService()
 	 * @see org.springframework.core.convert.converter.ConverterRegistry#addConverter
+	 * 设置ConfigurableConversionService
 	 */
 	void setConversionService(ConfigurableConversionService conversionService);
 
 	/**
 	 * Set the prefix that placeholders replaced by this resolver must begin with.
+	 * 设置前缀占位符
 	 */
 	void setPlaceholderPrefix(String placeholderPrefix);
 
 	/**
 	 * Set the suffix that placeholders replaced by this resolver must end with.
+	 * 设置后置占位符
 	 */
 	void setPlaceholderSuffix(String placeholderSuffix);
 
@@ -70,6 +76,7 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	 * Specify the separating character between the placeholders replaced by this
 	 * resolver and their associated default value, or {@code null} if no such
 	 * special character should be processed as a value separator.
+	 * 设置分隔符
 	 */
 	void setValueSeparator(String valueSeparator);
 
@@ -89,6 +96,7 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	/**
 	 * Specify which properties must be present, to be verified by
 	 * {@link #validateRequiredProperties()}.
+	 * 是指必须的properties
 	 */
 	void setRequiredProperties(String... requiredProperties);
 
@@ -98,6 +106,7 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	 * non-{@code null} value.
 	 * @throws MissingRequiredPropertiesException if any of the required
 	 * properties are not resolvable.
+	 * 检查properties
 	 */
 	void validateRequiredProperties() throws MissingRequiredPropertiesException;
 
