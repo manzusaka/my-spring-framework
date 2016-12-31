@@ -54,7 +54,9 @@ import org.springframework.util.ClassUtils;
 /**
  * A component provider that scans the classpath from a base package. It then
  * applies exclude and include filters to the resulting classes to find candidates.
- *
+ * 一个组件提供扫描给定路径的calsspath的功能
+ * 使用了排除和包括过滤器来返回选定的classes
+ * 
  * <p>This implementation is based on Spring's
  * {@link org.springframework.core.type.classreading.MetadataReader MetadataReader}
  * facility, backed by an ASM {@link org.springframework.asm.ClassReader ClassReader}.
@@ -113,6 +115,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 */
 	public ClassPathScanningCandidateComponentProvider(boolean useDefaultFilters, Environment environment) {
 		if (useDefaultFilters) {
+			//注册默认的filter
 			registerDefaultFilters();
 		}
 		Assert.notNull(environment, "Environment must not be null");
@@ -236,8 +239,10 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 */
 	@SuppressWarnings("unchecked")
 	protected void registerDefaultFilters() {
+		//增加了@Component的filters
 		this.includeFilters.add(new AnnotationTypeFilter(Component.class));
 		ClassLoader cl = ClassPathScanningCandidateComponentProvider.class.getClassLoader();
+		//javax.annotation中的
 		try {
 			this.includeFilters.add(new AnnotationTypeFilter(
 					((Class<? extends Annotation>) ClassUtils.forName("javax.annotation.ManagedBean", cl)), false));
@@ -261,12 +266,16 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	 * Scan the class path for candidate components.
 	 * @param basePackage the package to check for annotated classes
 	 * @return a corresponding Set of autodetected bean definitions
+	 * 扫描得到候选组件
 	 */
 	public Set<BeanDefinition> findCandidateComponents(String basePackage) {
+		//BeanDefinition set
 		Set<BeanDefinition> candidates = new LinkedHashSet<BeanDefinition>();
 		try {
+			//classpath*:com.mitix.spring/**/*.class  正则表达式
 			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
 					resolveBasePackage(basePackage) + '/' + this.resourcePattern;
+			//获取符合正则表达式的所有calss
 			Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
 			boolean traceEnabled = logger.isTraceEnabled();
 			boolean debugEnabled = logger.isDebugEnabled();
@@ -276,11 +285,15 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				}
 				if (resource.isReadable()) {
 					try {
+						//根据resource如果没有生成过SimpleMetadataReader那么生成新的SimpleMetadataReader
 						MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
+						//满足是一个组件的所有要求
 						if (isCandidateComponent(metadataReader)) {
+							//生成ScannedGenericBeanDefinition其实就是一个带有注解信息，没有任何构造函数参数等等的GenericBeanDefinition
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setResource(resource);
 							sbd.setSource(resource);
+							//判断是否给定的beandefinition是一个具体的类，不是接口或者抽象类
 							if (isCandidateComponent(sbd)) {
 								if (debugEnabled) {
 									logger.debug("Identified candidate component class: " + resource);
@@ -366,6 +379,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	/**
 	 * Determine whether the given bean definition qualifies as candidate.
 	 * <p>The default implementation checks whether the class is concrete
+	 * 判断是否给定的beandefinition是一个具体的类，不是接口或者抽象类
 	 * (i.e. not abstract and not an interface). Can be overridden in subclasses.
 	 * @param beanDefinition the bean definition to check
 	 * @return whether the bean definition qualifies as a candidate component

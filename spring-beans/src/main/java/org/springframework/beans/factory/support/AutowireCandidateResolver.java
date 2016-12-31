@@ -22,6 +22,7 @@ import org.springframework.beans.factory.config.DependencyDescriptor;
 /**
  * Strategy interface for determining whether a specific bean definition
  * qualifies as an autowire candidate for a specific dependency.
+ * 策略接口接决定那个bean definition该被注入
  *
  * @author Juergen Hoeller
  * @author Mark Fisher
@@ -32,6 +33,7 @@ public interface AutowireCandidateResolver {
 	/**
 	 * Determine whether the given bean definition qualifies as an
 	 * autowire candidate for the given dependency.
+	 * 是否有资格作为自动装配的bean
 	 * @param bdHolder the bean definition including bean name and aliases
 	 * @param descriptor the descriptor for the target method parameter or field
 	 * @return whether the bean definition qualifies as autowire candidate
@@ -40,6 +42,7 @@ public interface AutowireCandidateResolver {
 
 	/**
 	 * Determine whether a default value is suggested for the given dependency.
+	 * 确定一个默认的值是否为给定依赖
 	 * @param descriptor the descriptor for the target method parameter or field
 	 * @return the value suggested (typically an expression String),
 	 * or {@code null} if none found
@@ -50,6 +53,7 @@ public interface AutowireCandidateResolver {
 	/**
 	 * Build a proxy for lazy resolution of the actual dependency target,
 	 * if demanded by the injection point.
+	 * 创建一个代理延时启动标记   切面
 	 * @param descriptor the descriptor for the target method parameter or field
 	 * @param beanName the name of the bean that contains the injection point
 	 * @return the lazy resolution proxy for the actual dependency target,

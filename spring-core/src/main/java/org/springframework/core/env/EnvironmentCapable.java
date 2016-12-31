@@ -18,6 +18,7 @@ package org.springframework.core.env;
 
 /**
  * Interface indicating a component that contains and exposes an {@link Environment} reference.
+ * 接口标识组件包含和向外提供Environment信息
  *
  * <p>All Spring application contexts are EnvironmentCapable, and the interface is used primarily
  * for performing {@code instanceof} checks in framework methods that accept BeanFactory

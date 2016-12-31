@@ -137,6 +137,7 @@ public class DefaultResourceLoader implements ResourceLoader {
 			}
 			catch (MalformedURLException ex) {
 				// No URL -> resolve as resource path.
+				//new ClassPathContextResource(path, getClassLoader());
 				return getResourceByPath(location);
 			}
 		}

@@ -61,11 +61,14 @@ import org.springframework.util.StringUtils;
  * internal Ant-style regular expressions (matched using Spring's
  * {@link org.springframework.util.AntPathMatcher} utility).
  * Both of the latter are effectively wildcards.
+ * 一个资源匹配实现，可以匹配指定路径的一个或者多个资源
+ * 路径可能式单路径，一对一的映射关系，也可能是基于正则表达式的通配扫描路径
  *
  * <p><b>No Wildcards:</b>
  *
  * <p>In the simple case, if the specified location path does not start with the
  * {@code "classpath*:}" prefix, and does not contain a PathMatcher pattern,
+ * 如果详细路径不是以classpath*：开头或者无法匹配正则表达式
  * this resolver will simply return a single resource via a
  * {@code getResource()} call on the underlying {@code ResourceLoader}.
  * Examples are real URLs such as "{@code file:C:/context.xml}", pseudo-URLs
@@ -288,6 +291,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			// (to not get fooled by a pattern symbol in a strange prefix).
 			int prefixEnd = locationPattern.indexOf(":") + 1;
 			if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
+				/*
+				 * 	public boolean isPattern(String path) {
+				 *		return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
+				 *	}
+				 */
 				// a file pattern
 				return findPathMatchingResources(locationPattern);
 			}
