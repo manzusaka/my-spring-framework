@@ -32,6 +32,7 @@ import org.springframework.beans.PropertyValues;
  * {@link InstantiationAwareBeanPostProcessor} functionality. If all you need
  * is plain {@link BeanPostProcessor} functionality, prefer a straight
  * implementation of that (simpler) interface.
+ * 抽象类，bean实例化BeanPostProcessor的适配器，提供了一些默认实现，这样可以使子类少写一些不必要的实现方法
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

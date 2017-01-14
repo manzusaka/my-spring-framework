@@ -545,6 +545,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		 * 1.ApplicationContext容器初始化的时候就有一个ApplicationListenerDetector会执行postProcessMergedBeanDefinition
 		 * 目的是为了记录每个bean是否是单例,如果后面bean是ApplicationListener类型的，那么会进行postProcessAfterInitialization相关处理
 		 * @see org.springframework.context.support.ApplicationListenerDetector
+		 * 2.AutowiredAnnotationBeanPostProcessor  在配置component-scan  ，annotation-config这样的配置的时候，ApplicationContext回新建
+		 * AutowiredAnnotationBeanPostProcessor 用于
 		 */
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
@@ -1267,6 +1269,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			PropertyDescriptor[] filteredPds = filterPropertyDescriptorsForDependencyCheck(bw, mbd.allowCaching);
 			if (hasInstAwareBpps) {
 				for (BeanPostProcessor bp : getBeanPostProcessors()) {
+					//AutowiredAnnotationBeanPostProcessor对所有Autowire 和value注解的进行属性填充
 					if (bp instanceof InstantiationAwareBeanPostProcessor) {
 						InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
 						pvs = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);

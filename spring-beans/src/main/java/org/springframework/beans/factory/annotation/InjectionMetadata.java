@@ -60,7 +60,9 @@ public class InjectionMetadata {
 		this.injectedElements = elements;
 	}
 
-
+	/*
+	 * 检查配置Member
+	 */
 	public void checkConfigMembers(RootBeanDefinition beanDefinition) {
 		Set<InjectedElement> checkedElements = new LinkedHashSet<InjectedElement>(this.injectedElements.size());
 		for (InjectedElement element : this.injectedElements) {
@@ -75,7 +77,7 @@ public class InjectionMetadata {
 		}
 		this.checkedElements = checkedElements;
 	}
-
+	
 	public void inject(Object target, String beanName, PropertyValues pvs) throws Throwable {
 		Collection<InjectedElement> elementsToIterate =
 				(this.checkedElements != null ? this.checkedElements : this.injectedElements);
