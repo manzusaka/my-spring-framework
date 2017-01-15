@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
@@ -10,12 +11,20 @@
 	<bean id="testbean" class="com.mitix.spring.aop.exp1.TestBean"></bean>
 	<bean id="logcut" class="com.mitix.spring.aop.exp1.AspectJTest"></bean>
 	<aop:config>
+		<!-- 切点解析 -->
+		<aop:pointcut id="infotech1" expression="execution(* com.mitix.spring.aop.exp1.TestBean.print2(..))" />
+		<!--pointcut 和  pointcut-ref互斥  只能定义一个-->
+		<!-- 这种关于事务的配置后面再看 -->
+		<!-- 这里的pointcut-ref 使一个cut引用   pointcut是aop:pointcut中的expression表达式 -->
+		<!-- 
+		<aop:advisor advice-ref="" id="" order="" pointcut="" pointcut-ref=""/>
+ 		-->
 		<aop:aspect id="aspectJTest" ref="logcut" >
-			<aop:pointcut id="log" expression="execution(* com.mitix.spring.aop.exp1.TestBean.print(..))" />
-			<aop:before method="beforeLog" pointcut-ref="log"/>
-			<aop:after method="afterLog" pointcut-ref="log"/>
-			<aop:around method="aroundLog" pointcut-ref="log"/>
+			<aop:before method="beforeLog" pointcut="execution(* com.mitix.spring.aop.exp1.TestBean.print(..))"/>
+			<aop:after method="afterLog" pointcut-ref="infotech1"/>
+			<aop:around method="aroundLog" pointcut-ref="infotech1"/>
 		</aop:aspect>
 	</aop:config>
+	
 
 </beans>

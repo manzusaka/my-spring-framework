@@ -2,21 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
-
-	<bean id="userService" class="com.mitix.spring.aop.exp2.UserService"></bean>
-	<aop:config>
-		<aop:aspect>
-			<!--default-impl类名    delegate-ref应该引用的使bean的名字-->
-			<aop:declare-parents types-matching="com.mitix.spring.aop.exp2.UserService+"
-				implement-interface="com.mitix.spring.aop.exp2.IVerifier"
-				default-impl="com.mitix.spring.aop.exp2.VerifierImpl"/>
-				
-		</aop:aspect>
-	</aop:config>
-
+	
+	<aop:aspectj-autoproxy />
+	<bean id="testbean" class="com.mitix.spring.aop.exp5.TestBean"></bean>
+	<bean id="logcut" class="com.mitix.spring.aop.exp5.AspectJTest"></bean>
 </beans>

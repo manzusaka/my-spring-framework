@@ -25,6 +25,10 @@ public class TestBean {
 	}
 	
 	public void print(){
-	  System.out.println("this is testbean say "+this.testStr);
+	  System.out.println("this is testbean say1 "+this.testStr);
 	}
+	
+	   public void print2(){
+	      System.out.println("this is testbean say2 "+this.testStr);
+	    }
 }

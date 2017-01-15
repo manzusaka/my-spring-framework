@@ -23,6 +23,7 @@ import org.springframework.beans.factory.config.BeanReference;
 /**
  * Interface that describes the logical view of a set of {@link BeanDefinition BeanDefinitions}
  * and {@link BeanReference BeanReferences} as presented in some configuration context.
+ * 接口,描述了一组beandefinition的逻辑视图和BeanReferences提出了一些配置上下文
  *
  * <p>With the introduction of {@link org.springframework.beans.factory.xml.NamespaceHandler pluggable custom XML tags},
  * it is now possible for a single logical configuration entity, in this case an XML tag, to
@@ -80,6 +81,7 @@ public interface ComponentDefinition extends BeanMetadataElement {
 	 * Get the user-visible name of this {@code ComponentDefinition}.
 	 * <p>This should link back directly to the corresponding configuration data
 	 * for this component in a given context.
+	 * 返回一个名字    返回配置数据(名字)，再给定的上下文中
 	 */
 	String getName();
 
@@ -87,6 +89,7 @@ public interface ComponentDefinition extends BeanMetadataElement {
 	 * Return a friendly description of the described component.
 	 * <p>Implementations are encouraged to return the same value from
 	 * {@code toString()}.
+	 * 返回一个有好的描述
 	 */
 	String getDescription();
 
@@ -98,6 +101,7 @@ public interface ComponentDefinition extends BeanMetadataElement {
 	 * however these are <strong>not</strong> included as they may be not available immediately.
 	 * Important {@link BeanReference BeanReferences} are available from {@link #getBeanReferences()}.
 	 * @return the array of BeanDefinitions, or an empty array if none
+	 * 返回BeanDefinition数组
 	 */
 	BeanDefinition[] getBeanDefinitions();
 
@@ -107,6 +111,7 @@ public interface ComponentDefinition extends BeanMetadataElement {
 	 * <p>Other inner beans may exist within the associated {@link BeanDefinition BeanDefinitions},
 	 * however these are not considered to be needed for validation or for user visualization.
 	 * @return the array of BeanDefinitions, or an empty array if none
+	 * 返回内部beandefinition数组
 	 */
 	BeanDefinition[] getInnerBeanDefinitions();
 
@@ -117,6 +122,7 @@ public interface ComponentDefinition extends BeanMetadataElement {
 	 * {@link BeanDefinition BeanDefinitions}, however these are not considered
 	 * to be needed for validation or for user visualization.
 	 * @return the array of BeanReferences, or an empty array if none
+	 * 返回BeanReferences数组
 	 */
 	BeanReference[] getBeanReferences();
 

@@ -10,8 +10,7 @@
 /**
  * @version 1.0.0
  * @author oldflame-Jm
- * 配置方式实现AOP----declare-parents
+ * spring Aop简单实例  配置2
+ * 相对来说其实第一种比较灵活  可以方便配置文件进行卸载
  */
-package com.mitix.spring.aop.exp2;
-//<aop:declare-parents/>标签的使用
-//作用，使一个实现类拥有另外一个接口和实现类的功能
+package com.mitix.spring.aop.exp5;

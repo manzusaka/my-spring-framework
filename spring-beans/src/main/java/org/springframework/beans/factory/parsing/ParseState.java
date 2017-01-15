@@ -39,6 +39,7 @@ public final class ParseState {
 
 	/**
 	 * Internal {@link Stack} storage.
+	 * 堆存储
 	 */
 	private final Stack<Entry> state;
 

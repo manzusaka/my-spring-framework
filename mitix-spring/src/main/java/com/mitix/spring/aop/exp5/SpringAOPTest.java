@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-package com.mitix.spring.aop.exp1;
+package com.mitix.spring.aop.exp5;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -24,10 +24,9 @@ public class SpringAOPTest {
    */
   public static void main(String[] args) {
     //测试ApplicationContext第一个Beans实例
-    ApplicationContext context=new ClassPathXmlApplicationContext("aop/exp1/applicationContext.xml");
+    ApplicationContext context=new ClassPathXmlApplicationContext("aop/exp5/applicationContext.xml");
     TestBean bean=(TestBean) context.getBean("testbean");
     bean.print();
-    bean.print2();
   }
 
 }

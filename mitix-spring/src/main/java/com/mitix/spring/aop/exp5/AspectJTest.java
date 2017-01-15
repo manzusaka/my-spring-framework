@@ -8,7 +8,7 @@
  * Apache License Version 2.0 http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-package com.mitix.spring.aop.exp2;
+package com.mitix.spring.aop.exp5;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;

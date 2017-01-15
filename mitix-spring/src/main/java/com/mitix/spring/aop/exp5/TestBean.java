@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-package com.mitix.spring.aop.exp2;
+package com.mitix.spring.aop.exp5;
 
 /**
  * @version 1.0.0
