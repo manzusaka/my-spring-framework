@@ -103,13 +103,14 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 	private Class<?> pointcutDeclarationScope;
 
 	private String[] pointcutParameterNames = new String[0];
-
+	
 	private Class<?>[] pointcutParameterTypes = new Class<?>[0];
 
 	private BeanFactory beanFactory;
-
+    //切面类加载器
+    //transient 修饰符表示该变量不参与持久化
 	private transient ClassLoader pointcutClassLoader;
-
+	//切点表达式接口
 	private transient PointcutExpression pointcutExpression;
 
 	private transient Map<Method, ShadowMatch> shadowMatchCache = new ConcurrentHashMap<Method, ShadowMatch>(32);

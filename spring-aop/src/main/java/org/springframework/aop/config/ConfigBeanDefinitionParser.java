@@ -238,6 +238,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 									aspectElement, this.parseState.snapshot());
 							return;
 						}
+						//RuntimeBeanReference 按照字面意思应该使运行时引用
 						beanReferences.add(new RuntimeBeanReference(aspectName));
 					}
 					AbstractBeanDefinition advisorDefinition = parseAdvice(

@@ -69,6 +69,7 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		for (AdvisorAdapter adapter : this.adapters) {
 			// Check that it is supported.
 			if (adapter.supportsAdvice(advice)) {
+				//增强点
 				return new DefaultPointcutAdvisor(advice);
 			}
 		}

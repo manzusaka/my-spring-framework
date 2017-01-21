@@ -127,15 +127,15 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	private TargetSourceCreator[] customTargetSourceCreators;
 
 	private BeanFactory beanFactory;
-
+	//使用customTargetSourceCreators做增强的bean
 	private final Set<String> targetSourcedBeans =
 			Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>(16));
-
+	//再init做增强的bean
 	private final Set<Object> earlyProxyReferences =
 			Collections.newSetFromMap(new ConcurrentHashMap<Object, Boolean>(16));
 
 	private final Map<Object, Class<?>> proxyTypes = new ConcurrentHashMap<Object, Class<?>>(16);
-
+	//增强bean缓存当  Object为基础类型或者不需要通知增强的时候  会设置成false
 	private final Map<Object, Boolean> advisedBeans = new ConcurrentHashMap<Object, Boolean>(256);
 
 
@@ -237,15 +237,23 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 		return wrapIfNecessary(bean, beanName, cacheKey);
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation(java.lang.Class, java.lang.String)
+	 * 代理增强处理  
+	 */
 	@Override
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+		//获取参数  策略
 		Object cacheKey = getCacheKey(beanClass, beanName);
-
+		
 		if (beanName == null || !this.targetSourcedBeans.contains(beanName)) {
+			//增强bean
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
+			//如果是基础类bean就不用增强了
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;
@@ -255,9 +263,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		// Create proxy here if we have a custom TargetSource.
 		// Suppresses unnecessary default instantiation of the target bean:
 		// The TargetSource will handle target instances in a custom fashion.
+		/*
+		 * 如果有custom TargetSource再这里做代理增强
+		 */
 		if (beanName != null) {
 			TargetSource targetSource = getCustomTargetSource(beanClass, beanName);
 			if (targetSource != null) {
+				//进行增强处理
 				this.targetSourcedBeans.add(beanName);
 				Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(beanClass, beanName, targetSource);
 				Object proxy = createProxy(beanClass, beanName, specificInterceptors, targetSource);
@@ -313,6 +325,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @param beanClass the bean class
 	 * @param beanName the bean name
 	 * @return the cache key for the given class and name
+	 * 判断是获取beanclass 还是beanname  或者是FactoryBean&beanname
 	 */
 	protected Object getCacheKey(Class<?> beanClass, String beanName) {
 		if (StringUtils.hasLength(beanName)) {
@@ -330,8 +343,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @param beanName the name of the bean
 	 * @param cacheKey the cache key for metadata access
 	 * @return a proxy wrapping the bean, or the raw bean instance as-is
+	 * 代理增强处理
 	 */
 	protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+		//已经Instantiation被做过增强
 		if (beanName != null && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
@@ -342,10 +357,12 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
 			return bean;
 		}
-
+		
 		// Create proxy if we have advice.
+		// 获取增强方法   获取增强通知点advice
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
+			//标记这个bean已经找过并且找到增强方法
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
@@ -443,25 +460,30 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		ProxyFactory proxyFactory = new ProxyFactory();
+		//获取当前类的相关属性
 		proxyFactory.copyFrom(this);
-
+		//判断是否用proxyTargetClass代理  也就是CGLIB
 		if (!proxyFactory.isProxyTargetClass()) {
+			//需要使用ProxyTargetClass代理就是没有接口  只能用CGLIB了
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
 			}
 			else {
+				//使用接口进行代理
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}
-
+		//转化增强器OBJECT 转化成Advisor
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
 		for (Advisor advisor : advisors) {
+			//引入增强器
 			proxyFactory.addAdvisor(advisor);
 		}
-
+		//设置要代理的类
 		proxyFactory.setTargetSource(targetSource);
+		//定制代理
 		customizeProxyFactory(proxyFactory);
-
+		
 		proxyFactory.setFrozen(this.freezeProxy);
 		if (advisorsPreFiltered()) {
 			proxyFactory.setPreFiltered(true);
@@ -531,6 +553,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 		Advisor[] advisors = new Advisor[allInterceptors.size()];
 		for (int i = 0; i < allInterceptors.size(); i++) {
+			//封装拦截器 转化成advisors
 			advisors[i] = this.advisorAdapterRegistry.wrap(allInterceptors.get(i));
 		}
 		return advisors;

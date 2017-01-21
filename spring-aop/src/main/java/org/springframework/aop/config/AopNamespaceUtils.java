@@ -81,10 +81,14 @@ public abstract class AopNamespaceUtils {
 
 	private static void useClassProxyingIfNecessary(BeanDefinitionRegistry registry, Element sourceElement) {
 		if (sourceElement != null) {
+			//处理proxy-target-class
+			//强制使用CGLIB代理=true
 			boolean proxyTargetClass = Boolean.valueOf(sourceElement.getAttribute(PROXY_TARGET_CLASS_ATTRIBUTE));
 			if (proxyTargetClass) {
 				AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);
 			}
+			//处理expose-proxy
+			//用于方法内事务的代理   一般可以不用
 			boolean exposeProxy = Boolean.valueOf(sourceElement.getAttribute(EXPOSE_PROXY_ATTRIBUTE));
 			if (exposeProxy) {
 				AopConfigUtils.forceAutoProxyCreatorToExposeProxy(registry);

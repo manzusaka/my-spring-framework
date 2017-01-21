@@ -552,7 +552,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			 * ,因为解析xml资源应该是context自己继承实现了 这里面其实只是解析了一堆BeanDefinition
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
-
+			//打印beanFactory日志
+			logger.info(beanFactory);
+			
 			// Prepare the bean factory for use in this context.
 			/*
 			 * 对beanFactory做可用前的准备

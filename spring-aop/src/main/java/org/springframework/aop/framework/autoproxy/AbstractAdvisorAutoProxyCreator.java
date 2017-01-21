@@ -49,7 +49,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
 	private BeanFactoryAdvisorRetrievalHelper advisorRetrievalHelper;
 
-
+	//设置属性的时候设置了BeanFactoryAdvisorRetrievalHelperAdapter
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) {
 		super.setBeanFactory(beanFactory);
@@ -84,10 +84,13 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * @see #extendAdvisors
 	 */
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
+		//获取增强器
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
+		//获取增强器中适用于目前这个bean的增强器
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
 		extendAdvisors(eligibleAdvisors);
 		if (!eligibleAdvisors.isEmpty()) {
+			//增强器排序
 			eligibleAdvisors = sortAdvisors(eligibleAdvisors);
 		}
 		return eligibleAdvisors;
@@ -96,6 +99,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	/**
 	 * Find all candidate Advisors to use in auto-proxying.
 	 * @return the List of candidate Advisors
+	 * 获取增强器
 	 */
 	protected List<Advisor> findCandidateAdvisors() {
 		return this.advisorRetrievalHelper.findAdvisorBeans();
@@ -112,9 +116,10 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 */
 	protected List<Advisor> findAdvisorsThatCanApply(
 			List<Advisor> candidateAdvisors, Class<?> beanClass, String beanName) {
-
+		//设置正在处理的name
 		ProxyCreationContext.setCurrentProxiedBeanName(beanName);
 		try {
+			//增强器过滤  寻找匹配的
 			return AopUtils.findAdvisorsThatCanApply(candidateAdvisors, beanClass);
 		}
 		finally {

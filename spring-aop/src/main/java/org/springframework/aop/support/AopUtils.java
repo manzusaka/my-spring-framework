@@ -255,8 +255,10 @@ public abstract class AopUtils {
 	 * @param advisor the advisor to check
 	 * @param targetClass class we're testing
 	 * @return whether the pointcut can apply on any method
+	 *advisor=增强器  适用targetClass
 	 */
 	public static boolean canApply(Advisor advisor, Class<?> targetClass) {
+		//false  引介增强未处理或者无引介增强
 		return canApply(advisor, targetClass, false);
 	}
 
@@ -271,6 +273,7 @@ public abstract class AopUtils {
 	 * @return whether the pointcut can apply on any method
 	 */
 	public static boolean canApply(Advisor advisor, Class<?> targetClass, boolean hasIntroductions) {
+		//如果是引介增强直接返回了是否合适   合适就返回true
 		if (advisor instanceof IntroductionAdvisor) {
 			return ((IntroductionAdvisor) advisor).getClassFilter().matches(targetClass);
 		}
@@ -298,16 +301,20 @@ public abstract class AopUtils {
 		}
 		List<Advisor> eligibleAdvisors = new LinkedList<Advisor>();
 		for (Advisor candidate : candidateAdvisors) {
+			//首先处理引介增强
 			if (candidate instanceof IntroductionAdvisor && canApply(candidate, clazz)) {
 				eligibleAdvisors.add(candidate);
 			}
 		}
+		//引介增强已经处理（如果有东西）
 		boolean hasIntroductions = !eligibleAdvisors.isEmpty();
 		for (Advisor candidate : candidateAdvisors) {
+			//引介增强处理过了就跳过
 			if (candidate instanceof IntroductionAdvisor) {
 				// already processed
 				continue;
 			}
+			//处理普通增强
 			if (canApply(candidate, clazz, hasIntroductions)) {
 				eligibleAdvisors.add(candidate);
 			}

@@ -41,9 +41,10 @@ public final class ParserContext {
 	private final XmlReaderContext readerContext;
 
 	private final BeanDefinitionParserDelegate delegate;
-
+	//一般为null
 	private BeanDefinition containingBeanDefinition;
 	
+	//这里其实就是注册的代理组件PointcutComponentDefinition  AdvisorComponentDefinition等
 	private final Stack<ComponentDefinition> containingComponents = new Stack<ComponentDefinition>();
 
 

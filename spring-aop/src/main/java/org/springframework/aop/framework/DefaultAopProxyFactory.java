@@ -48,6 +48,11 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 	@Override
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+		/*
+		 * 1.Optimize控制CGlib代理的时候是否使用激进的优化策略
+		 * 2.ProxyTargetClass 就是配置中强制使用CGLIB进行代理
+		 * 3.hasNoUserSuppliedProxyInterfaces是否存在代理接口
+		 */
 		if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
 			Class<?> targetClass = config.getTargetClass();
 			if (targetClass == null) {
@@ -55,8 +60,10 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 						"Either an interface or a target is required for proxy creation.");
 			}
 			if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {
+				//使用jdk接口代理  出来的类是$proxy1 父类为java.lang.reflect.Proxy  实现接口为传入接口 
 				return new JdkDynamicAopProxy(config);
 			}
+			//使用CGLIB进行代理  和JDK代理再SPRING使用过程中最主要的区别应该是  CGLIB代理的父类应该是bean本身   JDK代理的父类是Proxy
 			return new ObjenesisCglibAopProxy(config);
 		}
 		else {

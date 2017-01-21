@@ -59,6 +59,7 @@ public abstract class AopConfigUtils {
 	/**
 	 * Setup the escalation list.
 	 */
+	//升级顺序
 	static {
 		APC_PRIORITY_LIST.add(InfrastructureAdvisorAutoProxyCreator.class);
 		APC_PRIORITY_LIST.add(AspectJAwareAdvisorAutoProxyCreator.class);
@@ -103,15 +104,25 @@ public abstract class AopConfigUtils {
 			definition.getPropertyValues().add("exposeProxy", Boolean.TRUE);
 		}
 	}
-
-
+	
+	/*
+	 * 注册或者升级AnnotationAwareAspectJAutoProxyCreator.class
+	 * 注：若前面有了aop:config的xml 这种情况下就会升级
+	 * beanName=org.springframework.aop.config.internalAutoProxyCreator
+	 */
 	private static BeanDefinition registerOrEscalateApcAsRequired(Class<?> cls, BeanDefinitionRegistry registry, Object source) {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+		//已经注册org.springframework.aop.config.internalAutoProxyCreator
 		if (registry.containsBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME)) {
+			//获取bean
 			BeanDefinition apcDefinition = registry.getBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME);
+			//beanclass不相等
 			if (!cls.getName().equals(apcDefinition.getBeanClassName())) {
+				//返回0-1-2的升级顺序
 				int currentPriority = findPriorityForClass(apcDefinition.getBeanClassName());
+				//返回目前的顺序
 				int requiredPriority = findPriorityForClass(cls);
+				//如果原来四的顺序小于现在的   那就升级
 				if (currentPriority < requiredPriority) {
 					apcDefinition.setBeanClassName(cls.getName());
 				}

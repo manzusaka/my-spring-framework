@@ -25,7 +25,15 @@ public class SpringAOPTest {
   public static void main(String[] args) {
     //测试ApplicationContext第一个Beans实例
     ApplicationContext context=new ClassPathXmlApplicationContext("aop/exp1/applicationContext.xml");
-    TestBean bean=(TestBean) context.getBean("testbean");
+    ITestBean bean=(ITestBean) context.getBean("testbean");
+    Class<?> beanclass=bean.getClass();
+    System.out.println(beanclass.getName());
+    System.out.println(beanclass.getSuperclass().getName());
+    System.out.println(beanclass.getSuperclass().getSuperclass().getName());
+    System.out.println(beanclass.getInterfaces()[0].getName());
+    System.out.println(beanclass.getInterfaces()[1].getName());
+    
+
     bean.print();
     bean.print2();
   }

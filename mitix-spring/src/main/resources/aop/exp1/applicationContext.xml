@@ -10,7 +10,8 @@
 				
 	<bean id="testbean" class="com.mitix.spring.aop.exp1.TestBean"></bean>
 	<bean id="logcut" class="com.mitix.spring.aop.exp1.AspectJTest"></bean>
-	<aop:config>
+	<!-- proxy-target-class="true"使用CGLIB -->
+	<aop:config proxy-target-class="true">
 		<!-- 切点解析 -->
 		<aop:pointcut id="infotech1" expression="execution(* com.mitix.spring.aop.exp1.TestBean.print2(..))" />
 		<!--pointcut 和  pointcut-ref互斥  只能定义一个-->
@@ -19,7 +20,7 @@
 		<!-- 
 		<aop:advisor advice-ref="" id="" order="" pointcut="" pointcut-ref=""/>
  		-->
-		<aop:aspect id="aspectJTest" ref="logcut" >
+		<aop:aspect ref="logcut" >
 			<aop:before method="beforeLog" pointcut="execution(* com.mitix.spring.aop.exp1.TestBean.print(..))"/>
 			<aop:after method="afterLog" pointcut-ref="infotech1"/>
 			<aop:around method="aroundLog" pointcut-ref="infotech1"/>
