@@ -11,7 +11,6 @@
 package com.mitix.spring.jdbc.exp1;
 
 import java.util.List;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -22,11 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class UserServiceImpl implements UserService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
-
   
-  public void setDataSource(DataSource dataSource) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
-  }
   /*
    * (non-Javadoc)
    * 
@@ -34,8 +29,7 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public void save(User user) {
-//    jdbcTemplate.update("insert into user (id,age,name,sex) values(?,?,?,?)", new Object[] {user.getId(), user.getAge(), user.getName(), user.getSex()},
-//        new int[] {java.sql.Types.INTEGER, java.sql.Types.INTEGER, java.sql.Types.VARCHAR, java.sql.Types.VARCHAR});
+    jdbcTemplate.update("insert into user (id,age,name,sex) values(?,?,?,?)", user.getId(), user.getAge(), user.getName(), user.getSex());
   }
 
   /*
@@ -45,8 +39,16 @@ public class UserServiceImpl implements UserService {
    */
   @Override
   public List<User> getUsers() {
-//    List<User> list=jdbcTemplate.query("select * from user", new UserRowMapper());
-    return null;
+    List<User> list=jdbcTemplate.query("select * from user", new UserRowMapper());
+    return list;
+  }
+
+  public JdbcTemplate getJdbcTemplate() {
+    return jdbcTemplate;
+  }
+
+  public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
   }
 
 }
