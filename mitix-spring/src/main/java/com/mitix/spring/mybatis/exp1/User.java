@@ -8,7 +8,7 @@
  * Apache License Version 2.0 http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-package com.mitix.spring.jdbc.exp1;
+package com.mitix.spring.mybatis.exp1;
 
 /**
  * @version 1.0.0
@@ -19,18 +19,7 @@ public class User {
   private String name;
   private int age;
   private String sex;
-  
-  
-  public User(){
-    super();
-  }
-  
-  public User(String name,String sex,int age){
-    this.name=name;
-    this.sex=sex;
-    this.age=age;
-  }
-  
+
   public int getId() {
     return id;
   }

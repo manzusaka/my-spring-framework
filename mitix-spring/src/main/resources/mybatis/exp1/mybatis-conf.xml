@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC  "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+<configuration>
+	<settings>
+		<!-- 设置一些全局属性 -->
+		<setting name="cacheEnabled" value="false"/>
+		<setting name="useGeneratedKeys" value="true"/>
+		<setting name="defaultExecutorType" value="REUSE"/>
+	</settings>
+	<typeAliases>
+		<typeAlias alias="user" type="com.mitix.spring.mybatis.exp1.User" />
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="jdbc"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver"/>
+				<property name="url" value="jdbc:mysql://192.168.10.200:3306/dz_mysql"/>
+				<property name="username" value="dz_mysql"/>
+				<property name="password" value="dz_mysql"/>
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="mybatis/exp1/UserMapper.xml"/>
+	</mappers>
+</configuration>
