@@ -220,9 +220,10 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 * @param basePackages the packages to check for annotated classes
 	 * @return number of beans registered
 	 */
+	//扫描参数数组
 	public int scan(String... basePackages) {
 		int beanCountAtScanStart = this.registry.getBeanDefinitionCount();
-
+		//真实的扫描方法
 		doScan(basePackages);
 
 		// Register annotation config processors, if necessary.
@@ -246,6 +247,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<BeanDefinitionHolder>();
 		for (String basePackage : basePackages) {
 			//寻找候选的BeanDefinition
+			//注：注解在匹配的时候会递归的   会找这个注解的父注解
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			for (BeanDefinition candidate : candidates) {
 				//scope注解设置beandefinition的scope属性

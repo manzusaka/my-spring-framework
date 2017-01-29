@@ -304,9 +304,11 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
     if (this.processPropertyPlaceHolders) {
       processPropertyPlaceHolders();
     }
-
+    //类路径扫描工具
     ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
+    //true
     scanner.setAddToConfig(this.addToConfig);
+    //注册的时候应该是空的
     scanner.setAnnotationClass(this.annotationClass);
     scanner.setMarkerInterface(this.markerInterface);
     scanner.setSqlSessionFactory(this.sqlSessionFactory);
@@ -315,6 +317,8 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
     scanner.setSqlSessionTemplateBeanName(this.sqlSessionTemplateBeanName);
     scanner.setResourceLoader(this.applicationContext);
     scanner.setBeanNameGenerator(this.nameGenerator);
+    //开始注册拦截器
+    // 如果没有配置注解和接口类型  那么默认设置全部匹配   除掉package-info.java
     scanner.registerFilters();
     scanner.scan(StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
   }

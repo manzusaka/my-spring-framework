@@ -118,6 +118,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
     boolean acceptAllInterfaces = true;
 
     // if specified, use the given annotation and / or marker interface
+    //如果有注解  使用给的注解注册扫描Filter
     if (this.annotationClass != null) {
       addIncludeFilter(new AnnotationTypeFilter(this.annotationClass));
       acceptAllInterfaces = false;
@@ -166,6 +167,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
     if (beanDefinitions.isEmpty()) {
       logger.warn("No MyBatis mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
     } else {
+      //这个是关键，会把mapper接口替换成MapperFactoryBean  然后mapper增加一个构造函数放进去
       processBeanDefinitions(beanDefinitions);
     }
 

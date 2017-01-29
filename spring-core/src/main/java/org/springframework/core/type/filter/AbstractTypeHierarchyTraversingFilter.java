@@ -27,11 +27,13 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 
 /**
  * Type filter that is aware of traversing over hierarchy.
+ * 层级结构的过滤器   抽象实现 
  *
  * <p>This filter is useful when matching needs to be made based on potentially the
  * whole class/interface hierarchy. The algorithm employed uses a succeed-fast
  * strategy: if at any time a match is declared, no further processing is
  * carried out.
+ * 匹配潜在类型的接口  使用succeed-fast算法
  *
  * @author Ramnivas Laddad
  * @author Mark Fisher
@@ -40,35 +42,39 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 public abstract class AbstractTypeHierarchyTraversingFilter implements TypeFilter {
 
 	protected final Log logger = LogFactory.getLog(getClass());
-
+	//是否有Inherited注解
 	private final boolean considerInherited;
-
+	//是否有接口
 	private final boolean considerInterfaces;
 
-
+	
 	protected AbstractTypeHierarchyTraversingFilter(boolean considerInherited, boolean considerInterfaces) {
 		this.considerInherited = considerInherited;
 		this.considerInterfaces = considerInterfaces;
 	}
 
-
+	//匹配的模板方法
 	@Override
 	public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory)
 			throws IOException {
 
 		// This method optimizes avoiding unnecessary creation of ClassReaders
 		// as well as visiting over those readers.
+		//匹配注解  在AnnotationTypeFilter被实现
 		if (matchSelf(metadataReader)) {
 			return true;
 		}
+		//类类型匹配AssignableTypeFilter 实现
 		ClassMetadata metadata = metadataReader.getClassMetadata();
 		if (matchClassName(metadata.getClassName())) {
 			return true;
 		}
-
+		//如果存在Inherited 注解
 		if (this.considerInherited) {
+			//有父注解匹配父注解
 			if (metadata.hasSuperClass()) {
 				// Optimization to avoid creating ClassReader for super class.
+				//匹配父注解
 				Boolean superClassMatch = matchSuperClass(metadata.getSuperClassName());
 				if (superClassMatch != null) {
 					if (superClassMatch.booleanValue()) {
@@ -76,8 +82,10 @@ public abstract class AbstractTypeHierarchyTraversingFilter implements TypeFilte
 					}
 				}
 				else {
+					//需要匹配父注解
 					// Need to read super class to determine a match...
 					try {
+						//有父类就匹配父类
 						if (match(metadata.getSuperClassName(), metadataReaderFactory)) {
 							return true;
 						}
@@ -89,7 +97,7 @@ public abstract class AbstractTypeHierarchyTraversingFilter implements TypeFilte
  				}
 			}
 		}
-
+		//如果有接口匹配接口
 		if (this.considerInterfaces) {
 			for (String ifc : metadata.getInterfaceNames()) {
 				// Optimization to avoid creating ClassReader for super class

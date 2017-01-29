@@ -286,6 +286,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				if (resource.isReadable()) {
 					try {
 						//根据resource如果没有生成过SimpleMetadataReader那么生成新的SimpleMetadataReader
+						//对resource进行封装
 						MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
 						//满足是一个组件的所有要求
 						if (isCandidateComponent(metadataReader)) {
