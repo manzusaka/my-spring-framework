@@ -100,6 +100,7 @@ public class ProxyProcessorSupport extends ProxyConfig implements Ordered, BeanC
 		Class<?>[] targetInterfaces = ClassUtils.getAllInterfacesForClass(beanClass, getProxyClassLoader());
 		boolean hasReasonableProxyInterface = false;
 		for (Class<?> ifc : targetInterfaces) {
+			//不是spring的几个接口  可以进去看                   不是内部的语言接口        接口有方法
 			if (!isConfigurationCallbackInterface(ifc) && !isInternalLanguageInterface(ifc) &&
 					ifc.getMethods().length > 0) {
 				hasReasonableProxyInterface = true;
@@ -108,6 +109,7 @@ public class ProxyProcessorSupport extends ProxyConfig implements Ordered, BeanC
 		}
 		if (hasReasonableProxyInterface) {
 			// Must allow for introductions; can't just set interfaces to the target's interfaces only.
+			//把接口放进proxyFactory
 			for (Class<?> ifc : targetInterfaces) {
 				proxyFactory.addInterface(ifc);
 			}

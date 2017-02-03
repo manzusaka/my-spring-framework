@@ -99,10 +99,12 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 	 * exception in this case, rather than let a mysterious failure happen later.
 	 */
 	public JdkDynamicAopProxy(AdvisedSupport config) throws AopConfigException {
+		//AdvisedSupport 其实就是proxyFactory
 		Assert.notNull(config, "AdvisedSupport must not be null");
 		if (config.getAdvisors().length == 0 && config.getTargetSource() == AdvisedSupport.EMPTY_TARGET_SOURCE) {
 			throw new AopConfigException("No advisors and no TargetSource specified");
 		}
+		//config=AdvisedSupport 其实就是proxyFactory
 		this.advised = config;
 	}
 

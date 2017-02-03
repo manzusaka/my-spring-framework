@@ -21,7 +21,8 @@ import java.sql.Connection;
 /**
  * Interface that defines Spring-compliant transaction properties.
  * Based on the propagation behavior definitions analogous to EJB CMT attributes.
- *
+ * 接口定义了transaction的属性
+ * 
  * <p>Note that isolation level and timeout settings will not get applied unless
  * an actual new transaction gets started. As only {@link #PROPAGATION_REQUIRED},
  * {@link #PROPAGATION_REQUIRES_NEW} and {@link #PROPAGATION_NESTED} can cause

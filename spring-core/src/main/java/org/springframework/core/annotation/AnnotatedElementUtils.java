@@ -994,6 +994,7 @@ public class AnnotatedElementUtils {
 
 		// Search in annotations
 		for (Annotation annotation : annotations) {
+			//是否是java.long的注解
 			if (!AnnotationUtils.isInJavaLangAnnotationPackage(annotation)) {
 				if (annotation.annotationType() == annotationType ||
 						annotation.annotationType().getName().equals(annotationName) ||

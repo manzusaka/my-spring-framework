@@ -178,6 +178,7 @@ public abstract class ReflectionUtils {
 		while (searchType != null) {
 			Method[] methods = (searchType.isInterface() ? searchType.getMethods() : getDeclaredMethods(searchType));
 			for (Method method : methods) {
+				//找到名字一样参数一样的方法，返回，如果没找到父类继续找，没找到返回null
 				if (name.equals(method.getName()) &&
 						(paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {
 					return method;

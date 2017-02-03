@@ -22,6 +22,7 @@ import org.springframework.transaction.TransactionDefinition;
  * This interface adds a {@code rollbackOn} specification to {@link TransactionDefinition}.
  * As custom {@code rollbackOn} is only possible with AOP, this class resides
  * in the AOP transaction package.
+ * AOP transaction  相对于TransactionDefinition增加了事务规范rollbackOn和getQualifier入去事务的manaeger
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

@@ -69,6 +69,7 @@ public class AnnotationTransactionAttributeSource extends AbstractFallbackTransa
 	 * Create a default AnnotationTransactionAttributeSource, supporting
 	 * public methods that carry the {@code Transactional} annotation
 	 * or the EJB3 {@link javax.ejb.TransactionAttribute} annotation.
+	 * 
 	 */
 	public AnnotationTransactionAttributeSource() {
 		this(true);
@@ -82,6 +83,7 @@ public class AnnotationTransactionAttributeSource extends AbstractFallbackTransa
 	 * the {@code Transactional} annotation only (typically for use
 	 * with proxy-based AOP), or protected/private methods as well
 	 * (typically used with AspectJ class weaving)
+	 * 对于默认的Transaction  事务   publicMethodsOnly=true　就是只支持对于public方法进行事务 
 	 */
 	public AnnotationTransactionAttributeSource(boolean publicMethodsOnly) {
 		this.publicMethodsOnly = publicMethodsOnly;
@@ -130,11 +132,13 @@ public class AnnotationTransactionAttributeSource extends AbstractFallbackTransa
 
 	@Override
 	protected TransactionAttribute findTransactionAttribute(Method method) {
+		//找到这个方法的事务声明
 		return determineTransactionAttribute(method);
 	}
 
 	@Override
 	protected TransactionAttribute findTransactionAttribute(Class<?> clazz) {
+		//找到这个类的事务声明
 		return determineTransactionAttribute(clazz);
 	}
 
@@ -148,9 +152,13 @@ public class AnnotationTransactionAttributeSource extends AbstractFallbackTransa
 	 * @param ae the annotated method or class
 	 * @return TransactionAttribute the configured transaction attribute,
 	 * or {@code null} if none was found
+	 * 
 	 */
 	protected TransactionAttribute determineTransactionAttribute(AnnotatedElement ae) {
 		if (ae.getAnnotations().length > 0) {
+			/*
+			 * 默认SpringTransactionAnnotationParser
+			 */
 			for (TransactionAnnotationParser annotationParser : this.annotationParsers) {
 				TransactionAttribute attr = annotationParser.parseTransactionAnnotation(ae);
 				if (attr != null) {

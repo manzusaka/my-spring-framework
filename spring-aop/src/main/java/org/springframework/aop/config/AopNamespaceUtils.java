@@ -54,7 +54,7 @@ public abstract class AopNamespaceUtils {
 
 	public static void registerAutoProxyCreatorIfNecessary(
 			ParserContext parserContext, Element sourceElement) {
-
+		//注册或者升级AutoProxyCreator  如果这个时候有动作还会注册一个
 		BeanDefinition beanDefinition = AopConfigUtils.registerAutoProxyCreatorIfNecessary(
 				parserContext.getRegistry(), parserContext.extractSource(sourceElement));
 		useClassProxyingIfNecessary(parserContext.getRegistry(), sourceElement);

@@ -350,6 +350,7 @@ public abstract class ClassUtils {
 	 * class, but the original class in case of a CGLIB-generated subclass.
 	 * @param clazz the class to check
 	 * @return the user-defined class
+	 * 获取用户的class 如果使用CGLIB进行代理  那class名字有"$$" 那么找代理类的父类
 	 */
 	public static Class<?> getUserClass(Class<?> clazz) {
 		if (clazz != null && clazz.getName().contains(CGLIB_CLASS_SEPARATOR)) {
@@ -774,11 +775,15 @@ public abstract class ClassUtils {
 	 * {@code targetClass} doesn't implement it or is {@code null}
 	 */
 	public static Method getMostSpecificMethod(Method method, Class<?> targetClass) {
+		//方法不为空+方法可以被重写+目标类不为空+目标类不是方法的那个类
+		//上面的条件加起来要表达的就是  ----（这个方法有可能在不表类里面被找到，就是接口的实现方法或者子类重写父类的方法，如果方法就是目标类上的方法  那么最后个判断为false就不进去了）
 		if (method != null && isOverridable(method, targetClass) &&
 				targetClass != null && targetClass != method.getDeclaringClass()) {
 			try {
+				//共有方法
 				if (Modifier.isPublic(method.getModifiers())) {
 					try {
+						//共有方法直接在targetClass找了
 						return targetClass.getMethod(method.getName(), method.getParameterTypes());
 					}
 					catch (NoSuchMethodException ex) {
@@ -786,6 +791,7 @@ public abstract class ClassUtils {
 					}
 				}
 				else {
+					//非共有方法
 					Method specificMethod =
 							ReflectionUtils.findMethod(targetClass, method.getName(), method.getParameterTypes());
 					return (specificMethod != null ? specificMethod : method);
@@ -822,14 +828,19 @@ public abstract class ClassUtils {
 	 * Determine whether the given method is overridable in the given target class.
 	 * @param method the method to check
 	 * @param targetClass the target class to check against
+	 * 方法名和目标类  （方法在tx的代码跟踪下来    方法可能是targetClass的接口的方法或者父类的接口的方法）
+	 * 确定方法是否可以被目标类重写
 	 */
 	private static boolean isOverridable(Method method, Class<?> targetClass) {
+		//如果是私有方法  那false  私有方法是不能重写
 		if (Modifier.isPrivate(method.getModifiers())) {
 			return false;
 		}
+		//共有的和保护的方法可以被重新
 		if (Modifier.isPublic(method.getModifiers()) || Modifier.isProtected(method.getModifiers())) {
 			return true;
 		}
+		//如果默认没有属性值的   那看方法的calss和目标class是否在一个包下
 		return getPackageName(method.getDeclaringClass()).equals(getPackageName(targetClass));
 	}
 

@@ -36,9 +36,10 @@ import org.springframework.transaction.interceptor.TransactionAttribute;
  */
 @SuppressWarnings("serial")
 public class SpringTransactionAnnotationParser implements TransactionAnnotationParser, Serializable {
-
+	//解析Transaction
 	@Override
 	public TransactionAttribute parseTransactionAnnotation(AnnotatedElement ae) {
+		//获取注解Transactional合并Annotation
 		AnnotationAttributes attributes = AnnotatedElementUtils.getMergedAnnotationAttributes(ae, Transactional.class);
 		if (attributes != null) {
 			return parseTransactionAnnotation(attributes);
@@ -51,13 +52,16 @@ public class SpringTransactionAnnotationParser implements TransactionAnnotationP
 	public TransactionAttribute parseTransactionAnnotation(Transactional ann) {
 		return parseTransactionAnnotation(AnnotationUtils.getAnnotationAttributes(ann, false, false));
 	}
-
+	//解析注解
 	protected TransactionAttribute parseTransactionAnnotation(AnnotationAttributes attributes) {
 		RuleBasedTransactionAttribute rbta = new RuleBasedTransactionAttribute();
+		//解析事务传播方式
 		Propagation propagation = attributes.getEnum("propagation");
 		rbta.setPropagationBehavior(propagation.value());
+		//解析事务隔离级别
 		Isolation isolation = attributes.getEnum("isolation");
 		rbta.setIsolationLevel(isolation.value());
+		//解析超时事件
 		rbta.setTimeout(attributes.getNumber("timeout").intValue());
 		rbta.setReadOnly(attributes.getBoolean("readOnly"));
 		rbta.setQualifier(attributes.getString("value"));

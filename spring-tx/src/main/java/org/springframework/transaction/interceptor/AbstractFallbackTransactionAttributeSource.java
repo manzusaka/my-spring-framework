@@ -84,10 +84,12 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 	public TransactionAttribute getTransactionAttribute(Method method, Class<?> targetClass) {
 		// First, see if we have a cached value.
 		Object cacheKey = getCacheKey(method, targetClass);
+		//TransactionAttribute缓存
 		Object cached = this.attributeCache.get(cacheKey);
 		if (cached != null) {
 			// Value will either be canonical value indicating there is no transaction attribute,
 			// or an actual transaction attribute.
+			//如果是DefaultTransactionAttribute返回null
 			if (cached == NULL_TRANSACTION_ATTRIBUTE) {
 				return null;
 			}
@@ -96,13 +98,16 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 			}
 		}
 		else {
+			//计算配置bean的TransactionAttribute属性   如果计算出来是个空  就是没有事务  那么返回个空   然后在缓存中添加一个DefaultTransactionAttribute  targetClass 目标类  原有的类
 			// We need to work it out.
+			//注 解析代码的顺序表面   在类上和方法上同时有事务注解是被允许的   会优先使用类上的  这样的化对于代码就可以有一定的遍历性了
 			TransactionAttribute txAttr = computeTransactionAttribute(method, targetClass);
 			// Put it in the cache.
 			if (txAttr == null) {
 				this.attributeCache.put(cacheKey, NULL_TRANSACTION_ATTRIBUTE);
 			}
 			else {
+				//返回一个经过鉴别的名字
 				String methodIdentification = ClassUtils.getQualifiedMethodName(method, targetClass);
 				if (txAttr instanceof DefaultTransactionAttribute) {
 					((DefaultTransactionAttribute) txAttr).setDescriptor(methodIdentification);
@@ -134,40 +139,50 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 	 * <p>As of 4.1.8, this method can be overridden.
 	 * @since 4.1.8
 	 * @see #getTransactionAttribute
+	 * 提取注解属性
 	 */
 	protected TransactionAttribute computeTransactionAttribute(Method method, Class<?> targetClass) {
 		// Don't allow no-public methods as required.
+		// 如果只允许public方法进行事务处理而该方法不是共有方法那就跳过     默认true
 		if (allowPublicMethodsOnly() && !Modifier.isPublic(method.getModifiers())) {
 			return null;
 		}
-
+		
 		// Ignore CGLIB subclasses - introspect the actual user class.
+		// 忽略CGLIBD代理类找到父类
 		Class<?> userClass = ClassUtils.getUserClass(targetClass);
 		// The method may be on an interface, but we need attributes from the target class.
 		// If the target class is null, the method will be unchanged.
+		// 找到真实的方法
 		Method specificMethod = ClassUtils.getMostSpecificMethod(method, userClass);
 		// If we are dealing with method with generic parameters, find the original method.
+		//找到桥接方法
 		specificMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
 
 		// First try is the method in the target class.
+		// 查看方法中是否存在事务声明
+		//备注  这个时候qualifier还没有值
 		TransactionAttribute txAttr = findTransactionAttribute(specificMethod);
 		if (txAttr != null) {
 			return txAttr;
 		}
-
+		
 		// Second try is the transaction attribute on the target class.
+		// 查看是否存在于类上的注解
 		txAttr = findTransactionAttribute(specificMethod.getDeclaringClass());
 		if (txAttr != null && ClassUtils.isUserLevelMethod(method)) {
 			return txAttr;
 		}
-
+		//如果存在接口
 		if (specificMethod != method) {
 			// Fallback is to look at the original method.
+			// 查找方法上的注解
 			txAttr = findTransactionAttribute(method);
 			if (txAttr != null) {
 				return txAttr;
 			}
 			// Last fallback is the class of the original method.
+			//查找类上的注解
 			txAttr = findTransactionAttribute(method.getDeclaringClass());
 			if (txAttr != null && ClassUtils.isUserLevelMethod(method)) {
 				return txAttr;

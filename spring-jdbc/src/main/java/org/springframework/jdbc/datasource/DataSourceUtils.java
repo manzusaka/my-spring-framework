@@ -181,6 +181,7 @@ public abstract class DataSourceUtils {
 		}
 
 		// Apply specific isolation level, if any.
+		//设置事务隔离级别
 		Integer previousIsolationLevel = null;
 		if (definition != null && definition.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT) {
 			if (logger.isDebugEnabled()) {

@@ -184,7 +184,10 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	@Override
 	protected Object doGetTransaction() {
 		DataSourceTransactionObject txObject = new DataSourceTransactionObject();
+		//保存点设置
 		txObject.setSavepointAllowed(isNestedTransactionAllowed());
+		//设置ConnectionHolder
+		//TransactionSynchronizationManager 事务同步管理类
 		ConnectionHolder conHolder =
 				(ConnectionHolder) TransactionSynchronizationManager.getResource(this.dataSource);
 		txObject.setConnectionHolder(conHolder, false);
@@ -199,6 +202,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 	/**
 	 * This implementation sets the isolation level but ignores the timeout.
+	 * 构造DataSourceTransaction  设置属性
 	 */
 	@Override
 	protected void doBegin(Object transaction, TransactionDefinition definition) {
@@ -217,7 +221,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 			txObject.getConnectionHolder().setSynchronizedWithTransaction(true);
 			con = txObject.getConnectionHolder().getConnection();
-
+			//事务现成绑定
 			Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(con, definition);
 			txObject.setPreviousIsolationLevel(previousIsolationLevel);
 
@@ -343,6 +347,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	/**
 	 * DataSource transaction object, representing a ConnectionHolder.
 	 * Used as transaction object by DataSourceTransactionManager.
+	 * 数据库事务对象
 	 */
 	private static class DataSourceTransactionObject extends JdbcTransactionObjectSupport {
 

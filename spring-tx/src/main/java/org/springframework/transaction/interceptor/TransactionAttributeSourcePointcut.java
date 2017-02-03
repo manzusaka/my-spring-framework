@@ -37,7 +37,11 @@ abstract class TransactionAttributeSourcePointcut extends StaticMethodMatcherPoi
 		if (TransactionalProxy.class.isAssignableFrom(targetClass)) {
 			return false;
 		}
+		/*
+		 * 对于spring的<tx:annotation-driven/>配置使用的是AnnotationTransactionAttributeSource
+		 */
 		TransactionAttributeSource tas = getTransactionAttributeSource();
+		//tas.getTransactionAttribute(method, targetClass)  这个
 		return (tas == null || tas.getTransactionAttribute(method, targetClass) != null);
 	}
 

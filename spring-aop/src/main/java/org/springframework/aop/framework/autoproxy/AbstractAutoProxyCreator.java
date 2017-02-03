@@ -253,7 +253,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
-			//如果是基础类bean就不用增强了
+			//如果是基础类bean就不用增强了           通知bean也不用增强了
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;
@@ -353,6 +353,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
+		//如果是内部类或者是通知bean本身  那就不进行代理
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
 			return bean;
@@ -464,7 +465,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		proxyFactory.copyFrom(this);
 		//判断是否用proxyTargetClass代理  也就是CGLIB
 		if (!proxyFactory.isProxyTargetClass()) {
-			//需要使用ProxyTargetClass代理就是没有接口  只能用CGLIB了
+			//需要使用ProxyTargetClass代理用CGLIB了
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
 			}
@@ -479,7 +480,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			//引入增强器
 			proxyFactory.addAdvisor(advisor);
 		}
+		
 		//设置要代理的类
+		//在AbstractAutoProxyCreator普通在init after的代理都是SingletonTargetSource
 		proxyFactory.setTargetSource(targetSource);
 		//定制代理
 		customizeProxyFactory(proxyFactory);

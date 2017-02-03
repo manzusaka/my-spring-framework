@@ -17,8 +17,9 @@
 package org.springframework.transaction.config;
 
 import org.w3c.dom.Element;
-
+import org.springframework.aop.aspectj.autoproxy.AspectJAwareAdvisorAutoProxyCreator;
 import org.springframework.aop.config.AopNamespaceUtils;
+import org.springframework.aop.framework.autoproxy.InfrastructureAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
@@ -59,11 +60,13 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
 		registerTransactionalEventListenerFactory(parserContext);
 		String mode = element.getAttribute("mode");
+		//aspectj  方式
 		if ("aspectj".equals(mode)) {
 			// mode="aspectj"
 			registerTransactionAspect(element, parserContext);
 		}
 		else {
+			// 动态代理proxy方式
 			// mode="proxy"
 			AopAutoProxyConfigurer.configureAutoProxyCreator(element, parserContext);
 		}
@@ -101,9 +104,13 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 	private static class AopAutoProxyConfigurer {
 
 		public static void configureAutoProxyCreator(Element element, ParserContext parserContext) {
+			//注册了AOP的相关配置   其实就是注册InfrastructureAdvisorAutoProxyCreator  该类实现了SmartInstantiationAwareBeanPostProcessor就是InstantiationAwareBeanPostProcessor
+			//会在获取bean的时候经过这个后置处理器进行处理  
+			//备注：这个InfrastructureAdvisorAutoProxyCreator是级别最低的  可能会被升级
 			AopNamespaceUtils.registerAutoProxyCreatorIfNecessary(parserContext, element);
 
 			String txAdvisorBeanName = TransactionManagementConfigUtils.TRANSACTION_ADVISOR_BEAN_NAME;
+			//注册一个internalTransactionAdvisor  内部事务提供者
 			if (!parserContext.getRegistry().containsBeanDefinition(txAdvisorBeanName)) {
 				Object eleSource = parserContext.extractSource(element);
 
@@ -115,6 +122,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 				String sourceName = parserContext.getReaderContext().registerWithGeneratedName(sourceDef);
 
 				// Create the TransactionInterceptor definition.
+				//TransactionInterceptor 实现了MethodInterceptor-->Interceptor-->Advice接口  这个就是spring代理的反射方法起点
 				RootBeanDefinition interceptorDef = new RootBeanDefinition(TransactionInterceptor.class);
 				interceptorDef.setSource(eleSource);
 				interceptorDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
