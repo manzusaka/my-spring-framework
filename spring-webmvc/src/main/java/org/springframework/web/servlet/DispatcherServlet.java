@@ -275,6 +275,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		// This is currently strictly internal and not meant to be customized
 		// by application developers.
 		try {
+			//加载读取默认的DispatcherServlet.properties文件
 			ClassPathResource resource = new ClassPathResource(DEFAULT_STRATEGIES_PATH, DispatcherServlet.class);
 			defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);
 		}
@@ -481,9 +482,13 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
+		//初始化上传的设置  就是把bean引入到servlet
 		initMultipartResolver(context);
+		//初始化国际化bean
 		initLocaleResolver(context);
+		//主题设置
 		initThemeResolver(context);
+		//HandlerMapping初始化
 		initHandlerMappings(context);
 		initHandlerAdapters(context);
 		initHandlerExceptionResolvers(context);
@@ -578,6 +583,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		else {
 			try {
+				//加载名字为handlerMapping 的bean
 				HandlerMapping hm = context.getBean(HANDLER_MAPPING_BEAN_NAME, HandlerMapping.class);
 				this.handlerMappings = Collections.singletonList(hm);
 			}

@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
   <display-name>mitixmvc-spring</display-name>
+  <!-- 使用ContextLoaderListener配置时，需要告诉它spring配置文件的位置 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+  <!--  contextClass 自定义的上下文容器  默认org.springframework.web.context.support.XmlWebApplicationContext  配置在spring-web下的配置里  -->
+  <context-param>
+  	<param-name>contextClass</param-name>
+  	<param-value>org.springframework.web.context.support.XmlWebApplicationContext</param-value>
+  </context-param>
+  <!-- parentContextKey  locatorFactorySelector 父容器上下文配置  一般很少用到 -->
+  <!-- contextId 容器ID号配置 -->
+  <!-- globalInitializerClasses contextInitializerClasses -->
+  
+  <!-- 当DispatcherServlet载入后，将从一个xml中载入spring上下文，该xml文件的名字取决于<servlet-name> -->
+  <!-- 这里DispatcherServlet试图从一个叫做springmvc-servlet的文件中载入上下文，其默认位置为WEB-INF下 -->
+  <servlet>
+  	<servlet-name>springmvc</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>springmvc</servlet-name>
+  	<url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <!-- 上下文载入器，载入除了DispatcherServlet以外的其他spring上下文配置 -->
+  <!-- 最常见的载入器 ContextLoaderListener-->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+  	<listener-class>com.mitixmvc.listener.MyDataContextListener</listener-class>
+  </listener>
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
     <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
 </web-app>

@@ -46,29 +46,32 @@ import org.springframework.web.context.support.ServletContextResourceLoader;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
 /**
- * Simple extension of {@link javax.servlet.http.HttpServlet} which treats
- * its config parameters ({@code init-param} entries within the
- * {@code servlet} tag in {@code web.xml}) as bean properties.
+ * Simple extension of {@link javax.servlet.http.HttpServlet} which treats its config
+ * parameters ({@code init-param} entries within the {@code servlet} tag in
+ * {@code web.xml}) as bean properties.
  *
- * <p>A handy superclass for any type of servlet. Type conversion of config
- * parameters is automatic, with the corresponding setter method getting
- * invoked with the converted value. It is also possible for subclasses to
- * specify required properties. Parameters without matching bean property
- * setter will simply be ignored.
+ * <p>
+ * A handy superclass for any type of servlet. Type conversion of config parameters is
+ * automatic, with the corresponding setter method getting invoked with the converted
+ * value. It is also possible for subclasses to specify required properties. Parameters
+ * without matching bean property setter will simply be ignored.
  *
- * <p>This servlet leaves request handling to subclasses, inheriting the default
- * behavior of HttpServlet ({@code doGet}, {@code doPost}, etc).
+ * <p>
+ * This servlet leaves request handling to subclasses, inheriting the default behavior of
+ * HttpServlet ({@code doGet}, {@code doPost}, etc).
  *
- * <p>This generic servlet base class has no dependency on the Spring
- * {@link org.springframework.context.ApplicationContext} concept. Simple
- * servlets usually don't load their own context but rather access service
- * beans from the Spring root application context, accessible via the
- * filter's {@link #getServletContext() ServletContext} (see
+ * <p>
+ * This generic servlet base class has no dependency on the Spring
+ * {@link org.springframework.context.ApplicationContext} concept. Simple servlets usually
+ * don't load their own context but rather access service beans from the Spring root
+ * application context, accessible via the filter's {@link #getServletContext()
+ * ServletContext} (see
  * {@link org.springframework.web.context.support.WebApplicationContextUtils}).
  *
- * <p>The {@link FrameworkServlet} class is a more specific servlet base
- * class which loads its own application context. FrameworkServlet serves
- * as direct base class of Spring's full-fledged {@link DispatcherServlet}.
+ * <p>
+ * The {@link FrameworkServlet} class is a more specific servlet base class which loads
+ * its own application context. FrameworkServlet serves as direct base class of Spring's
+ * full-fledged {@link DispatcherServlet}.
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -85,32 +88,33 @@ public abstract class HttpServletBean extends HttpServlet
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/**
-	 * Set of required properties (Strings) that must be supplied as
-	 * config parameters to this servlet.
+	 * Set of required properties (Strings) that must be supplied as config parameters to
+	 * this servlet.
 	 */
 	private final Set<String> requiredProperties = new HashSet<String>();
 
 	private ConfigurableEnvironment environment;
 
-
 	/**
-	 * Subclasses can invoke this method to specify that this property
-	 * (which must match a JavaBean property they expose) is mandatory,
-	 * and must be supplied as a config parameter. This should be called
-	 * from the constructor of a subclass.
-	 * <p>This method is only relevant in case of traditional initialization
-	 * driven by a ServletConfig instance.
-	 * @param property name of the required property
+	 * Subclasses can invoke this method to specify that this property (which must match a
+	 * JavaBean property they expose) is mandatory, and must be supplied as a config
+	 * parameter. This should be called from the constructor of a subclass.
+	 * <p>
+	 * This method is only relevant in case of traditional initialization driven by a
+	 * ServletConfig instance.
+	 * 
+	 * @param property name of the required property 子类进行覆盖实现 功能设置servlet必须有的属性
 	 */
 	protected final void addRequiredProperty(String property) {
 		this.requiredProperties.add(property);
 	}
 
 	/**
-	 * Map config parameters onto bean properties of this servlet, and
-	 * invoke subclass initialization.
-	 * @throws ServletException if bean properties are invalid (or required
-	 * properties are missing), or if subclass initialization fails.
+	 * Map config parameters onto bean properties of this servlet, and invoke subclass
+	 * initialization.
+	 * 
+	 * @throws ServletException if bean properties are invalid (or required properties are
+	 *         missing), or if subclass initialization fails.
 	 */
 	@Override
 	public final void init() throws ServletException {
@@ -120,19 +124,31 @@ public abstract class HttpServletBean extends HttpServlet
 
 		// Set bean properties from init parameters.
 		try {
-			PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
+			// 解析init-param并封装至PropertyValues
+			PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(),
+					this.requiredProperties);
+			//对当前的servlet进行转化  转成BeanWrapper 可以进行属性设置
 			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
-			ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
-			bw.registerCustomEditor(Resource.class, new ResourceEditor(resourceLoader, getEnvironment()));
+			//获取ResourceLoader
+			ResourceLoader resourceLoader = new ServletContextResourceLoader(
+					getServletContext());
+			//注册自定义的编辑器，一旦遇到Resource类型的属性可以解析
+			bw.registerCustomEditor(Resource.class,
+					new ResourceEditor(resourceLoader, getEnvironment()));
+			//初始化servlet  模板方法子类实现
 			initBeanWrapper(bw);
+			//注入属性
 			bw.setPropertyValues(pvs, true);
 		}
 		catch (BeansException ex) {
-			logger.error("Failed to set bean properties on servlet '" + getServletName() + "'", ex);
+			logger.error(
+					"Failed to set bean properties on servlet '" + getServletName() + "'",
+					ex);
 			throw ex;
 		}
 
 		// Let subclasses do whatever initialization they like.
+		//属性注入后留给子类覆盖的初始化方法
 		initServletBean();
 
 		if (logger.isDebugEnabled()) {
@@ -141,9 +157,10 @@ public abstract class HttpServletBean extends HttpServlet
 	}
 
 	/**
-	 * Initialize the BeanWrapper for this HttpServletBean,
-	 * possibly with custom editors.
-	 * <p>This default implementation is empty.
+	 * Initialize the BeanWrapper for this HttpServletBean, possibly with custom editors.
+	 * <p>
+	 * This default implementation is empty.
+	 * 
 	 * @param bw the BeanWrapper to initialize
 	 * @throws BeansException if thrown by BeanWrapper methods
 	 * @see org.springframework.beans.BeanWrapper#registerCustomEditor
@@ -151,10 +168,9 @@ public abstract class HttpServletBean extends HttpServlet
 	protected void initBeanWrapper(BeanWrapper bw) throws BeansException {
 	}
 
-
 	/**
-	 * Overridden method that simply returns {@code null} when no
-	 * ServletConfig set yet.
+	 * Overridden method that simply returns {@code null} when no ServletConfig set yet.
+	 * 
 	 * @see #getServletConfig()
 	 */
 	@Override
@@ -163,21 +179,22 @@ public abstract class HttpServletBean extends HttpServlet
 	}
 
 	/**
-	 * Overridden method that simply returns {@code null} when no
-	 * ServletConfig set yet.
+	 * Overridden method that simply returns {@code null} when no ServletConfig set yet.
+	 * 
 	 * @see #getServletConfig()
 	 */
 	@Override
 	public final ServletContext getServletContext() {
-		return (getServletConfig() != null ? getServletConfig().getServletContext() : null);
+		return (getServletConfig() != null ? getServletConfig().getServletContext()
+				: null);
 	}
 
-
 	/**
-	 * Subclasses may override this to perform custom initialization.
-	 * All bean properties of this servlet will have been set before this
-	 * method is invoked.
-	 * <p>This default implementation is empty.
+	 * Subclasses may override this to perform custom initialization. All bean properties
+	 * of this servlet will have been set before this method is invoked.
+	 * <p>
+	 * This default implementation is empty.
+	 * 
 	 * @throws ServletException if subclass initialization fails
 	 */
 	protected void initServletBean() throws ServletException {
@@ -185,8 +202,9 @@ public abstract class HttpServletBean extends HttpServlet
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @throws IllegalArgumentException if environment is not assignable to
-	 * {@code ConfigurableEnvironment}.
+	 *         {@code ConfigurableEnvironment}.
 	 */
 	@Override
 	public void setEnvironment(Environment environment) {
@@ -196,7 +214,8 @@ public abstract class HttpServletBean extends HttpServlet
 
 	/**
 	 * {@inheritDoc}
-	 * <p>If {@code null}, a new environment will be initialized via
+	 * <p>
+	 * If {@code null}, a new environment will be initialized via
 	 * {@link #createEnvironment()}.
 	 */
 	@Override
@@ -215,7 +234,6 @@ public abstract class HttpServletBean extends HttpServlet
 		return new StandardServletEnvironment();
 	}
 
-
 	/**
 	 * PropertyValues implementation created from ServletConfig init parameters.
 	 */
@@ -223,17 +241,24 @@ public abstract class HttpServletBean extends HttpServlet
 
 		/**
 		 * Create new ServletConfigPropertyValues.
+		 * 
 		 * @param config ServletConfig we'll use to take PropertyValues from
-		 * @param requiredProperties set of property names we need, where
-		 * we can't accept default values
+		 * @param requiredProperties set of property names we need, where we can't accept
+		 *        default values
 		 * @throws ServletException if any required properties are missing
 		 */
-		public ServletConfigPropertyValues(ServletConfig config, Set<String> requiredProperties)
-			throws ServletException {
-
-			Set<String> missingProps = (requiredProperties != null && !requiredProperties.isEmpty()) ?
-					new HashSet<String>(requiredProperties) : null;
-
+		public ServletConfigPropertyValues(ServletConfig config,
+				Set<String> requiredProperties) throws ServletException {
+			// 如果必须有的属性为空 那么直接设置null
+			Set<String> missingProps = (requiredProperties != null
+					&& !requiredProperties.isEmpty())
+							? new HashSet<String>(requiredProperties) : null;
+			/*
+			 * 获取servlet下的所有的参数 应该是 <servlet> <init-param></init-param> </servlet> 的所有参数
+			 */
+			/*
+			 * 内部类保存所有的property参数同时移除该参数的校验
+			 */
 			Enumeration<String> en = config.getInitParameterNames();
 			while (en.hasMoreElements()) {
 				String property = en.nextElement();
@@ -243,13 +268,15 @@ public abstract class HttpServletBean extends HttpServlet
 					missingProps.remove(property);
 				}
 			}
-
+			//如果校验的参数还有不为空的  说明有必须配置的参数没有配置  则需要进行配置抛出异常
 			// Fail if we are still missing properties.
 			if (missingProps != null && missingProps.size() > 0) {
 				throw new ServletException(
-					"Initialization from ServletConfig for servlet '" + config.getServletName() +
-					"' failed; the following required properties were missing: " +
-					StringUtils.collectionToDelimitedString(missingProps, ", "));
+						"Initialization from ServletConfig for servlet '"
+								+ config.getServletName()
+								+ "' failed; the following required properties were missing: "
+								+ StringUtils.collectionToDelimitedString(missingProps,
+										", "));
 			}
 		}
 	}

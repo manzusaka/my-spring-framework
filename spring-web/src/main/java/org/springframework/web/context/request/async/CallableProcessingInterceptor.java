@@ -24,7 +24,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 /**
  * Intercepts concurrent request handling, where the concurrent result is
  * obtained by executing a {@link Callable} on behalf of the application with
- * an {@link AsyncTaskExecutor}.
+ * an {@link AsyncTaskExecutor}
+ * 拦截处理并发的请求  通过执行一个回调函数   实现异步请求AsyncTaskExecutor
  *
  * <p>A {@code CallableProcessingInterceptor} is invoked before and after the
  * invocation of the {@code Callable} task in the asynchronous thread, as well

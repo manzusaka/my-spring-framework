@@ -481,6 +481,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	/**
 	 * Overridden method of {@link HttpServletBean}, invoked after any bean properties
 	 * have been set. Creates this servlet's WebApplicationContext.
+	 * 父类覆盖方法   做WebApplicationContext加强
 	 */
 	@Override
 	protected final void initServletBean() throws ServletException {
@@ -492,6 +493,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 		try {
 			this.webApplicationContext = initWebApplicationContext();
+			//初始化类   模板方法子类覆盖
 			initFrameworkServlet();
 		}
 		catch (ServletException ex) {
@@ -512,6 +514,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 	/**
 	 * Initialize and publish the WebApplicationContext for this servlet.
+	 * 实例化和公布WebApplicationContext
 	 * <p>Delegates to {@link #createWebApplicationContext} for actual creation
 	 * of the context. Can be overridden in subclasses.
 	 * @return the WebApplicationContext instance
@@ -520,10 +523,12 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see #setContextConfigLocation
 	 */
 	protected WebApplicationContext initWebApplicationContext() {
+		//该属性是在ContextLoaderListener被设置进去的
+		//找到rootContext
 		WebApplicationContext rootContext =
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
-
+		//这个参数应该是在构造函数的时候被设置进去  大多数情况下是null
 		if (this.webApplicationContext != null) {
 			// A context instance was injected at construction time -> use it
 			wac = this.webApplicationContext;
@@ -546,10 +551,12 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			// has been registered in the servlet context. If one exists, it is assumed
 			// that the parent context (if any) has already been set and that the
 			// user has performed any initialization such as setting the context id
+			// 在构造函数中没有设置context   查找servlet以及注册的上下文
 			wac = findWebApplicationContext();
 		}
 		if (wac == null) {
 			// No context instance is defined for this servlet -> create a local one
+			// 如果没有上下文  注册一个
 			wac = createWebApplicationContext(rootContext);
 		}
 
@@ -662,7 +669,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		if (env instanceof ConfigurableWebEnvironment) {
 			((ConfigurableWebEnvironment) env).initPropertySources(getServletContext(), getServletConfig());
 		}
-
+		
 		postProcessWebApplicationContext(wac);
 		applyInitializers(wac);
 		wac.refresh();
@@ -854,6 +861,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see #doService
 	 * @see #doHead
 	 */
+	//get请求
 	@Override
 	protected final void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -865,6 +873,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * Delegate POST requests to {@link #processRequest}.
 	 * @see #doService
 	 */
+	//post请求
 	@Override
 	protected final void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -951,22 +960,26 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 */
 	protected final void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		//记录当前请求的时间
 		long startTime = System.currentTimeMillis();
 		Throwable failureCause = null;
-
+		//保存当前线程的LocaleContext
 		LocaleContext previousLocaleContext = LocaleContextHolder.getLocaleContext();
+		//创建当前请求的LocaleContext
 		LocaleContext localeContext = buildLocaleContext(request);
-
+		//保存当前线程的RequestAttributes
 		RequestAttributes previousAttributes = RequestContextHolder.getRequestAttributes();
+		//创建当前请求的RequestAttributes
 		ServletRequestAttributes requestAttributes = buildRequestAttributes(request, response, previousAttributes);
-
+		//设置异步请求Manager  这里以及把asyncManager 充当属性放入request
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
+		//注册拦截器   key=org.springframework.web.servlet.FrameworkServlet  value=new RequestBindingInterceptor()
 		asyncManager.registerCallableInterceptor(FrameworkServlet.class.getName(), new RequestBindingInterceptor());
-
+		//把新的属性绑定到线程上
 		initContextHolders(request, localeContext, requestAttributes);
 
 		try {
+			//处理方法
 			doService(request, response);
 		}
 		catch (ServletException ex) {

@@ -77,7 +77,7 @@ public final class WebAsyncManager {
 	private Object concurrentResult = RESULT_NONE;
 
 	private Object[] concurrentResultContext;
-
+	//请求即时返回的拦截器
 	private final Map<Object, CallableProcessingInterceptor> callableInterceptors =
 			new LinkedHashMap<Object, CallableProcessingInterceptor>();
 
