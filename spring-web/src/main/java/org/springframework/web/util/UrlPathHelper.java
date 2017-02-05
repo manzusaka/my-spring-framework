@@ -58,7 +58,7 @@ public class UrlPathHelper {
 
 	static volatile Boolean websphereComplianceFlag;
 
-
+	//是否总是使用全路径  默认为false
 	private boolean alwaysUseFullPath = false;
 
 	private boolean urlDecode = true;
@@ -73,6 +73,7 @@ public class UrlPathHelper {
 	 * context. Else, the path within the current servlet mapping is used
 	 * if applicable (i.e. in the case of a ".../*" servlet mapping in web.xml).
 	 * Default is "false".
+	 * 是否总是使用全路径  默认为false
 	 */
 	public void setAlwaysUseFullPath(boolean alwaysUseFullPath) {
 		this.alwaysUseFullPath = alwaysUseFullPath;
@@ -147,6 +148,7 @@ public class UrlPathHelper {
 	 */
 	public String getLookupPathForRequest(HttpServletRequest request) {
 		// Always use full path within current servlet context?
+		// 总是使用完整路径在当前servlet上下文
 		if (this.alwaysUseFullPath) {
 			return getPathWithinApplication(request);
 		}

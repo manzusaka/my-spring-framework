@@ -534,6 +534,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			wac = this.webApplicationContext;
 			if (wac instanceof ConfigurableWebApplicationContext) {
 				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) wac;
+				//探测是否已经激活  在貂绒context的 AbstractApplicationContext的prepareRefresh前时未激活的
 				if (!cwac.isActive()) {
 					// The context has not yet been refreshed -> provide services such as
 					// setting the parent context, setting the application context id, etc
@@ -659,7 +660,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 		wac.setServletContext(getServletContext());
 		wac.setServletConfig(getServletConfig());
+		//这个时关键  读取默认配置文件的
 		wac.setNamespace(getNamespace());
+		//这个也是比Listener中多的配置
 		wac.addApplicationListener(new SourceFilteringListener(wac, new ContextRefreshListener()));
 
 		// The wac environment's #initPropertySources will be called in any case when the context
@@ -996,6 +999,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 
 		finally {
+			//请求结束回复线程属性
 			resetContextHolders(request, previousLocaleContext, previousAttributes);
 			if (requestAttributes != null) {
 				requestAttributes.requestCompleted();
@@ -1014,7 +1018,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					}
 				}
 			}
-
+			//发送事件通知
 			publishRequestHandledEvent(request, response, startTime, failureCause);
 		}
 	}

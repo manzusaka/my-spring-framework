@@ -114,6 +114,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 */
 	@Override
 	protected Object getHandlerInternal(HttpServletRequest request) throws Exception {
+		//new UrlPathHelper
 		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
 		Object handler = lookupHandler(lookupPath, request);
 		if (handler == null) {

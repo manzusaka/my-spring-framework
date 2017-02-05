@@ -54,6 +54,7 @@ import org.springframework.web.util.UrlPathHelper;
  * @see org.springframework.web.servlet.AsyncHandlerInterceptor
  * @see org.springframework.web.filter.OncePerRequestFilter#shouldNotFilterAsyncDispatch
  * @see org.springframework.web.filter.OncePerRequestFilter#isAsyncDispatch
+ * 3.2开始支持   springmvc异步请求
  */
 public final class WebAsyncManager {
 

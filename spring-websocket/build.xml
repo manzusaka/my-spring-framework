@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="Jar" name="spring-websocket">
+	<target name="delete-spring-websocket">
+		<delete file="${build.dir}/${ant.project.name}.jar"></delete>
+	</target>
+	<target name="Jar" depends="delete-spring-websocket">
+		<jar destfile="${build.dir}/${ant.project.name}.jar" basedir="bin/main" />
+	</target>	
+</project>

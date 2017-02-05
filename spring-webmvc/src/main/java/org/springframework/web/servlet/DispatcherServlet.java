@@ -312,6 +312,11 @@ public class DispatcherServlet extends FrameworkServlet {
 	private ThemeResolver themeResolver;
 
 	/** List of HandlerMappings used by this servlet */
+	/*
+	 * default :
+	 * org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping
+	 * org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping
+	 */
 	private List<HandlerMapping> handlerMappings;
 
 	/** List of HandlerAdapters used by this servlet */
@@ -594,6 +599,9 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
+		//注册一个默认的
+		//org.springframework.web.servlet.HandlerMapping=org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping,org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping
+
 		if (this.handlerMappings == null) {
 			this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
 			if (logger.isDebugEnabled()) {
@@ -874,24 +882,27 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Keep a snapshot of the request attributes in case of an include,
 		// to be able to restore the original attributes after the include.
+		// 保存属性的快照  
 		Map<String, Object> attributesSnapshot = null;
 		if (WebUtils.isIncludeRequest(request)) {
 			attributesSnapshot = new HashMap<String, Object>();
 			Enumeration<?> attrNames = request.getAttributeNames();
 			while (attrNames.hasMoreElements()) {
+				//把所有servet的属性复制进去
 				String attrName = (String) attrNames.nextElement();
 				if (this.cleanupAfterInclude || attrName.startsWith("org.springframework.web.servlet")) {
 					attributesSnapshot.put(attrName, request.getAttribute(attrName));
 				}
 			}
 		}
-
+		
 		// Make framework objects available to handlers and view objects.
+		// 设置一堆属性
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
 		request.setAttribute(THEME_RESOLVER_ATTRIBUTE, this.themeResolver);
 		request.setAttribute(THEME_SOURCE_ATTRIBUTE, getThemeSource());
-
+		
 		FlashMap inputFlashMap = this.flashMapManager.retrieveAndUpdate(request, response);
 		if (inputFlashMap != null) {
 			request.setAttribute(INPUT_FLASH_MAP_ATTRIBUTE, Collections.unmodifiableMap(inputFlashMap));
@@ -927,7 +938,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
 		boolean multipartRequestParsed = false;
-
+		//获取异步执行管理器
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 
 		try {
@@ -935,10 +946,13 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
+				//如果类型MultipartHttpServletRequest类型  那么进行转化
 				processedRequest = checkMultipart(request);
+				//如果类型变化说明时文件传输的
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
+				// 找到Handler
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null || mappedHandler.getHandler() == null) {
 					noHandlerFound(processedRequest, response);
@@ -1090,6 +1104,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * @param request current HTTP request
 	 * @return the processed request (multipart wrapper if necessary)
 	 * @see MultipartResolver#resolveMultipart
+	 * 如果时上传文件类型的请求   转化multipart request 并使用multipart resolver
+	 * 默认在Dispatch的servlet的context中时没有配置这个上传的multipartResolver的
+	 * 
 	 */
 	protected HttpServletRequest checkMultipart(HttpServletRequest request) throws MultipartException {
 		if (this.multipartResolver != null && this.multipartResolver.isMultipart(request)) {

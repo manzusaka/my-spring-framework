@@ -316,6 +316,7 @@ public class ContextLoader {
 			}
 			if (this.context instanceof ConfigurableWebApplicationContext) {
 				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) this.context;
+				//探测是否已经激活  在貂绒context的 AbstractApplicationContext的prepareRefresh前时未激活的
 				if (!cwac.isActive()) {
 					// The context has not yet been refreshed -> provide services such as
 					// setting the parent context, setting the application context id, etc

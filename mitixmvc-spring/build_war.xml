@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. 学习spring-web时打包用的
+              	目前还没有找到很好的办法来直接引用spring源码，所以打个包出来这样保证程序包和源码一致-->
+<project basedir="." default="build-all" name="mitixmvc-spring">
+	<property name="build.dir" value="../mitixmvc-spring/WebRoot/WEB-INF/lib" />
+	<target name="build-all">
+		<ant antfile="build.xml" dir="../spring-web" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-webmvc" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-webmvc-portlet" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-webmvc-tiles2" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-websocket" target="Jar" />
+	</target>
+</project>

@@ -172,6 +172,7 @@ public abstract class AbstractRefreshablePortletApplicationContext extends Abstr
 	 */
 	@Override
 	protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+		//这个是在容器初始化的时候调用的  注册了很多Web相关的功能
 		beanFactory.addBeanPostProcessor(new ServletContextAwareProcessor(this.servletContext));
 		beanFactory.addBeanPostProcessor(new PortletContextAwareProcessor(this.portletContext, this.portletConfig));
 		beanFactory.ignoreDependencyInterface(ServletContextAware.class);
