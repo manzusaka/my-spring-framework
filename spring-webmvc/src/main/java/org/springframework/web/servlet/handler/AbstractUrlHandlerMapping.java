@@ -116,23 +116,28 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	protected Object getHandlerInternal(HttpServletRequest request) throws Exception {
 		//new UrlPathHelper
 		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
+		//根据路径在Map中找到Handler
 		Object handler = lookupHandler(lookupPath, request);
 		if (handler == null) {
 			// We need to care for the default handler directly, since we need to
 			// expose the PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE for it as well.
 			Object rawHandler = null;
+			//如果请求是"/那么使用RootHandler"
 			if ("/".equals(lookupPath)) {
 				rawHandler = getRootHandler();
 			}
 			if (rawHandler == null) {
+				//如果还是没找到  用默认的
 				rawHandler = getDefaultHandler();
 			}
+			//如果默认的DefaultHandler不为空  那么去匹配以下  包装以下
 			if (rawHandler != null) {
 				// Bean name or resolved handler?
 				if (rawHandler instanceof String) {
 					String handlerName = (String) rawHandler;
 					rawHandler = getApplicationContext().getBean(handlerName);
 				}
+				//校验   子类继承模板方法
 				validateHandler(rawHandler, request);
 				handler = buildPathExposingHandler(rawHandler, lookupPath, lookupPath, null);
 			}
@@ -161,6 +166,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 */
 	protected Object lookupHandler(String urlPath, HttpServletRequest request) throws Exception {
 		// Direct match?
+		// 如果在Mappering中直接匹配到了   就处理
 		Object handler = this.handlerMap.get(urlPath);
 		if (handler != null) {
 			// Bean name or resolved handler?
@@ -172,6 +178,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 			return buildPathExposingHandler(handler, urlPath, urlPath, null);
 		}
 		// Pattern match?
+		//  通过通配符进行匹配
 		List<String> matchingPatterns = new ArrayList<String>();
 		for (String registeredPattern : this.handlerMap.keySet()) {
 			if (getPathMatcher().match(registeredPattern, urlPath)) {
@@ -385,6 +392,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 * Special interceptor for exposing the
 	 * {@link AbstractUrlHandlerMapping#PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE} attribute.
 	 * @see AbstractUrlHandlerMapping#exposePathWithinMapping
+	 *特殊的内部拦截器   设置了一些属性
 	 */
 	private class PathExposingHandlerInterceptor extends HandlerInterceptorAdapter {
 

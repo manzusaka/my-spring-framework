@@ -240,6 +240,7 @@ public class UrlPathHelper {
 	 * is a match return the extra part. This method is needed because the
 	 * context path and the servlet path returned by the HttpServletRequest are
 	 * stripped of semicolon content unlike the requesUri.
+	 * 用给定的mapping去匹配requestUri开头   返回剩下的部分  确定servlet的上下文路径
 	 */
 	private String getRemainingPath(String requestUri, String mapping, boolean ignoreCase) {
 		int index1 = 0;

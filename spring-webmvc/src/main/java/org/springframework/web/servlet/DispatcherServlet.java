@@ -320,6 +320,12 @@ public class DispatcherServlet extends FrameworkServlet {
 	private List<HandlerMapping> handlerMappings;
 
 	/** List of HandlerAdapters used by this servlet */
+	/*
+	 *default:
+	 *org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter
+	 *org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter
+	 *org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter
+	 */
 	private List<HandlerAdapter> handlerAdapters;
 
 	/** List of HandlerExceptionResolvers used by this servlet */
@@ -495,6 +501,7 @@ public class DispatcherServlet extends FrameworkServlet {
 		initThemeResolver(context);
 		//HandlerMapping初始化
 		initHandlerMappings(context);
+		//请求适配器
 		initHandlerAdapters(context);
 		initHandlerExceptionResolvers(context);
 		initRequestToViewNameTranslator(context);
@@ -955,17 +962,20 @@ public class DispatcherServlet extends FrameworkServlet {
 				// 找到Handler
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null || mappedHandler.getHandler() == null) {
+					//未找到对应的处理器
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
 				// Determine handler adapter for the current request.
+				// 确定适配器
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
 				String method = request.getMethod();
 				boolean isGet = "GET".equals(method);
 				if (isGet || "HEAD".equals(method)) {
+					//获取LastModified时间
 					long lastModified = ha.getLastModified(request, mappedHandler.getHandler());
 					if (logger.isDebugEnabled()) {
 						logger.debug("Last-Modified value for [" + getRequestUri(request) + "] is: " + lastModified);

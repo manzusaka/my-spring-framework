@@ -57,9 +57,18 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * Create a new AnnotationConfigApplicationContext that needs to be populated
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
+	/*
+	 * @see super this.classLoader = ClassUtils.getDefaultClassLoader();
+	 * @see super this.resourcePatternResolver=new PathMatchingResourcePatternResolver(this);
+	 * @see super this.beanFactory = new DefaultListableBeanFactory();
+	 * 初始化了classloader  资源解析器   beanFactory
+	 * 
+	 */
 	public AnnotationConfigApplicationContext() {
+		//关键代码  里面
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
+		logger.info(this.getBeanFactory());
 	}
 
 	/**

@@ -47,10 +47,10 @@ import org.springframework.web.servlet.HandlerMapping;
 /**
  * Abstract base class for {@link HandlerMapping} implementations that define
  * a mapping between a request and a {@link HandlerMethod}.
- *
+ * 一个基础的抽象类，确定mapping和request之间的关系
  * <p>For each registered handler method, a unique mapping is maintained with
  * subclasses defining the details of the mapping type {@code <T>}.
- *
+ * 每一个注册的handler method方法，都会保存一个唯一的mapping
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -178,6 +178,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 	/**
 	 * Detects handler methods at initialization.
+	 * 处理入口方法   初始化
 	 */
 	@Override
 	public void afterPropertiesSet() {
@@ -189,6 +190,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 * @see #isHandler(Class)
 	 * @see #getMappingForMethod(Method, Class)
 	 * @see #handlerMethodsInitialized(Map)
+	 * 在容器中扫描bean,然后注册
 	 */
 	protected void initHandlerMethods() {
 		if (logger.isDebugEnabled()) {
@@ -197,11 +199,13 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		String[] beanNames = (this.detectHandlerMethodsInAncestorContexts ?
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
 				getApplicationContext().getBeanNamesForType(Object.class));
-
+		//传入type=Object.class  就是把所有的bean全部拿出来了
 		for (String beanName : beanNames) {
+			//如果bean的名字！=scopedTarget
 			if (!beanName.startsWith(SCOPED_TARGET_NAME_PREFIX)) {
 				Class<?> beanType = null;
 				try {
+					//获取bean的类型
 					beanType = getApplicationContext().getType(beanName);
 				}
 				catch (Throwable ex) {
@@ -210,6 +214,11 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 						logger.debug("Could not resolve target class for bean with name '" + beanName + "'", ex);
 					}
 				}
+				//isHandler方法模板方法  被RequestMappingHandlerMapping子类实现    
+				/*
+				 * 当bean上有@Controller  或者（@RequestMapping @Component）成对出现的时候，会被当成一个springmvc的bean 
+				 *注：其实@Controller  是@Component子类   上述注解卸载类名上有效
+				 */
 				if (beanType != null && isHandler(beanType)) {
 					detectHandlerMethods(beanName);
 				}

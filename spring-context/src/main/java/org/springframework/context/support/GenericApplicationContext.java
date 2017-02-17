@@ -101,6 +101,11 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 * @see #registerBeanDefinition
 	 * @see #refresh
 	 */
+	/*
+	 * @see super--super this.classLoader = ClassUtils.getDefaultClassLoader();
+	 * @see super this.resourcePatternResolver=new PathMatchingResourcePatternResolver(this);
+	 * 初始化了classloader   路径匹配查找
+	 */
 	public GenericApplicationContext() {
 		this.beanFactory = new DefaultListableBeanFactory();
 	}

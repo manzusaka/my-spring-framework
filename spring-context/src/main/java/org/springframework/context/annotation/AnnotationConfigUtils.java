@@ -161,7 +161,8 @@ public class AnnotationConfigUtils {
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<BeanDefinitionHolder>(4);
 
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
-			//注册内部的BeanFactoryPostProcessor,这个东西在初始化refresh里面会初始化,做了一些内部的设置
+			//注册内部的BeanFactoryPostProcessor,这个东西在初始化refresh里面会初始化,做了一些内部的设置   
+			// 1.还有一种情况   在AnnotationConfigApplicationContext 初始化的情况下 也会初始化
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));

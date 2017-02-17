@@ -44,7 +44,7 @@ public final class ParserContext {
 	//一般为null
 	private BeanDefinition containingBeanDefinition;
 	
-	//这里其实就是注册的代理组件PointcutComponentDefinition  AdvisorComponentDefinition等
+	//这里其实就是注册的代理组件PointcutComponentDefinition  AdvisorComponentDefinition等 还包括了CompositeComponentDefinition--MVC用到了
 	private final Stack<ComponentDefinition> containingComponents = new Stack<ComponentDefinition>();
 
 

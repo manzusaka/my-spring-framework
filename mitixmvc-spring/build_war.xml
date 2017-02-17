@@ -8,6 +8,24 @@
 <project basedir="." default="build-all" name="mitixmvc-spring">
 	<property name="build.dir" value="../mitixmvc-spring/WebRoot/WEB-INF/lib" />
 	<target name="build-all">
+		<ant antfile="build.xml" dir="../spring-aop" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-aspects" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-beans" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-context" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-context-support" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-core" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-expression" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-instrument" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-instrument-tomcat" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-jdbc" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-jms" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-messaging" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-orm" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-orm-hibernate4" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-orm-hibernate5" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-oxm" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-test" target="Jar" />
+		<ant antfile="build.xml" dir="../spring-tx" target="Jar" />
 		<ant antfile="build.xml" dir="../spring-web" target="Jar" />
 		<ant antfile="build.xml" dir="../spring-webmvc" target="Jar" />
 		<ant antfile="build.xml" dir="../spring-webmvc-portlet" target="Jar" />
