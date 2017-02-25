@@ -76,6 +76,13 @@ abstract class ConfigurationClassUtils {
 	 * @param beanDef the bean definition to check
 	 * @param metadataReaderFactory the current factory in use by the caller
 	 * @return whether the candidate qualifies as (any kind of) configuration class
+	 * 
+	 * 检查Configuration配置class的候选 
+	 * 1.当被标记成  在查询类上有个@Configuration时进行标记full
+	 * 
+	 * 当类上有org.springframework.context.annotation.Import  org.springframework.stereotype.Component
+	 * org.springframework.context.annotation.ImportResource org.springframework.context.annotation.ComponentScan  注解 
+	 * 或者方法上有  org.springframework.context.annotation.Bean 注解会被标记成Lite
 	 */
 	public static boolean checkConfigurationClassCandidate(BeanDefinition beanDef, MetadataReaderFactory metadataReaderFactory) {
 		String className = beanDef.getBeanClassName();
@@ -117,7 +124,7 @@ abstract class ConfigurationClassUtils {
 		else {
 			return false;
 		}
-
+		
 		// It's a full or lite configuration candidate... Let's determine the order value, if any.
 		Map<String, Object> orderAttributes = metadata.getAnnotationAttributes(Order.class.getName());
 		if (orderAttributes != null) {
@@ -156,6 +163,9 @@ abstract class ConfigurationClassUtils {
 	 * @param metadata the metadata of the annotated class
 	 * @return {@code true} if the given class is to be processed as a lite
 	 * configuration class, just registering it and scanning it for {@code @Bean} methods
+	 * 当类上有org.springframework.context.annotation.Import  org.springframework.stereotype.Component
+	 * org.springframework.context.annotation.ImportResource org.springframework.context.annotation.ComponentScan  注解 
+	 *  或者方法上有  org.springframework.context.annotation.Bean 注解会被标记成Lite
 	 */
 	public static boolean isLiteConfigurationCandidate(AnnotationMetadata metadata) {
 		// Do not consider an interface or an annotation...
@@ -185,6 +195,7 @@ abstract class ConfigurationClassUtils {
 	/**
 	 * Determine whether the given bean definition indicates a full {@code @Configuration}
 	 * class, through checking {@link #checkConfigurationClassCandidate}'s metadata marker.
+	 * 确定bean时一个完整的@Configuration class
 	 */
 	public static boolean isFullConfigurationClass(BeanDefinition beanDef) {
 		return CONFIGURATION_CLASS_FULL.equals(beanDef.getAttribute(CONFIGURATION_CLASS_ATTRIBUTE));
@@ -193,6 +204,7 @@ abstract class ConfigurationClassUtils {
 	/**
 	 * Determine whether the given bean definition indicates a lite {@code @Configuration}
 	 * class, through checking {@link #checkConfigurationClassCandidate}'s metadata marker.
+	 * 确定bean时一个简化的@Configuration class
 	 */
 	public static boolean isLiteConfigurationClass(BeanDefinition beanDef) {
 		return CONFIGURATION_CLASS_LITE.equals(beanDef.getAttribute(CONFIGURATION_CLASS_ATTRIBUTE));

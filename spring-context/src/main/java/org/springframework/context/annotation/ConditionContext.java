@@ -23,7 +23,7 @@ import org.springframework.core.io.ResourceLoader;
 
 /**
  * Context information for use by {@link Condition}s.
- *
+ * 用于Condition的上下文信息
  * @author Phillip Webb
  * @since 4.0
  */

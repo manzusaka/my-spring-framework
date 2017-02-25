@@ -20,6 +20,7 @@ import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.StandardEnvironment;
 import org.springframework.util.Assert;
 
 /**
@@ -65,8 +66,16 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * 
 	 */
 	public AnnotationConfigApplicationContext() {
-		//关键代码  里面
+		/*
+		 * 这个师我尝试增加的代码   这样可以直接设置出环境
+		 */
+		//---------------------------------------------
+		//super();
+		//super.setEnvironment(new StandardEnvironment());
+		//-----------------------------------------------
+		//关键代码  里面有注解的BeanDefinitionreaderj
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		//bean扫描器
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 		logger.info(this.getBeanFactory());
 	}
@@ -89,6 +98,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
 		this();
+		//关键代码   注册配置的类对象   （当配置类上有@Conditional注解且为matches方法返回false的时候  好像这个类就不注册了）
 		register(annotatedClasses);
 		refresh();
 	}
@@ -100,6 +110,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(String... basePackages) {
 		this();
+		//扫描配置包路径
 		scan(basePackages);
 		refresh();
 	}
@@ -153,6 +164,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * e.g. {@link Configuration @Configuration} classes
 	 * @see #scan(String...)
 	 * @see #refresh()
+	 * 注册一个或者多个配置注解类
 	 */
 	public void register(Class<?>... annotatedClasses) {
 		Assert.notEmpty(annotatedClasses, "At least one annotated class must be specified");

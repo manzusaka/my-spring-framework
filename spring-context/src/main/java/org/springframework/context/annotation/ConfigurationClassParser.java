@@ -39,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.parsing.Location;
@@ -155,13 +156,23 @@ class ConfigurationClassParser {
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, resourceLoader);
 	}
 
-
+	
+	/*
+	 * 解析配置类
+	 */
 	public void parse(Set<BeanDefinitionHolder> configCandidates) {
 		this.deferredImportSelectors = new LinkedList<DeferredImportSelectorHolder>();
 
 		for (BeanDefinitionHolder holder : configCandidates) {
+			//获取BeanDefinition
 			BeanDefinition bd = holder.getBeanDefinition();
 			try {
+				//如果AnnotatedBeanDefinition
+				/*
+				 *在注册的时候  用的是这个
+				 *	AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
+				 *  是AnnotatedBeanDefinition的实现类
+				 */
 				if (bd instanceof AnnotatedBeanDefinition) {
 					parse(((AnnotatedBeanDefinition) bd).getMetadata(), holder.getBeanName());
 				}
@@ -183,22 +194,30 @@ class ConfigurationClassParser {
 
 		processDeferredImportSelectors();
 	}
-
+	/*
+	 * 解析配置类根据类名
+	 */
 	protected final void parse(String className, String beanName) throws IOException {
 		MetadataReader reader = this.metadataReaderFactory.getMetadataReader(className);
 		processConfigurationClass(new ConfigurationClass(reader, beanName));
 	}
-
+	/*
+	 * 解析配置类  根据类名
+	 */
 	protected final void parse(Class<?> clazz, String beanName) throws IOException {
 		processConfigurationClass(new ConfigurationClass(clazz, beanName));
 	}
-
+	
+	/*
+	 * 解析配置类  根据AnnotationMetadata
+	 */
 	protected final void parse(AnnotationMetadata metadata, String beanName) throws IOException {
 		processConfigurationClass(new ConfigurationClass(metadata, beanName));
 	}
 
 
 	protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
+		//判断是否可以直接跳过
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
@@ -225,8 +244,10 @@ class ConfigurationClassParser {
 		}
 
 		// Recursively process the configuration class and its superclass hierarchy.
+		// 创造一个SourceClass  递归的超类
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
+			//递归
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
@@ -244,6 +265,9 @@ class ConfigurationClassParser {
 	 */
 	protected final SourceClass doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass) throws IOException {
 		// Recursively process any member (nested) classes first
+		/*
+		 * 处理成员类  和传入类一样处理解析
+		 */
 		processMemberClasses(configClass, sourceClass);
 
 		// Process any @PropertySource annotations
@@ -264,6 +288,7 @@ class ConfigurationClassParser {
 		if (!componentScans.isEmpty() && !this.conditionEvaluator.shouldSkip(sourceClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN)) {
 			for (AnnotationAttributes componentScan : componentScans) {
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
+				//ComponentScanAnnotationParser
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 				// Check the set of scanned definitions for any further config classes and parse recursively if necessary

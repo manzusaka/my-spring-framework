@@ -27,6 +27,7 @@ import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.env.StandardEnvironment;
+import org.springframework.core.type.StandardAnnotationMetadata;
 import org.springframework.util.Assert;
 
 /**
@@ -79,7 +80,9 @@ public class AnnotatedBeanDefinitionReader {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
+		//Conditional注解评估器
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+		//这个时关键   注册AnnotationConfigProcessor
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 
@@ -116,13 +119,13 @@ public class AnnotatedBeanDefinitionReader {
 		this.scopeMetadataResolver =
 				(scopeMetadataResolver != null ? scopeMetadataResolver : new AnnotationScopeMetadataResolver());
 	}
-
+	
 	public void register(Class<?>... annotatedClasses) {
 		for (Class<?> annotatedClass : annotatedClasses) {
 			registerBean(annotatedClass);
 		}
 	}
-
+	
 	public void registerBean(Class<?> annotatedClass) {
 		registerBean(annotatedClass, null, (Class<? extends Annotation>[]) null);
 	}
@@ -131,10 +134,17 @@ public class AnnotatedBeanDefinitionReader {
 	public void registerBean(Class<?> annotatedClass, Class<? extends Annotation>... qualifiers) {
 		registerBean(annotatedClass, null, qualifiers);
 	}
-
+	
+	/*
+	 * 这个方法其实是把自己给注册上了（在AnnotationConfigApplicationContext启动的时候）
+	 */
 	@SuppressWarnings("unchecked")
 	public void registerBean(Class<?> annotatedClass, String name, Class<? extends Annotation>... qualifiers) {
+		//支持元数据的beandefinition一般实现
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
+		//this is new StandardAnnotationMetadata(beanClass, true);
+		//注解判断  如果有注解元数据并且注解元数据还没满足条件  返回true  那么就不注册这个配置文件了
+		//这里好像说的是   配置类可以写几个一样的   在不同的环境上进行原型   传入统一参数就好了
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
@@ -158,6 +168,7 @@ public class AnnotatedBeanDefinitionReader {
 		}
 
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
+		//创建ScopedProxyMode代理
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}

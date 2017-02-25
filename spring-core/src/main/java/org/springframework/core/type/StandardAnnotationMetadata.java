@@ -105,6 +105,7 @@ public class StandardAnnotationMetadata extends StandardClassMetadata implements
 	public boolean isAnnotated(String annotationName) {
 		return (this.annotations.length > 0 &&
 				AnnotatedElementUtils.isAnnotated(getIntrospectedClass(), annotationName));
+				
 	}
 
 	@Override

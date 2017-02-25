@@ -227,7 +227,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		RootBeanDefinition iabpp = new RootBeanDefinition(ImportAwareBeanPostProcessor.class);
 		iabpp.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		registry.registerBeanDefinition(IMPORT_AWARE_PROCESSOR_BEAN_NAME, iabpp);
-
+		//这测了ConfigurationBeanPostProcessor
 		RootBeanDefinition ecbpp = new RootBeanDefinition(EnhancedConfigurationBeanPostProcessor.class);
 		ecbpp.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		registry.registerBeanDefinition(ENHANCED_CONFIGURATION_PROCESSOR_BEAN_NAME, ecbpp);
@@ -242,7 +242,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-
+		//处理@Configuration的bean
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -269,6 +269,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	/**
 	 * Build and validate a configuration model based on the registry of
 	 * {@link Configuration} classes.
+	 * 这里有一个FullConfigurationClass  在查询类上有个@Configuration时进行标记
+	 * 
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<BeanDefinitionHolder>();
@@ -279,6 +281,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			if (ConfigurationClassUtils.isFullConfigurationClass(beanDef) ||
 					ConfigurationClassUtils.isLiteConfigurationClass(beanDef)) {
 				if (logger.isDebugEnabled()) {
+					//bean以及处理过了   说明上面两个标记时处理的时候标记上去的
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
@@ -314,10 +317,18 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		// Parse each @Configuration class
+		/*
+		 * metadataReaderFactory = new CachingMetadataReaderFactory();
+		 * problemReporter = new FailFastProblemReporter();
+		 * environment
+		 * resourceLoader = new DefaultResourceLoader();
+		 * componentScanBeanNameGenerator = new AnnotationBeanNameGenerator();
+		 * 
+		 */
 		ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
-
+		//配置文件集合
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<BeanDefinitionHolder>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<ConfigurationClass>(configCandidates.size());
 		do {
@@ -333,6 +344,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
+			//直接注册扫描出来的类
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 

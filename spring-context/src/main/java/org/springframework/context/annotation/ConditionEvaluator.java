@@ -36,7 +36,7 @@ import org.springframework.util.MultiValueMap;
 
 /**
  * Internal class used to evaluate {@link Conditional} annotations.
- *
+ * 内部的class 用作判断Conditional注解
  * @author Phillip Webb
  * @since 4.0
  */
@@ -59,6 +59,7 @@ class ConditionEvaluator {
 	 * {@code @Configuration} class will be {@link ConfigurationPhase#PARSE_CONFIGURATION})
 	 * @param metadata the meta data
 	 * @return if the item should be skipped
+	 * 确定是否跳过@Conditional
 	 */
 	public boolean shouldSkip(AnnotatedTypeMetadata metadata) {
 		return shouldSkip(metadata, null);
@@ -71,6 +72,8 @@ class ConditionEvaluator {
 	 * @return if the item should be skipped
 	 */
 	public boolean shouldSkip(AnnotatedTypeMetadata metadata, ConfigurationPhase phase) {
+		//解析beanClass有没有@Conditional注解  这里没有注解会返回回去false
+		//metadata！=null 以及解析过了且没有@Conditional就不重新解析了
 		if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) {
 			return false;
 		}
@@ -99,6 +102,7 @@ class ConditionEvaluator {
 				requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();
 			}
 			if (requiredPhase == null || requiredPhase == phase) {
+				//这个是关键如果有Conditional 且matches返回false  则返回true
 				if (!condition.matches(this.context, metadata)) {
 					return true;
 				}
