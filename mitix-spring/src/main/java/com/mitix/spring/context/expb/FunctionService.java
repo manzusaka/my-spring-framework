@@ -10,6 +10,7 @@
  */
 package com.mitix.spring.context.expb;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +19,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FunctionService {
+  
+  @Value("${spring.configuration.propertysource.test}")
+  private String valuestest;
+  
   public void doSayHello(String args0) {
-    System.out.println("Hello world!!!" + args0);
+    System.out.println("Hello world!!!" + valuestest +args0);
   }
 }

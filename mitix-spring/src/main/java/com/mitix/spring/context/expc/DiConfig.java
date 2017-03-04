@@ -7,11 +7,14 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-package com.mitix.spring.context.expb;
+package com.mitix.spring.context.expc;
 
 import org.apache.log4j.Logger;
 import org.apache.tiles.request.ApplicationContext;
 import org.apache.tiles.request.ApplicationContextAware;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -52,37 +55,30 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  * 5. @Order 实现Order注解可以排序
  */
 @Configuration
-@ComponentScan("com.mitix.spring.context.expb")
-@ImportResource(value="context/expb/applicationContext.xml")
-@Import(value=DiImportConfig.class)
-//@Component
-@PropertySource(name="test",value="classpath:context/expb/config.properties")
-public class DiConfig implements ApplicationContextAware{
-   private Logger logger=Logger.getLogger(DiConfig.class);
-
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) {
-//    this.applicationContext=applicationContext;
-    if(applicationContext instanceof AbstractApplicationContext){
-      AbstractApplicationContext context= (AbstractApplicationContext)applicationContext;
-      logger.error(context.getBeanFactory());
-    }
-  }
+@ComponentScan("com.mitix.spring.context.expc")
+public class DiConfig {
   
-  //用于处理@PropertySource
-  @Bean
-  public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-      return new PropertySourcesPlaceholderConfigurer();
+//  @Override
+//  public void setApplicationContext(ApplicationContext applicationContext) {
+//    if(applicationContext instanceof AbstractApplicationContext){
+//      AbstractApplicationContext context= (AbstractApplicationContext)applicationContext;
+//      context.getBeanFactory().getBean(requiredType);
+//    }
+//  }
+  
+  @Bean()
+  public FunctionService functionService(User getUser){
+    FunctionService functionService=new FunctionService();
+    functionService.setUser(getUser());
+    functionService.setUser2(getUser);
+    return functionService;
   }
   
   @Bean
-  public FunctionService functionService(){
-      return new FunctionService();
-  }
-  
-  @Bean
-  public UseFunctionService useFunctionService(){
-    return new UseFunctionService();
+  public User getUser(){
+    User user=new User();
+    user.setName("info2");
+    return user;
   }
 
 

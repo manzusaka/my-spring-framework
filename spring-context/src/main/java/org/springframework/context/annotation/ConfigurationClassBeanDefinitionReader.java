@@ -109,6 +109,7 @@ class ConfigurationClassBeanDefinitionReader {
 	/**
 	 * Read {@code configurationModel}, registering bean definitions
 	 * with the registry based on its contents.
+	 * 在bean注册中心注册bean
 	 */
 	public void loadBeanDefinitions(Set<ConfigurationClass> configurationModel) {
 		TrackedConditionEvaluator trackedConditionEvaluator = new TrackedConditionEvaluator();
@@ -123,7 +124,7 @@ class ConfigurationClassBeanDefinitionReader {
 	 */
 	private void loadBeanDefinitionsForConfigurationClass(ConfigurationClass configClass,
 			TrackedConditionEvaluator trackedConditionEvaluator) {
-
+		
 		if (trackedConditionEvaluator.shouldSkip(configClass)) {
 			String beanName = configClass.getBeanName();
 			if (StringUtils.hasLength(beanName) && this.registry.containsBeanDefinition(beanName)) {
@@ -132,7 +133,7 @@ class ConfigurationClassBeanDefinitionReader {
 			this.importRegistry.removeImportingClassFor(configClass.getMetadata().getClassName());
 			return;
 		}
-
+		
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}
@@ -168,6 +169,7 @@ class ConfigurationClassBeanDefinitionReader {
 	/**
 	 * Read the given {@link BeanMethod}, registering bean definitions
 	 * with the BeanDefinitionRegistry based on its contents.
+	 * 注册@Bean注解的类  这个比较重要
 	 */
 	private void loadBeanDefinitionsForBeanMethod(BeanMethod beanMethod) {
 		ConfigurationClass configClass = beanMethod.getConfigurationClass();
@@ -214,7 +216,7 @@ class ConfigurationClassBeanDefinitionReader {
 		}
 		beanDef.setAutowireMode(RootBeanDefinition.AUTOWIRE_CONSTRUCTOR);
 		beanDef.setAttribute(RequiredAnnotationBeanPostProcessor.SKIP_REQUIRED_CHECK_ATTRIBUTE, Boolean.TRUE);
-
+		//处理组件BeanDefinition
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDef, metadata);
 
 		Autowire autowire = bean.getEnum("autowire");

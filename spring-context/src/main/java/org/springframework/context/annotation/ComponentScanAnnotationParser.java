@@ -76,7 +76,7 @@ class ComponentScanAnnotationParser {
 	public Set<BeanDefinitionHolder> parse(AnnotationAttributes componentScan, final String declaringClass) {
 		Assert.state(this.environment != null, "Environment must not be null");
 		Assert.state(this.resourceLoader != null, "ResourceLoader must not be null");
-
+		//ClassPathBeanDefinitionScanner  一般spring扫描都是用这个类
 		ClassPathBeanDefinitionScanner scanner =
 				new ClassPathBeanDefinitionScanner(this.registry, componentScan.getBoolean("useDefaultFilters"));
 		scanner.setEnvironment(this.environment);

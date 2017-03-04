@@ -83,6 +83,9 @@ abstract class ConfigurationClassUtils {
 	 * 当类上有org.springframework.context.annotation.Import  org.springframework.stereotype.Component
 	 * org.springframework.context.annotation.ImportResource org.springframework.context.annotation.ComponentScan  注解 
 	 * 或者方法上有  org.springframework.context.annotation.Bean 注解会被标记成Lite
+	 * 
+	 * 
+	 * 其实 如果有Configuration  注解 会被标记成配置   其他注解当作组件
 	 */
 	public static boolean checkConfigurationClassCandidate(BeanDefinition beanDef, MetadataReaderFactory metadataReaderFactory) {
 		String className = beanDef.getBeanClassName();
@@ -126,6 +129,7 @@ abstract class ConfigurationClassUtils {
 		}
 		
 		// It's a full or lite configuration candidate... Let's determine the order value, if any.
+		// 排序属性
 		Map<String, Object> orderAttributes = metadata.getAnnotationAttributes(Order.class.getName());
 		if (orderAttributes != null) {
 			beanDef.setAttribute(ORDER_ATTRIBUTE, orderAttributes.get(AnnotationUtils.VALUE));

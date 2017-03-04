@@ -73,6 +73,7 @@ import static org.springframework.context.annotation.AnnotationConfigUtils.*;
 /**
  * {@link BeanFactoryPostProcessor} used for bootstrapping processing of
  * {@link Configuration @Configuration} classes.
+ * 用于配置类启动的引导器   这个配置在@Configuration 也有用到
  *
  * <p>Registered by default when using {@code <context:annotation-config/>} or
  * {@code <context:component-scan/>}. Otherwise, may be declared manually as
@@ -221,13 +222,15 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 	/**
 	 * Derive further bean definitions from the configuration classes in the registry.
+	 * 从bean中获取configuration   配置类注册的时候进行的解析
+	 * 
 	 */
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
 		RootBeanDefinition iabpp = new RootBeanDefinition(ImportAwareBeanPostProcessor.class);
 		iabpp.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		registry.registerBeanDefinition(IMPORT_AWARE_PROCESSOR_BEAN_NAME, iabpp);
-		//这测了ConfigurationBeanPostProcessor
+		//注册了ConfigurationBeanPostProcessor
 		RootBeanDefinition ecbpp = new RootBeanDefinition(EnhancedConfigurationBeanPostProcessor.class);
 		ecbpp.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		registry.registerBeanDefinition(ENHANCED_CONFIGURATION_PROCESSOR_BEAN_NAME, ecbpp);
@@ -273,6 +276,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * 
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
+		//候选配置类的List数组
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<BeanDefinitionHolder>();
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
@@ -294,8 +298,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		if (configCandidates.isEmpty()) {
 			return;
 		}
-
+		
 		// Sort by previously determined @Order value, if applicable
+		// Configuration北标记的情况下会进行排序的
 		Collections.sort(configCandidates, new Comparator<BeanDefinitionHolder>() {
 			@Override
 			public int compare(BeanDefinitionHolder bd1, BeanDefinitionHolder bd2) {
@@ -304,7 +309,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				return (i1 < i2) ? -1 : (i1 > i2) ? 1 : 0;
 			}
 		});
-
+		
 		// Detect any custom bean name generation strategy supplied through the enclosing application context
 		SingletonBeanRegistry singletonRegistry = null;
 		if (registry instanceof SingletonBeanRegistry) {
@@ -315,7 +320,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				this.importBeanNameGenerator = generator;
 			}
 		}
-
+		
 		// Parse each @Configuration class
 		/*
 		 * metadataReaderFactory = new CachingMetadataReaderFactory();
@@ -323,6 +328,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		 * environment
 		 * resourceLoader = new DefaultResourceLoader();
 		 * componentScanBeanNameGenerator = new AnnotationBeanNameGenerator();
+		 * 配置解析委托处理类
 		 * 
 		 */
 		ConfigurationClassParser parser = new ConfigurationClassParser(
@@ -332,6 +338,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<BeanDefinitionHolder>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<ConfigurationClass>(configCandidates.size());
 		do {
+			//解析配置
 			parser.parse(candidates);
 			parser.validate();
 
@@ -340,11 +347,12 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 			// Read the model and create bean definitions based on its content
 			if (this.reader == null) {
+				//这个类似于beandefinitionreader
 				this.reader = new ConfigurationClassBeanDefinitionReader(
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
-			//直接注册扫描出来的类
+			//直接注册扫描出来的类  --解析类数据
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 
@@ -433,7 +441,13 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 	}
 
-	
+	/**
+	 * 一个bean获取的内部类   作用
+	 * 在bean获取的前置处理器中   找到类型为ConfigurationClassPostProcessor.class的处理类ImportRegistry
+	 * 设置  ((ImportAware) bean).setImportMetadata(importingClass);
+	 * @author oldflame
+	 * @since 4.3
+	 */
 	private static class ImportAwareBeanPostProcessor implements BeanPostProcessor, BeanFactoryAware, PriorityOrdered {
 
 		private BeanFactory beanFactory;

@@ -73,7 +73,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		//super();
 		//super.setEnvironment(new StandardEnvironment());
 		//-----------------------------------------------
-		//关键代码  里面有注解的BeanDefinitionreaderj
+		//关键代码  里面有注解的BeanDefinitionreader
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		//bean扫描器
 		this.scanner = new ClassPathBeanDefinitionScanner(this);

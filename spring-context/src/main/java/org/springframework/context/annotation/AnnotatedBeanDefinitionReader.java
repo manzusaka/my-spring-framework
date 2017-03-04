@@ -145,10 +145,11 @@ public class AnnotatedBeanDefinitionReader {
 		//this is new StandardAnnotationMetadata(beanClass, true);
 		//注解判断  如果有注解元数据并且注解元数据还没满足条件  返回true  那么就不注册这个配置文件了
 		//这里好像说的是   配置类可以写几个一样的   在不同的环境上进行原型   传入统一参数就好了
+		//abd.getMetadata()  标准封装的注解元素
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
-
+		//获取封装完成的scopeMetadata  有可能没有这个注解  直接回来标准的
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
 		abd.setScope(scopeMetadata.getScopeName());
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));

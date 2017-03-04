@@ -125,7 +125,8 @@ class ConfigurationClassParser {
 	private final ComponentScanAnnotationParser componentScanParser;
 
 	private final ConditionEvaluator conditionEvaluator;
-
+	
+	//这个是解析保存配置类的集合
 	private final Map<ConfigurationClass, ConfigurationClass> configurationClasses =
 			new LinkedHashMap<ConfigurationClass, ConfigurationClass>();
 
@@ -169,11 +170,13 @@ class ConfigurationClassParser {
 			try {
 				//如果AnnotatedBeanDefinition
 				/*
-				 *在注册的时候  用的是这个
+				 *  在注册的时候  用的是这个
 				 *	AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
 				 *  是AnnotatedBeanDefinition的实现类
+				 *  注：AnnotatedBeanDefinition  提供注解元素实现的接口
 				 */
 				if (bd instanceof AnnotatedBeanDefinition) {
+					//StandardAnnotationMetadata
 					parse(((AnnotatedBeanDefinition) bd).getMetadata(), holder.getBeanName());
 				}
 				else if (bd instanceof AbstractBeanDefinition && ((AbstractBeanDefinition) bd).hasBeanClass()) {
@@ -203,6 +206,7 @@ class ConfigurationClassParser {
 	}
 	/*
 	 * 解析配置类  根据类名
+	 * 这个是一个处理的配置类集合
 	 */
 	protected final void parse(Class<?> clazz, String beanName) throws IOException {
 		processConfigurationClass(new ConfigurationClass(clazz, beanName));
@@ -210,6 +214,7 @@ class ConfigurationClassParser {
 	
 	/*
 	 * 解析配置类  根据AnnotationMetadata
+	 * metadata  在spring  configuration中为StandardAnnotationMetadata
 	 */
 	protected final void parse(AnnotationMetadata metadata, String beanName) throws IOException {
 		processConfigurationClass(new ConfigurationClass(metadata, beanName));
@@ -247,7 +252,7 @@ class ConfigurationClassParser {
 		// 创造一个SourceClass  递归的超类
 		SourceClass sourceClass = asSourceClass(configClass);
 		do {
-			//递归
+			//递归解析   
 			sourceClass = doProcessConfigurationClass(configClass, sourceClass);
 		}
 		while (sourceClass != null);
@@ -271,6 +276,8 @@ class ConfigurationClassParser {
 		processMemberClasses(configClass, sourceClass);
 
 		// Process any @PropertySource annotations
+		// 解析@PropertySource  这属性
+		// 解析出可以重复的PropertySource 元注解元素
 		for (AnnotationAttributes propertySource : AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), PropertySources.class, org.springframework.context.annotation.PropertySource.class)) {
 			if (this.environment instanceof ConfigurableEnvironment) {
@@ -283,6 +290,7 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @ComponentScan annotations
+		// 解析@ComponentScan 扫描组件    @ComponentScan注解元数据
 		Set<AnnotationAttributes> componentScans = AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), ComponentScans.class, ComponentScan.class);
 		if (!componentScans.isEmpty() && !this.conditionEvaluator.shouldSkip(sourceClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN)) {
@@ -293,6 +301,7 @@ class ConfigurationClassParser {
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 				// Check the set of scanned definitions for any further config classes and parse recursively if necessary
 				for (BeanDefinitionHolder holder : scannedBeanDefinitions) {
+					//扫描出来的都是ScannedGenericBeanDefinition
 					if (ConfigurationClassUtils.checkConfigurationClassCandidate(holder.getBeanDefinition(), this.metadataReaderFactory)) {
 						parse(holder.getBeanDefinition().getBeanClassName(), holder.getBeanName());
 					}
@@ -301,9 +310,11 @@ class ConfigurationClassParser {
 		}
 
 		// Process any @Import annotations
+		// 解析Import的注解  其实和配置文件中的import用处差不多
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations
+		// 解析@ImportResource注解
 		if (sourceClass.getMetadata().isAnnotated(ImportResource.class.getName())) {
 			AnnotationAttributes importResource =
 					AnnotationConfigUtils.attributesFor(sourceClass.getMetadata(), ImportResource.class);
@@ -316,6 +327,8 @@ class ConfigurationClassParser {
 		}
 
 		// Process individual @Bean methods
+		// 介个就是解析除了元数据
+		// StandardAnnotationMetadata-->StandardMethodMetadata返回了标准的方法元数据
 		Set<MethodMetadata> beanMethods = sourceClass.getMetadata().getAnnotatedMethods(Bean.class.getName());
 		for (MethodMetadata methodMetadata : beanMethods) {
 			configClass.addBeanMethod(new BeanMethod(methodMetadata, configClass));
@@ -383,14 +396,17 @@ class ConfigurationClassParser {
 	 * @throws IOException if loading a property source failed
 	 */
 	private void processPropertySource(AnnotationAttributes propertySource) throws IOException {
+		//解析name元素
 		String name = propertySource.getString("name");
 		if (!StringUtils.hasLength(name)) {
 			name = null;
 		}
+		//解析编码
 		String encoding = propertySource.getString("encoding");
 		if (!StringUtils.hasLength(encoding)) {
 			encoding = null;
 		}
+		//解析路径
 		String[] locations = propertySource.getStringArray("value");
 		Assert.isTrue(locations.length > 0, "At least one @PropertySource(value) location is required");
 		boolean ignoreResourceNotFound = propertySource.getBoolean("ignoreResourceNotFound");
@@ -403,6 +419,7 @@ class ConfigurationClassParser {
 			try {
 				String resolvedLocation = this.environment.resolveRequiredPlaceholders(location);
 				Resource resource = this.resourceLoader.getResource(resolvedLocation);
+				//PropertySource文件都是存在环境中的
 				addPropertySource(factory.createPropertySource(name, new EncodedResource(resource, encoding)));
 			}
 			catch (IllegalArgumentException ex) {

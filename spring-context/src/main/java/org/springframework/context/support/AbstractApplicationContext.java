@@ -553,7 +553,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 			//打印beanFactory日志
-			logger.info(beanFactory);
+			logger.error(beanFactory);
 			
 			// Prepare the bean factory for use in this context.
 			/*

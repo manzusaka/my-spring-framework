@@ -244,6 +244,7 @@ public class AnnotationConfigUtils {
 	}
 
 	public static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd) {
+		//StandardAnnotationMetadata
 		processCommonDefinitionAnnotations(abd, abd.getMetadata());
 	}
 
@@ -305,7 +306,7 @@ public class AnnotationConfigUtils {
 
 		Set<AnnotationAttributes> result = new LinkedHashSet<AnnotationAttributes>();
 		addAttributesIfNotNull(result, metadata.getAnnotationAttributes(annotationClassName, false));
-
+		
 		Map<String, Object> container = metadata.getAnnotationAttributes(containerClassName, false);
 		if (container != null && container.containsKey("value")) {
 			for (Map<String, Object> containedAttributes : (Map<String, Object>[]) container.get("value")) {
