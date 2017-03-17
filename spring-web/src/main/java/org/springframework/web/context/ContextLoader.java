@@ -293,6 +293,7 @@ public class ContextLoader {
 	 * @see #CONFIG_LOCATION_PARAM
 	 */
 	public WebApplicationContext initWebApplicationContext(ServletContext servletContext) {
+		//尝试获取org.springframework.web.context.WebApplicationContext.ROOT 容器  就是启动的父容器   如果存在就抛出异常
 		if (servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE) != null) {
 			throw new IllegalStateException(
 					"Cannot initialize context because there is already a root application context present - " +
@@ -311,12 +312,13 @@ public class ContextLoader {
 			// it is available on ServletContext shutdown.
 			// 初始化context
 			if (this.context == null) {
-				//创建WebApplicationContext
+				//创建WebApplicationContext  默认情况下是org.springframework.web.context.support.XmlWebApplicationContext
 				this.context = createWebApplicationContext(servletContext);
 			}
+			//如果类型是ConfigurableWebApplicationContext这个类型的   
 			if (this.context instanceof ConfigurableWebApplicationContext) {
 				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) this.context;
-				//探测是否已经激活  在貂绒context的 AbstractApplicationContext的prepareRefresh前时未激活的
+				//探测是否已经激活  在调用context的 AbstractApplicationContext的prepareRefresh前时未激活的
 				if (!cwac.isActive()) {
 					// The context has not yet been refreshed -> provide services such as
 					// setting the parent context, setting the application context id, etc
@@ -332,8 +334,9 @@ public class ContextLoader {
 				}
 			}
 			//对servletContext设置了属性   这个挺重要  在后面DispatcherServlet初始化的时候会获取属性
+			logger.info("root WebApplicationContext attribute name is= "+WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, this.context);
-
+			
 			ClassLoader ccl = Thread.currentThread().getContextClassLoader();
 			if (ccl == ContextLoader.class.getClassLoader()) {
 				currentContext = this.context;
@@ -402,6 +405,7 @@ public class ContextLoader {
 	 */
 	protected Class<?> determineContextClass(ServletContext servletContext) {
 		// CONTEXT_CLASS_PARAM = "contextClass"
+		// 如果web.xml配置了contextClass 容器的类名  那么就使用配置的class  如果没有配置  那么使用默认的
 		String contextClassName = servletContext.getInitParameter(CONTEXT_CLASS_PARAM);
 		if (contextClassName != null) {
 			try {
@@ -414,6 +418,7 @@ public class ContextLoader {
 		}
 		else {
 			//在web下面的spring-web下面的配置文件中有记录默认的加载类
+			//如果没有   就加载默认的WebApplicationContext   查看static静态块的方法
 			contextClassName = defaultStrategies.getProperty(WebApplicationContext.class.getName());
 			try {
 				return ClassUtils.forName(contextClassName, ContextLoader.class.getClassLoader());
@@ -568,7 +573,9 @@ public class ContextLoader {
 	 */
 	protected ApplicationContext loadParentContext(ServletContext servletContext) {
 		ApplicationContext parentContext = null;
+		//配置locatorFactorySelector
 		String locatorFactorySelector = servletContext.getInitParameter(LOCATOR_FACTORY_SELECTOR_PARAM);
+		//配置parentContextKey
 		String parentContextKey = servletContext.getInitParameter(LOCATOR_FACTORY_KEY_PARAM);
 
 		if (parentContextKey != null) {

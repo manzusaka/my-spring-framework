@@ -49,8 +49,9 @@ public class MyDataContextListener implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent event) {
     this.context = event.getServletContext();
+    logger.info(context);
     logger.debug("init context="+event.getServletContext().getContextPath());
-    context.setAttribute("mydate", "this is mydate");
+    context.setAttribute("mydata", "this is mydata");
   }
 
 }

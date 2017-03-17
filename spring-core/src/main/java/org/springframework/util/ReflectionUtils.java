@@ -519,11 +519,14 @@ public abstract class ReflectionUtils {
 	 * @param clazz the class to introspect
 	 * @param mc the callback to invoke for each method
 	 * @param mf the filter that determines the methods to apply the callback to
+	 * 执行会调方法处理一个类
 	 */
 	public static void doWithMethods(Class<?> clazz, MethodCallback mc, MethodFilter mf) {
 		// Keep backing up the inheritance hierarchy.
+		// 获取类所有的声明的方法
 		Method[] methods = getDeclaredMethods(clazz);
 		for (Method method : methods) {
+			//接口实现在这个类里面  如果不满足跳过（下面写的有两种  一种时桥接   一种时Object）
 			if (mf != null && !mf.matches(method)) {
 				continue;
 			}
@@ -836,7 +839,7 @@ public abstract class ReflectionUtils {
 	 * which are not declared on {@code java.lang.Object}.
 	 */
 	public static final MethodFilter USER_DECLARED_METHODS = new MethodFilter() {
-
+		//如果方法不是桥接方法 和方法的类不是Object.class
 		@Override
 		public boolean matches(Method method) {
 			return (!method.isBridge() && method.getDeclaringClass() != Object.class);

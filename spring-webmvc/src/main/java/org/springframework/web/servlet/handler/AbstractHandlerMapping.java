@@ -48,7 +48,7 @@ import org.springframework.web.util.UrlPathHelper;
  * Abstract base class for {@link org.springframework.web.servlet.HandlerMapping}
  * implementations. Supports ordering, a default handler, handler interceptors,
  * including handler interceptors mapped by path patterns.
- *
+ * 抽象的基础类  实现了HandlerMapping 接口  支持order   查找请求对应的handler和intercept功能
  * <p>Note: This base class does <i>not</i> support exposure of the
  * {@link #PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE}. Support for this attribute
  * is up to concrete subclasses, typically based on request URL mappings.
@@ -73,9 +73,11 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	private UrlPathHelper urlPathHelper = new UrlPathHelper();
 
 	private PathMatcher pathMatcher = new AntPathMatcher();
-
+	//springmvc的interceptor拦截器   注册interceptor的时候  由两种方法 
+	//1.interceptor提供了set方法   可以通过bean的属性进行设置
+	//2.通过extendInterceptors的模板方法  或者时钩子方法进行设置
 	private final List<Object> interceptors = new ArrayList<Object>();
-
+	//适用的拦截器adaptedInterceptors
 	private final List<HandlerInterceptor> adaptedInterceptors = new ArrayList<HandlerInterceptor>();
 
 	private CorsProcessor corsProcessor = new DefaultCorsProcessor();
@@ -240,10 +242,12 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * Initializes the interceptors.
 	 * @see #extendInterceptors(java.util.List)
 	 * @see #initInterceptors()
+	 * 主要功能  初始化了interceptors
 	 */
 	@Override
 	protected void initApplicationContext() throws BeansException {
 		extendInterceptors(this.interceptors);
+		//感知mappinginterceptors
 		detectMappedInterceptors(this.adaptedInterceptors);
 		initInterceptors();
 	}
@@ -268,6 +272,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 * @param mappedInterceptors an empty list to add {@link MappedInterceptor} instances to
 	 */
 	protected void detectMappedInterceptors(List<HandlerInterceptor> mappedInterceptors) {
+		//在容器中找到mappedInterceptors
 		mappedInterceptors.addAll(
 				BeanFactoryUtils.beansOfTypeIncludingAncestors(
 						getApplicationContext(), MappedInterceptor.class, true, false).values());
@@ -364,7 +369,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			String handlerName = (String) handler;
 			handler = getApplicationContext().getBean(handlerName);
 		}
-		//加入拦截器到执行链
+		//找到处理封装   一个handler和多个interceptor
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
 		if (CorsUtils.isCorsRequest(request)) {
 			CorsConfiguration globalConfig = this.corsConfigSource.getCorsConfiguration(request);

@@ -52,26 +52,33 @@ public abstract class MethodIntrospector {
 	 * or an empty map in case of no match
 	 */
 	public static <T> Map<Method, T> selectMethods(Class<?> targetType, final MetadataLookup<T> metadataLookup) {
+		//保存springmapping参数
 		final Map<Method, T> methodMap = new LinkedHashMap<Method, T>();
 		Set<Class<?>> handlerTypes = new LinkedHashSet<Class<?>>();
 		Class<?> specificHandlerType = null;
-
+		//确定当前的class不是一个代理类才添加到handlerTypes进行处理
 		if (!Proxy.isProxyClass(targetType)) {
 			handlerTypes.add(targetType);
 			specificHandlerType = targetType;
 		}
+		//不管是不是代理类  都把类的接口给加进去
 		handlerTypes.addAll(Arrays.asList(targetType.getInterfaces()));
-
+		
 		for (Class<?> currentHandlerType : handlerTypes) {
+			//传入的标记calss在代理类的情况下可能没有
 			final Class<?> targetClass = (specificHandlerType != null ? specificHandlerType : currentHandlerType);
-
+			
 			ReflectionUtils.doWithMethods(currentHandlerType, new ReflectionUtils.MethodCallback() {
 				@Override
 				public void doWith(Method method) {
+					//通过method 和targetClass 定位真正的实现方法
 					Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
+					//返回处理结果
 					T result = metadataLookup.inspect(specificMethod);
 					if (result != null) {
+						//找这个方法的桥接方法
 						Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
+						//桥接方法没有处理返回
 						if (bridgedMethod == specificMethod || metadataLookup.inspect(bridgedMethod) == null) {
 							methodMap.put(specificMethod, result);
 						}

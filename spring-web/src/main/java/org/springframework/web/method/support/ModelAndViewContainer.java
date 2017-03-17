@@ -161,6 +161,7 @@ public class ModelAndViewContainer {
 
 	/**
 	 * Whether to use the default model or the redirect model.
+	 * 如果不是redirectModelScenario 重定向false
 	 */
 	private boolean useDefaultModel() {
 		return (!this.redirectModelScenario || (this.redirectModel == null && !this.ignoreDefaultModelOnRedirect));

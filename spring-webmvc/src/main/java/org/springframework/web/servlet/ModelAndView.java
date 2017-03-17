@@ -46,6 +46,7 @@ import org.springframework.util.CollectionUtils;
 public class ModelAndView {
 
 	/** View instance or view name String */
+	//
 	private Object view;
 
 	/** Model Map */

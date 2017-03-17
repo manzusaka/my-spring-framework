@@ -304,6 +304,7 @@ public @interface RequestMapping {
 
 	/**
 	 * Assign a name to this mapping.
+	 * mapping的名字
 	 * <p><b>Supported at the type level as well as at the method level!</b>
 	 * When used on both levels, a combined name is derived by concatenation
 	 * with "#" as separator.
@@ -317,6 +318,7 @@ public @interface RequestMapping {
 	 * <p>In a Servlet environment this is an alias for {@link #path}.
 	 * For example {@code @RequestMapping("/foo")} is equivalent to
 	 * {@code @RequestMapping(path="/foo")}.
+	 * 相当于默认的路径
 	 * <p>In a Portlet environment this is the mapped portlet modes
 	 * (i.e. "EDIT", "VIEW", "HELP" or any custom modes).
 	 * <p><b>Supported at the type level as well as at the method level!</b>

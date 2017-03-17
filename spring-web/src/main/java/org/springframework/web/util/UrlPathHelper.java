@@ -218,6 +218,7 @@ public class UrlPathHelper {
 
 	/**
 	 * Return the path within the web application for the given request.
+	 * 返回path 根据request
 	 * <p>Detects include request URL if called within a RequestDispatcher include.
 	 * @param request current HTTP request
 	 * @return the path within the web application
@@ -225,6 +226,7 @@ public class UrlPathHelper {
 	public String getPathWithinApplication(HttpServletRequest request) {
 		String contextPath = getContextPath(request);
 		String requestUri = getRequestUri(request);
+		//根据请求的uri和容器上下文   找到需要匹配的路径
 		String path = getRemainingPath(requestUri, contextPath, true);
 		if (path != null) {
 			// Normal case: URI contains context path.
@@ -241,6 +243,9 @@ public class UrlPathHelper {
 	 * context path and the servlet path returned by the HttpServletRequest are
 	 * stripped of semicolon content unlike the requesUri.
 	 * 用给定的mapping去匹配requestUri开头   返回剩下的部分  确定servlet的上下文路径
+	 * 
+	 * 对比requestUri 和 mapping的字符串    挨个char类型进行比较
+	 * 1.如果request的拿到的字符时; 那么
 	 */
 	private String getRemainingPath(String requestUri, String mapping, boolean ignoreCase) {
 		int index1 = 0;
@@ -249,12 +254,15 @@ public class UrlPathHelper {
 			char c1 = requestUri.charAt(index1);
 			char c2 = mapping.charAt(index2);
 			if (c1 == ';') {
+				//从urirequest的index1开始找  找到第一个/的位置
 				index1 = requestUri.indexOf('/', index1);
 				if (index1 == -1) {
 					return null;
 				}
+				//找到/开头的位置
 				c1 = requestUri.charAt(index1);
 			}
+			//一样或者忽略大小写一样，跳过
 			if (c1 == c2) {
 				continue;
 			}
@@ -263,9 +271,11 @@ public class UrlPathHelper {
 			}
 			return null;
 		}
+		//如果mapping 以及检查完毕
 		if (index2 != mapping.length()) {
 			return null;
 		}
+		//如果 请求以及查到最后  这个和上面有细微的差别
 		else if (index1 == requestUri.length()) {
 			return "";
 		}
@@ -323,14 +333,18 @@ public class UrlPathHelper {
 	 * @return the context path
 	 */
 	public String getContextPath(HttpServletRequest request) {
+		//获取incloude属性  如果有include  那用include
+		//注:这个时就是说时引用的  那么使用引用的
 		String contextPath = (String) request.getAttribute(WebUtils.INCLUDE_CONTEXT_PATH_ATTRIBUTE);
 		if (contextPath == null) {
+			//那正常的Contextpath
 			contextPath = request.getContextPath();
 		}
 		if ("/".equals(contextPath)) {
 			// Invalid case, but happens for includes on Jetty: silently adapt it.
 			contextPath = "";
 		}
+		//解码路径  根据request的字符集
 		return decodeRequestString(request, contextPath);
 	}
 

@@ -42,7 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 3.0
  */
 public final class MappedInterceptor implements HandlerInterceptor {
-
+	
 	private final String[] includePatterns;
 
 	private final String[] excludePatterns;

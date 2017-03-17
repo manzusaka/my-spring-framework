@@ -114,9 +114,11 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 			ModelAndViewContainer mavContainer, Object... providedArgs) throws Exception {
 
 		Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
+		//设置返回的ResponseStatus  如果没有responseStatus  就是指定返回的responseStatus  那就不进行设置了
 		setResponseStatus(webRequest);
-
+		//如果returnValue为空  那么
 		if (returnValue == null) {
+			//是否request 不能被修改  ||  是否ResponseStatus这个值 ||是否是请求头
 			if (isRequestNotModified(webRequest) || hasResponseStatus() || mavContainer.isRequestHandled()) {
 				mavContainer.setRequestHandled(true);
 				return;
@@ -126,7 +128,7 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 			mavContainer.setRequestHandled(true);
 			return;
 		}
-
+		//设置
 		mavContainer.setRequestHandled(false);
 		try {
 			this.returnValueHandlers.handleReturnValue(

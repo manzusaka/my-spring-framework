@@ -182,9 +182,12 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		
 		CompositeComponentDefinition compDefinition = new CompositeComponentDefinition(element.getTagName(), source);
 		parserContext.pushContainingComponent(compDefinition);
-
+		
 		RuntimeBeanReference contentNegotiationManager = getContentNegotiationManager(element, source, parserContext);
-
+		//测试RequestMappingHandlerMapping  用来解析uri和方法映射关系的
+		//该类实现了InitializingBean  接口  在bean初始化的时候扫描并保存了映射关系RequestMappingInfo的映射关系
+		//然后当有请求的时候   会解析请求的uri通过uri找到满足条件的RequestMappingInfo    并把request包装成RequestMappingInfo
+		//然后是用Match对比上述两个RequestMappingInfo  如果满足就匹配成功     如果多个满足则排序优先级取第一个
 		RootBeanDefinition handlerMappingDef = new RootBeanDefinition(RequestMappingHandlerMapping.class);
 		handlerMappingDef.setSource(source);
 		handlerMappingDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);

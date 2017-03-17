@@ -105,14 +105,15 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 	 */
 	@Override
 	public RequestMethodsRequestCondition getMatchingCondition(HttpServletRequest request) {
+		////Origin请求  && OPTIONS && 请求里的Access-Control-Request-Method 不为null
 		if (CorsUtils.isPreFlightRequest(request)) {
 			return matchPreFlight(request);
 		}
-
+		
 		if (getMethods().isEmpty()) {
 			if (RequestMethod.OPTIONS.name().equals(request.getMethod()) &&
 					!DispatcherType.ERROR.equals(request.getDispatcherType())) {
-
+				
 				return null; // No implicit match for OPTIONS (we handle it)
 			}
 			return this;
@@ -130,6 +131,7 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 		if (getMethods().isEmpty()) {
 			return this;
 		}
+		//找到请求传过来的方法
 		String expectedMethod = request.getHeader(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD);
 		return matchRequestMethod(expectedMethod);
 	}

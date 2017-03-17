@@ -124,7 +124,7 @@ public abstract class HttpServletBean extends HttpServlet
 
 		// Set bean properties from init parameters.
 		try {
-			// 解析init-param并封装至PropertyValues
+			// 解析init-param并封装至PropertyValues  如果requiredProperties的属性缺失就报异常
 			PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(),
 					this.requiredProperties);
 			//对当前的servlet进行转化  转成BeanWrapper 可以进行属性设置

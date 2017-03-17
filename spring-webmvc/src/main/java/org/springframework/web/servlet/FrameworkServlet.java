@@ -771,6 +771,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see #getServletName
 	 */
 	public String getServletContextAttributeName() {
+		System.out.println(SERVLET_CONTEXT_PREFIX + getServletName());
 		return SERVLET_CONTEXT_PREFIX + getServletName();
 	}
 
@@ -975,6 +976,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		//创建当前请求的RequestAttributes
 		ServletRequestAttributes requestAttributes = buildRequestAttributes(request, response, previousAttributes);
 		//设置异步请求Manager  这里以及把asyncManager 充当属性放入request
+		//异步管理器绑定request
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 		//注册拦截器   key=org.springframework.web.servlet.FrameworkServlet  value=new RequestBindingInterceptor()
 		asyncManager.registerCallableInterceptor(FrameworkServlet.class.getName(), new RequestBindingInterceptor());
@@ -1001,6 +1003,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		finally {
 			//请求结束回复线程属性
 			resetContextHolders(request, previousLocaleContext, previousAttributes);
+			//request以及被执行  进行标记
 			if (requestAttributes != null) {
 				requestAttributes.requestCompleted();
 			}
@@ -1079,7 +1082,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			logger.trace("Cleared thread-bound request context: " + request);
 		}
 	}
-
+	//可以用于日志处理等操作
 	private void publishRequestHandledEvent(
 			HttpServletRequest request, HttpServletResponse response, long startTime, Throwable failureCause) {
 

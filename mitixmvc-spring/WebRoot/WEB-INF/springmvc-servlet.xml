@@ -27,32 +27,47 @@
 	<bean id="userController2" class="com.mitixmvc.controller.UserController"></bean>
 	-->
 	
+	<!-- 测试用BeanNameUrlHandlerMapping -->
+	<bean name="/tessee" class="com.mitixmvc.controller.UserController3"></bean>
+	
 	<!-- 支持spring mvc新的注解类型 	-->
-	<context:annotation-config />
+	<!--  -->
+	<context:annotation-config  />
+		
+	
+	<!-- mvc驱动配置 -->
+	<!--  -->
+	<mvc:annotation-driven >
+	</mvc:annotation-driven>
+	
+	
+	<!-- mvc扫描 -->
+	<!-- -->
 	<context:component-scan base-package="com.mitixmvc.controller" />
-	<mvc:annotation-driven />
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
-
 	
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
-	<!-- spring上传的设置   如果不配置  那么在servlet里面就没有这个bean -->
-	<!--  
+	
+	<!-- spring上传的设置   如果不配置  那么在DispatcherServlet不加载  无法上传 -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="2048000"></property>
 	</bean>
-	-->
-	<!-- 国际化设置 -->
+	
+	<!-- 国际化设置 如果不设置会调用默认的 LocaleResolver解析器-->
+	<!--  
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver">
 	</bean>
+	-->
 	
 	<!-- 处理拦截器的使用 -->
+	<!--  -->
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/*" />
 			<bean class="com.mitixmvc.interceptor.MyTestInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
+	
 </beans>

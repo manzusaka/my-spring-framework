@@ -34,6 +34,7 @@ import org.springframework.web.servlet.HandlerExecutionChain;
  * Abstract base class for URL-mapped {@link org.springframework.web.servlet.HandlerMapping}
  * implementations. Provides infrastructure for mapping handlers to URLs and configurable
  * URL lookup. For information on the latter, see "alwaysUseFullPath" property.
+ * 一个基础类，实现了
  *
  * <p>Supports direct matches, e.g. a registered "/test" matches "/test", and
  * various Ant-style pattern matches, e.g. a registered "/t*" pattern matches
@@ -115,6 +116,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	@Override
 	protected Object getHandlerInternal(HttpServletRequest request) throws Exception {
 		//new UrlPathHelper
+		//根据策略获得request的查找路径
 		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
 		//根据路径在Map中找到Handler
 		Object handler = lookupHandler(lookupPath, request);
@@ -133,6 +135,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 			//如果默认的DefaultHandler不为空  那么去匹配以下  包装以下
 			if (rawHandler != null) {
 				// Bean name or resolved handler?
+				// 通过handler的名字去匹配以下
 				if (rawHandler instanceof String) {
 					String handlerName = (String) rawHandler;
 					rawHandler = getApplicationContext().getBean(handlerName);
@@ -256,7 +259,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 */
 	protected Object buildPathExposingHandler(Object rawHandler, String bestMatchingPattern,
 			String pathWithinMapping, Map<String, String> uriTemplateVariables) {
-
+		
 		HandlerExecutionChain chain = new HandlerExecutionChain(rawHandler);
 		chain.addInterceptor(new PathExposingHandlerInterceptor(bestMatchingPattern, pathWithinMapping));
 		if (!CollectionUtils.isEmpty(uriTemplateVariables)) {

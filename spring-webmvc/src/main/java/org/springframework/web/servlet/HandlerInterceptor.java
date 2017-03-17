@@ -26,6 +26,9 @@ import org.springframework.web.method.HandlerMethod;
  * Applications can register any number of existing or custom interceptors
  * for certain groups of handlers, to add common preprocessing behavior
  * without needing to modify each handler implementation.
+ * 一个工作流接口   允许自定义处理执行链
+ * 应用程序可以注册任意数量的现有的和自定义的拦截器
+ * 
  *
  * <p>A HandlerInterceptor gets called before the appropriate HandlerAdapter
  * triggers the execution of the handler itself. This mechanism can be used

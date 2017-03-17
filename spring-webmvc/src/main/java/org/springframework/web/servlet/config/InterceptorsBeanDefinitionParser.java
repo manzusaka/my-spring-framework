@@ -55,7 +55,7 @@ class InterceptorsBeanDefinitionParser implements BeanDefinitionParser {
 			RootBeanDefinition mappedInterceptorDef = new RootBeanDefinition(MappedInterceptor.class);
 			mappedInterceptorDef.setSource(parserContext.extractSource(interceptor));
 			mappedInterceptorDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-
+			
 			ManagedList<String> includePatterns = null;
 			ManagedList<String> excludePatterns = null;
 			Object interceptorBean;
@@ -75,7 +75,7 @@ class InterceptorsBeanDefinitionParser implements BeanDefinitionParser {
 			if (pathMatcherRef != null) {
 				mappedInterceptorDef.getPropertyValues().add("pathMatcher", pathMatcherRef);
 			}
-
+			//注册了一个MappedInterceptor
 			String beanName = parserContext.getReaderContext().registerWithGeneratedName(mappedInterceptorDef);
 			parserContext.registerComponent(new BeanComponentDefinition(mappedInterceptorDef, beanName));
 		}
