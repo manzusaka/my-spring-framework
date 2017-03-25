@@ -60,6 +60,10 @@
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver">
 	</bean>
 	-->
+	<!-- 自定义的异常解析器 -->
+	<bean id="myRuntimeExceptionResolver" class="com.mitixmvc.exceptionresolver.MyRuntimeExceptionResolver">
+		<property name="order" value="-1"></property>
+	</bean>
 	
 	<!-- 处理拦截器的使用 -->
 	<!--  -->

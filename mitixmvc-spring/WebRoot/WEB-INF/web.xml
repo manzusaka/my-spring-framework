@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>mitixmvc-spring</display-name>
   
   <!-- 使用ContextLoaderListener配置时，需要告诉它spring配置文件的位置 -->
@@ -29,6 +29,20 @@
   	<url-pattern>/*</url-pattern>
   </servlet-mapping>
   -->
+  
+  <!-- 异步请求测试 -->
+  <!--  
+  <servlet>
+  	<servlet-name>AsyncWorkServlet</servlet-name>
+  	<servlet-class>com.mitixmvc.servlet.MyAsyncWorkServlet</servlet-class>
+  	<async-supported>true</async-supported>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>AsyncWorkServlet</servlet-name>
+  	<url-pattern>/work</url-pattern>
+  </servlet-mapping>
+  -->
+  
   <!--  contextClass 自定义的上下文容器  默认org.springframework.web.context.support.XmlWebApplicationContext  配置在spring-web下的配置里  -->
   <!--  
   <context-param>
@@ -42,10 +56,12 @@
   
   <!-- 当DispatcherServlet载入后，将从一个xml中载入spring上下文，该xml文件的名字取决于<servlet-name> -->
   <!-- 这里DispatcherServlet试图从一个叫做springmvc-servlet的文件中载入上下文，其默认位置为WEB-INF下 -->
+  <!--  -->
   <servlet>
   	<servlet-name>springmvc</servlet-name>
   	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
   	<load-on-startup>1</load-on-startup>
+  	<async-supported>true</async-supported>
   </servlet>
   <servlet-mapping>
   	<servlet-name>springmvc</servlet-name>
@@ -55,6 +71,7 @@
   	<servlet-name>springmvc</servlet-name>
   	<url-pattern>/</url-pattern>
   </servlet-mapping>
+  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

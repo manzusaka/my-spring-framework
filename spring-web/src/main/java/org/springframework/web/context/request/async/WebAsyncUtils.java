@@ -36,6 +36,7 @@ public abstract class WebAsyncUtils {
 	public static final String WEB_ASYNC_MANAGER_ATTRIBUTE = WebAsyncManager.class.getName() + ".WEB_ASYNC_MANAGER";
 
 	// Determine whether Servlet 3.0's ServletRequest.startAsync method is available
+	// 判断启动的是不是spring3.0 支持异步请求
 	private static final boolean startAsyncAvailable = ClassUtils.hasMethod(ServletRequest.class, "startAsync");
 
 
@@ -56,6 +57,7 @@ public abstract class WebAsyncUtils {
 	/**
 	 * Obtain the {@link WebAsyncManager} for the current request, or if not
 	 * found, create and associate it with the request.
+	 * 使用webRequest进行初始化
 	 */
 	public static WebAsyncManager getAsyncManager(WebRequest webRequest) {
 		int scope = RequestAttributes.SCOPE_REQUEST;
@@ -77,6 +79,7 @@ public abstract class WebAsyncUtils {
 	 * @return an AsyncWebRequest instance (never {@code null})
 	 */
 	public static AsyncWebRequest createAsyncWebRequest(HttpServletRequest request, HttpServletResponse response) {
+		//Servlet.class带了startAsync方法就认为本地的servlet环境为servlet3.0以上版本   支持异步   这个时候创建StandardAsyncWebRequest
 		return (startAsyncAvailable ? AsyncWebRequestFactory.createStandardAsyncWebRequest(request, response) :
 				new NoSupportAsyncWebRequest(request, response));
 	}

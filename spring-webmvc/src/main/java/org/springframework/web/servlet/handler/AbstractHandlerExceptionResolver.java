@@ -30,7 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Abstract base class for {@link HandlerExceptionResolver} implementations.
- *
+ * 以及抽象的基础类  实现了MVC的异常处理接口
  * <p>Supports mapped {@linkplain #setMappedHandlers handlers} and
  * {@linkplain #setMappedHandlerClasses handler classes} that the resolver
  * should be applied to and implements the {@link Ordered} interface.
@@ -92,7 +92,7 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	public void setMappedHandlerClasses(Class<?>... mappedHandlerClasses) {
 		this.mappedHandlerClasses = mappedHandlerClasses;
 	}
-
+	
 	/**
 	 * Set the log category for warn logging. The name will be passed to the underlying logger
 	 * implementation through Commons Logging, getting interpreted as a log category according

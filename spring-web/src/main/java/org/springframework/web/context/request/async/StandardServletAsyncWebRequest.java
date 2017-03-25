@@ -31,6 +31,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 /**
  * A Servlet 3.0 implementation of {@link AsyncWebRequest}.
+ * servlet3.0实现
  *
  * <p>The servlet and all filters involved in an async request must have async
  * support enabled using the Servlet API or by adding an
@@ -43,7 +44,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 public class StandardServletAsyncWebRequest extends ServletWebRequest implements AsyncWebRequest, AsyncListener {
 
 	private Long timeout;
-
+	//AsyncContext  异步容器
 	private AsyncContext asyncContext;
 
 	private AtomicBoolean asyncCompleted = new AtomicBoolean(false);
@@ -105,8 +106,9 @@ public class StandardServletAsyncWebRequest extends ServletWebRequest implements
 				"in async request processing. This is done in Java code using the Servlet API " +
 				"or by adding \"<async-supported>true</async-supported>\" to servlet and " +
 				"filter declarations in web.xml.");
+		//如果完成了  就抛异常
 		Assert.state(!isAsyncComplete(), "Async processing has already completed");
-
+		//如果已经启动直接返回
 		if (isAsyncStarted()) {
 			return;
 		}

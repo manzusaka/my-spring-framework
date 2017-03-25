@@ -39,7 +39,7 @@ import com.mitixmvc.model.User;
 //@RestController
 @Controller
 @RequestMapping("/SpringMVC")
-public class UserController extends AbstractController implements LastModified{
+public class UserController5 extends AbstractController implements LastModified{
   private long lastModified;
   /*
    * (non-Javadoc)
@@ -48,8 +48,9 @@ public class UserController extends AbstractController implements LastModified{
    * org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http
    * .HttpServletRequest, javax.servlet.http.HttpServletResponse)
    */
+  //测试异常处理
   @Override
-  @RequestMapping(value="/test.do",method=RequestMethod.GET)
+  @RequestMapping(value="/test5.do",method=RequestMethod.GET)
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
     List<User> list = new ArrayList<User>();
     User user1 = new User();
@@ -60,7 +61,7 @@ public class UserController extends AbstractController implements LastModified{
     user2.setAge(44);
     list.add(user1);
     list.add(user2);
-    return new ModelAndView("userlist", "users", list);
+    throw new RuntimeException("Infotech ...");
   }
   
   @Override
