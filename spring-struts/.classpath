@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="output" path="spring-struts/bin/eclipse"/>
+	<classpathentry output="bin/main" kind="src" path="src/main/java"/>
+	<classpathentry output="bin/main" kind="src" path="src/main/resources"/>
+	<classpathentry output="bin/test" kind="src" path="src/test/java"/>
+	<classpathentry output="bin/test" kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/struts/struts/1.2.9/6ef08e2f66a15ab678c07dd5e17d4e649a22af24/struts-1.2.9-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/struts/struts/1.2.9/1d772f30aff9ae4af06e3e4893fbc116619f2bed/struts-1.2.9.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.7.0/b68c4fc66026e8c08df7fb57c7dc1e94a6ed8cbb/commons-beanutils-1.7.0-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.7.0/5675fd96b29656504b86029551973d60fb41339b/commons-beanutils-1.7.0.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.servlet/servlet-api/2.5/21599814ad9a605b86f3e6381571beccd861a32/servlet-api-2.5-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.servlet/servlet-api/2.5/5959582d97d8b61f4d154ca9e495aafd16726e34/servlet-api-2.5.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.servlet/jstl/1.2/2f5877ef15adb721421e80f5aa2b6fe069eec8ed/jstl-1.2-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.servlet/jstl/1.2/74aca283cd4f4b4f3e425f5820cda58f44409547/jstl-1.2.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/28e0ad201304e4a4abf999ca0570b7cffc352c3c/junit-4.11-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0/junit-4.11.jar"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-all/1.3/47e033b7ab18c5dbd5fe29fc1bd5a40afe028818/hamcrest-all-1.3-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-all/1.3/63a21ebc981131004ad02e0434e799fd7f3a8d5a/hamcrest-all-1.3.jar"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/1.9.5/46f703fb4266140c544d48a189cb25947eb6333e/mockito-core-1.9.5-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/1.9.5/c3264abeea62c4d2f367e21484fbb40c7e256393/mockito-core-1.9.5.jar"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.3/28bb0405fddaf04f15058fbfbe01fe2780d7d3b6/commons-logging-1.1.3-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.3/f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f/commons-logging-1.1.3.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/2.1/fa4c407195e317251a176b3dd04d6704d9df3ca6/commons-collections-2.1-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/2.1/8e10f94f30ea064eee3cb94f864dc9c31e30e8af/commons-collections-2.1.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/xml-apis/xml-apis/1.0.b2/d8525661c5a0a05702fa41873d250d135031ec25/xml-apis-1.0.b2-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/xml-apis/xml-apis/1.0.b2/3136ca936f64c9d68529f048c2618bd356bf85c9/xml-apis-1.0.b2.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-digester/commons-digester/1.6/776f60b31da3df0306a8b41387534659c097b5a6/commons-digester-1.6-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-digester/commons-digester/1.6/e2822f655f2c182681c2cf27f224a425ccb2983d/commons-digester-1.6.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-fileupload/commons-fileupload/1.0/30acb3ed419038391c68d8e0bace5658230b0981/commons-fileupload-1.0-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-fileupload/commons-fileupload/1.0/2366159e25523d99e96d05211a2fa5399c938735/commons-fileupload-1.0.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-validator/commons-validator/1.1.4/bf1ab9a45a7a17aea2ec9adaf0575808fab78996/commons-validator-1.1.4-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-validator/commons-validator/1.1.4/1033bc3f5e304f447d7987f0f5db8c6133d9695b/commons-validator-1.1.4.jar" exported="true"/>
+	<classpathentry kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/oro/oro/2.0.7/f91d4528652d713faa54039b26af468a1229328b/oro-2.0.7.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.2/b89cfcdcb699c972f9a6a0cdf333a3f39ed33306/antlr-2.7.2-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.2/546b5220622c4d9b2da45ad1899224b6ce1c8830/antlr-2.7.2.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/xalan/xalan/2.5.1/d67f15e51f5600b521eaca6ae2da3040bd3975ef/xalan-2.5.1-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/xalan/xalan/2.5.1/8ee62aa6e698230994c17deb763f15e9c0c4173e/xalan-2.5.1.jar" exported="true"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar"/>
+	<classpathentry sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/1.0/b10c90e57b7bb985a7b6a704769428fe5c2a732c/objenesis-1.0-sources.jar" kind="lib" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/1.0/9b473564e792c2bdf1449da1f0b1b5bff9805704/objenesis-1.0.jar"/>
+	<classpathentry kind="src" path="/spring-core" exported="true"/>
+	<classpathentry kind="src" path="/spring-beans" exported="true"/>
+	<classpathentry kind="src" path="/spring-context" exported="true"/>
+	<classpathentry kind="src" path="/spring-web" exported="true"/>
+	<classpathentry kind="src" path="/spring-webmvc" exported="true"/>
+	<classpathentry kind="src" path="/spring-test" exported="true"/>
+	<classpathentry kind="src" path="/spring-webmvc-tiles3" exported="true"/>
+	<classpathentry kind="src" path="/spring-aop" exported="true"/>
+	<classpathentry kind="src" path="/spring-expression" exported="true"/>
+	<classpathentry kind="src" path="/spring-instrument" exported="true"/>
+	<classpathentry kind="src" path="/spring-oxm" exported="true"/>
+	<classpathentry kind="src" path="/spring-context-support" exported="true"/>
+	<classpathentry kind="src" path="/spring-jdbc" exported="true"/>
+	<classpathentry kind="src" path="/spring-tx" exported="true"/>
+	<classpathentry kind="src" path="/spring-orm" exported="true"/>
+	<classpathentry kind="src" path="/spring-webmvc-portlet" exported="true"/>
+</classpath>

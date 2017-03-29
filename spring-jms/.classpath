@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry path="spring-jms/bin/eclipse" kind="output"/>
+	<classpathentry output="bin/main" path="src/main/java" kind="src"/>
+	<classpathentry output="bin/main" path="src/main/resources" kind="src"/>
+	<classpathentry output="bin/test" path="src/test/java" kind="src"/>
+	<classpathentry output="bin/test" path="src/test/resources" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/" kind="con"/>
+	<classpathentry exported="true" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.transaction/javax.transaction-api/1.2/d81aff979d603edd90dcd8db2abc1f4ce6479e3e/javax.transaction-api-1.2.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.transaction/javax.transaction-api/1.2/5d1fb3fe056fe51e6f6ed9b4ef4898a774ed69c0/javax.transaction-api-1.2-sources.jar"/>
+	<classpathentry exported="true" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.resource/connector-api/1.5/a5cee35dc703a9d9ea305cc3f4a2baa7c4919145/connector-api-1.5.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.resource/connector-api/1.5/a8f177930b0abd2422c6b9601c756d8c48278add/connector-api-1.5-sources.jar"/>
+	<classpathentry exported="true" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.8.4/1c36c81e79cacdf48116afba8495e3393d267ba1/jackson-databind-2.8.4.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.8.4/2b4edfb6d6bad1710951837b4911eddd1415228f/jackson-databind-2.8.4-sources.jar"/>
+	<classpathentry exported="true" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.jms/jms-api/1.1-rev-1/af256c6e1b77f1599c33b61c730fb1ff591cbfb0/jms-api-1.1-rev-1.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/javax.jms/jms-api/1.1-rev-1/1b7776a0d1e1ba2d5b7d1832f6eb5cc59a86de3a/jms-api-1.1-rev-1-sources.jar"/>
+	<classpathentry path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar"/>
+	<classpathentry path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/1.10.19/e8546f5bef4e061d8dd73895b4e8f40e3fe6effe/mockito-core-1.10.19.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/1.10.19/8269667b73d9616600359a9b0ba1b1c7d0cf7a97/mockito-core-1.10.19-sources.jar"/>
+	<classpathentry path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-all/1.3/63a21ebc981131004ad02e0434e799fd7f3a8d5a/hamcrest-all-1.3.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-all/1.3/47e033b7ab18c5dbd5fe29fc1bd5a40afe028818/hamcrest-all-1.3-sources.jar"/>
+	<classpathentry exported="true" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar"/>
+	<classpathentry exported="true" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.8.0/45b426f7796b741035581a176744d91090e2e6fb/jackson-annotations-2.8.0.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.8.0/29a1a95363d497e856c0a7d682e4f7973e334068/jackson-annotations-2.8.0-sources.jar"/>
+	<classpathentry exported="true" path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.8.4/ca365c0817cc345ea831cae7c4e9b42a72b32281/jackson-core-2.8.4.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.8.4/2b19a5be7b533aea3a4b7931ee518d5642c5c513/jackson-core-2.8.4-sources.jar"/>
+	<classpathentry path="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.1/87c0ea803b69252868d09308b4618f766f135a96/objenesis-2.1.jar" kind="lib" sourcepath="C:/Users/oldflame/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.1/611a57d836e2c320d59f9851d4ad587f3c8472e/objenesis-2.1-sources.jar"/>
+	<classpathentry exported="true" path="D:/Program Files/GitHub/Local/my-spring-framework/spring-core/build/libs/spring-cglib-repack-3.2.4.jar" kind="lib"/>
+	<classpathentry exported="true" path="D:/Program Files/GitHub/Local/my-spring-framework/spring-core/build/libs/spring-objenesis-repack-2.4.jar" kind="lib"/>
+	<classpathentry path="/spring-core" kind="src"/>
+	<classpathentry path="/spring-beans" kind="src"/>
+	<classpathentry path="/spring-aop" kind="src"/>
+	<classpathentry path="/spring-context" kind="src"/>
+	<classpathentry path="/spring-expression" kind="src"/>
+	<classpathentry path="/spring-messaging" kind="src"/>
+	<classpathentry path="/spring-tx" kind="src"/>
+	<classpathentry path="/spring-oxm" kind="src"/>
+	<classpathentry exported="true" path="/spring-instrument" kind="src"/>
+</classpath>
