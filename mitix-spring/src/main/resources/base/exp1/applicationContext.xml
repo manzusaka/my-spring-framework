@@ -14,12 +14,12 @@
 		profile=""></beans> -->
 	<!-- alias别名 -->
 	<!-- <alias name="" alias="" /> -->
-
+	<!--
 	<bean abstract="true" autowire-candidate="default" autowire="default"
 		class="" depends-on="" destroy-method="" factory-bean=""
 		factory-method="" init-method="" lazy-init="default" name="" parent=""
 		primary="true" scope="" id=""></bean>
-
+	-->
 	<bean id="mytestbean" class="com.mitix.spring.base.exp1.MyTestBean">
 	</bean>
 
