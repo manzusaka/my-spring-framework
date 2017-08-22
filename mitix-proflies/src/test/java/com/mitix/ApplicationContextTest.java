@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(classes = {BeanConfiguration.class})
-@ContextConfiguration(locations = {"classpath:com/mitix/applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 @ActiveProfiles("prod")
 public class ApplicationContextTest extends AbstractJUnit4SpringContextTests {
 
@@ -18,5 +18,4 @@ public class ApplicationContextTest extends AbstractJUnit4SpringContextTests {
         MyTestBean myTestBean= (MyTestBean) applicationContext.getBean("mytestbean");
         System.out.println(myTestBean.getTestStr());
     }
-
 }
