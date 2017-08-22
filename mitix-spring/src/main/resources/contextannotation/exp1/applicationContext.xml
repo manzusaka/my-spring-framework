@@ -12,7 +12,7 @@
 						http://www.springframework.org/schema/tx 
 						http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-	<context:component-scan  base-package="com.mitix.spring.exp19"/>
+	<context:component-scan  base-package="com.mitix.spring.contextannotation.exp2"/>
 	<!-- 
 	<bean id="testbean" class="com.mitix.spring.exp19.TestBean">
 		<property name="testBean2" ref="testBean2"></property>

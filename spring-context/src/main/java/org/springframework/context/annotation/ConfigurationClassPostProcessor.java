@@ -247,6 +247,14 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		this.registriesPostProcessed.add(registryId);
 		//处理@Configuration的bean
 		processConfigBeanDefinitions(registry);
+
+		//自己加的  检查扫描以后的情况
+		String[] beanDefinitionNames = registry.getBeanDefinitionNames();
+		StringBuffer bdBuff=new StringBuffer();
+		for (String beanDefinitionName : beanDefinitionNames) {
+			bdBuff.append("[").append(beanDefinitionName).append("]");
+		}
+		System.out.println(bdBuff.toString());
 	}
 
 	/**
@@ -352,7 +360,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
-			//直接注册扫描出来的类  --解析类数据
+			//直接注册扫描出来的类  --解析类数据   这里进行所有bean的解析注册
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 

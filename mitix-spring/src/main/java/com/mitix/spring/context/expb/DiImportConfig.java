@@ -16,7 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author oldflame-Jm
  * TODO
  */
-@ComponentScan("com.mitix.spring.context.expb")
+//@ComponentScan("com.mitix.spring.context.expb")
 public class DiImportConfig {
 
 }

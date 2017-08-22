@@ -141,6 +141,10 @@ public class AnnotationConfigUtils {
 	 * that this registration was triggered from. May be {@code null}.
 	 * @return a Set of BeanDefinitionHolders, containing all bean definitions
 	 * that have actually been registered by this call
+	 *
+	 *  该方法被调用的地方
+	 *  1.在spring使用AnnotationConfigBeanDefinitionParser解析xml文件的时候  也就是配置annotation-config的时候
+	 *  2.启动在AnnotationConfigApplicationContext容器的时候
 	 */
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, Object source) {

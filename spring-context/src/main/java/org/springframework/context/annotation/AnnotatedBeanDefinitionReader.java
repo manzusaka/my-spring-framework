@@ -80,7 +80,7 @@ public class AnnotatedBeanDefinitionReader {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
-		//Conditional注解评估器
+		//Conditional注解决定器
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
 		//这个时关键   注册AnnotationConfigProcessor
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
@@ -178,10 +178,12 @@ public class AnnotatedBeanDefinitionReader {
 	/**
 	 * Get the Environment from the given registry if possible, otherwise return a new
 	 * StandardEnvironment.
+	 * 如果容器实现了EnvironmentCapable接口则使用接口的方式调用环境  如果没有则使用标准的环境
 	 */
 	private static Environment getOrCreateEnvironment(BeanDefinitionRegistry registry) {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		if (registry instanceof EnvironmentCapable) {
+			//主要应该有一个web的标准环境
 			return ((EnvironmentCapable) registry).getEnvironment();
 		}
 		return new StandardEnvironment();

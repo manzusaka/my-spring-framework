@@ -137,6 +137,7 @@ class ConfigurationClassBeanDefinitionReader {
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}
+		//这个是关键   注册Bean注解
 		for (BeanMethod beanMethod : configClass.getBeanMethods()) {
 			loadBeanDefinitionsForBeanMethod(beanMethod);
 		}

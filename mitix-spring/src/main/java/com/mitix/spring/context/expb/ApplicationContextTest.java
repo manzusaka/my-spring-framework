@@ -9,6 +9,7 @@ public class ApplicationContextTest {
 	public static void main(String[] args) {
 		//测试ApplicationContext第一个Beans实例
 		ApplicationContext context=new AnnotationConfigApplicationContext(DiConfig.class);
+//		ApplicationContext context=new AnnotationConfigApplicationContext("com.mitix.spring.context.expb");
 		UseFunctionService bean=(UseFunctionService) context.getBean(UseFunctionService.class);
 		bean.sayHello("mami");
 	}

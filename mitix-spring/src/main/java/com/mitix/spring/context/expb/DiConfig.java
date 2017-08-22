@@ -52,11 +52,11 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
  * 5. @Order 实现Order注解可以排序
  */
 @Configuration
-@ComponentScan("com.mitix.spring.context.expb")
-@ImportResource(value="context/expb/applicationContext.xml")
-@Import(value=DiImportConfig.class)
+//@ComponentScan("com.mitix.spring.context.expb")
+//@ImportResource(value="context/expb/applicationContext.xml")
+//@Import(value=DiImportConfig.class)
 //@Component
-@PropertySource(name="test",value="classpath:context/expb/config.properties")
+//@PropertySource(name="test",value="classpath:context/expb/config.properties")
 public class DiConfig implements ApplicationContextAware{
    private Logger logger=Logger.getLogger(DiConfig.class);
 
@@ -74,7 +74,8 @@ public class DiConfig implements ApplicationContextAware{
   public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
       return new PropertySourcesPlaceholderConfigurer();
   }
-  
+
+  //注册成ConfigurationClassBeanDefinition
   @Bean
   public FunctionService functionService(){
       return new FunctionService();
