@@ -87,7 +87,8 @@ import org.springframework.util.ReflectionUtils;
  * @see javax.jms.MessageProducer
  * @see javax.jms.MessageConsumer
  */
-public class JmsTemplate extends JmsDestinationAccessor implements JmsOperations {
+public class
+JmsTemplate extends JmsDestinationAccessor implements JmsOperations {
 
 	/** The JMS 2.0 MessageProducer.setDeliveryDelay method, if available */
 	private static final Method setDeliveryDelayMethod =

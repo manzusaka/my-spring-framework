@@ -101,6 +101,7 @@ class ConditionEvaluator {
 			if (condition instanceof ConfigurationCondition) {
 				requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();
 			}
+			//是否需要做这个判断进行一次校验   分为注册bean 和解析configuration
 			if (requiredPhase == null || requiredPhase == phase) {
 				//这个是关键如果有Conditional 且matches返回false  则返回true
 				if (!condition.matches(this.context, metadata)) {

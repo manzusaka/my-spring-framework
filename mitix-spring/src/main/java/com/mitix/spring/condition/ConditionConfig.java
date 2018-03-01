@@ -8,18 +8,24 @@ import org.springframework.context.annotation.Configuration;
  * Created by oldflame on 2017/2/13.
  */
 @Configuration
-//@Conditional(LinuxCondition.class)
+//@Conditional(TestCondition.class)
 public class ConditionConfig {
 
     @Bean
     @Conditional(WindowsConditional.class)
-    public ListService WindowsListService(){
+    public ListService WindowsListService() {
         return new WindowsListService();
     }
 
     @Bean
     @Conditional(LinuxCondition.class)
-    public ListService LinuxService(){
+    public ListService LinuxService() {
         return new LinuxListService();
+    }
+
+    @Bean
+    @Conditional(MacOSConditional.class)
+    public ListService MacService() {
+        return new MacListService();
     }
 }

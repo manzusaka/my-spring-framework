@@ -131,9 +131,11 @@ public class PropertyPlaceholderHelper {
 			String strVal, PlaceholderResolver placeholderResolver, Set<String> visitedPlaceholders) {
 
 		StringBuilder result = new StringBuilder(strVal);
-
+		//计算前缀的位置  spring里面常见的${
 		int startIndex = strVal.indexOf(this.placeholderPrefix);
+		//如果未找到  直接跳过
 		while (startIndex != -1) {
+			//查找后缀占位符  spring里面常见的}
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
 			if (endIndex != -1) {
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
@@ -184,8 +186,9 @@ public class PropertyPlaceholderHelper {
 
 		return result.toString();
 	}
-
+	//通过采用嵌套的方式去处理占位符
 	private int findPlaceholderEndIndex(CharSequence buf, int startIndex) {
+		//index定位加前缀长度
 		int index = startIndex + this.placeholderPrefix.length();
 		int withinNestedPlaceholder = 0;
 		while (index < buf.length()) {
